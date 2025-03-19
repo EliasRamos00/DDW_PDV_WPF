@@ -40,7 +40,7 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
+                    <Image Source="Imagenes\pink-flower-white-background.jpg" 
            Width="100" 
            Height="100" 
            HorizontalAlignment="Center"
