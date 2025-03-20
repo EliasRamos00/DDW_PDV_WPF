@@ -1,0 +1,47 @@
+﻿<Window x:Class="DDW_PDV_WPF.frmLogin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DDW_PDV_WPF"
+        mc:Ignorable="d"
+        Title="Iniciar Sesión" Height="450" Width="300"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="White" WindowStyle="None">
+    <Grid Margin="20">
+        <Button Content="✖"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                BorderThickness="0"
+                FontSize="16"
+                Click="Cerrar_Click"/>
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="220" >
+            <Ellipse Width="120" Height="120" Fill="LightGray" Margin="0,0,0,20">
+                <Ellipse.Stroke>
+                    <SolidColorBrush Color="Transparent"/>
+                </Ellipse.Stroke>
+                <Ellipse.OpacityMask>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="👤" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Ellipse.OpacityMask>
+            </Ellipse>
+
+            <TextBlock Text="Usuario" Margin="0,0,0,5"/>
+            <TextBox Text="" Background="LightGray" BorderThickness="0" Padding="5" />
+
+            <TextBlock Text="Contraseña" Margin="0,10,0,5"/>
+            <PasswordBox Password="" Background="LightGray" BorderThickness="0" Padding="5"/>
+
+            <Button Content="Iniciar Sesión" Margin="0,20,0,0" Background="#D8D8D8" Padding="8"
+                    FontWeight="SemiBold" BorderBrush="Transparent" BorderThickness="0" 
+                    HorizontalAlignment="Center" Width="140" Height="40" Click="Button_Click"
+                    />
+        </StackPanel>
+    </Grid>
+</Window>

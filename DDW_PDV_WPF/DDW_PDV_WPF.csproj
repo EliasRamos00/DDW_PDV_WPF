@@ -70,6 +70,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="frmLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="frmVentanaPrincipal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -88,6 +92,9 @@
     </Compile>
     <Compile Include="frmInventarios.xaml.cs">
       <DependentUpon>frmInventarios.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="frmLogin.xaml.cs">
+      <DependentUpon>frmLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="frmVentanaPrincipal.xaml.cs">
       <DependentUpon>frmVentanaPrincipal.xaml</DependentUpon>
