@@ -7,8 +7,7 @@
       mc:Ignorable="d"
       xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
       Title="Flores artificiales OMEGA"
-        Width="1050" Height="720"
-      >
+>
     <Page.Resources>
         <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
         <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
@@ -207,7 +206,7 @@
                             <!-- Botón con ícono y texto -->
                             <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\bag.png" Width="50" Height="50" VerticalAlignment="Center"/>
+                                    <Image Source="Imagenes\bag.png" Width="50" Height="50" VerticalAlignment="Center"/>
                                     <TextBlock Text="Categoria 1" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
@@ -215,28 +214,28 @@
                             <!-- Repite para los demás botones -->
                             <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\flower-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
+                                    <Image Source="Imagenes\flower-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
                                     <TextBlock Text="Categoria 2" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
                             <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\flower.png" Width="50" Height="50"/>
+                                    <Image Source="Imagenes\flower.png" Width="50" Height="50"/>
                                     <TextBlock Text="Categoria 3" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
                             <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\lily.png" Width="50" Height="50" Margin="0,0,0,10"/>
+                                    <Image Source="Imagenes\lily.png" Width="50" Height="50" Margin="0,0,0,10"/>
                                     <TextBlock Text="Categoria 4" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
                             <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\merchant-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
+                                    <Image Source="Imagenes\merchant-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
                                     <TextBlock Text="Categoria 5" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
@@ -874,7 +873,7 @@
                 BorderThickness="0" 
                 MinWidth="217" 
                 Height="46" 
-                FontFamily="Arial"/>
+                FontFamily="Arial" />
             </StackPanel>
         </Border>
     </Grid>

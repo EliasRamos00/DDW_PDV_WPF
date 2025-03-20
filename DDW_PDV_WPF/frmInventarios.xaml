@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DDW_PDV_WPF"
         mc:Ignorable="d"
-        Title="frmInventarios" Height="720" Width="1050">
+       
+        Title="frmInventarios" >
     <Page.Resources>
         <Style x:Key="RoundedButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#333333"/>
@@ -41,7 +42,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Botón CERRAR SESION -->
-                    <Button Content="CERRAR SESION" 
+                <Button Content="CERRAR SESION" 
                     FontSize="12"
                     HorizontalAlignment="Left" 
                     Padding="10 5" 
@@ -94,7 +95,7 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Column="0" Background="#dedede" Grid.ColumnSpan="2">
+        <Grid Grid.Column="0" Background="#dedede" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition Width="6*"/>
@@ -104,22 +105,27 @@
                 <RowDefinition Height="7*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <Grid  Grid.Column="1">
+            <Grid Grid.ColumnSpan="2" Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="76*"/>
-                    <RowDefinition Height="61*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <TextBlock Text="INVENTARIO" 
                    FontSize="33" 
                    FontWeight="Bold" 
                    Foreground="Black"
                    HorizontalAlignment="Left"
-                   VerticalAlignment="Center" Height="48" Width="209" Margin="-82,0,0,0"/>
-                <TextBox x:Name="txtHora" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Margin="0,0,20,0" VerticalAlignment="Center" IsEnabled="False"
-                 Foreground="#767676" FontWeight="Bold" TextAlignment="Center" Grid.Row="1" />
+                   VerticalAlignment="Top" Height="48" Width="210" Margin="490,0,0,0" Grid.ColumnSpan="2" />
+                <TextBox x:Name="txtHora" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41"  VerticalAlignment="Top" IsEnabled="False" Grid.Column="0"
+                 Foreground="#767676" FontWeight="Bold" TextAlignment="Center" Margin="20,48,20,0" Grid.RowSpan="2"  />
+                <TextBox x:Name="txtFecha" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41"  VerticalAlignment="Top" IsEnabled="False" Grid.Column="1"
+Foreground="#767676" FontWeight="Bold" TextAlignment="Center" Margin="0,48,0,0" Grid.RowSpan="2"  />
             </Grid>
-            <TextBox x:Name="txtFecha" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Margin="10,86,10,0" VerticalAlignment="Top" IsEnabled="False" Grid.Column="0"
-            Foreground="#767676" FontWeight="Bold" TextAlignment="Center" />
+
 
             <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -127,48 +133,148 @@
                     <RowDefinition Height="9*"/>
                 </Grid.RowDefinitions>
                 <TextBox Grid.Row="0" Background="White" MinHeight="40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="580" Margin="10,10,0,0"/>
-                <ScrollViewer Background="#767676" Grid.Row="1" Margin="10,10,0,0" >
+                <ScrollViewer Background="#767676" Grid.Row="1" Margin="10,10,0,0">
+                    <StackPanel>
+
+                        <!-- Producto 1 -->
+                        <Border Background="#F5F5F5"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10"
+                Margin="0,0,0,10"
+                MaxHeight="100">
+                            <StackPanel>
+                                <TextBlock Text="Producto 1" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="xxxxx" Margin="0,2,0,0"/>
+                                <TextBlock Text="3pz" Margin="0,2,0,0"/>
+                                <TextBlock Text="Categoria 1" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Producto 2 -->
+                        <Border Background="#F5F5F5"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10"
+                Margin="0,0,0,10"
+                MaxHeight="100">
+                            <StackPanel>
+                                <TextBlock Text="Producto 2" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="Lorem ipsum" Margin="0,2,0,0"/>
+                                <TextBlock Text="5pz" Margin="0,2,0,0"/>
+                                <TextBlock Text="Categoria 2" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Producto 3 -->
+                        <Border Background="#F5F5F5"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10"
+                Margin="0,0,0,10"
+                MaxHeight="100">
+                            <StackPanel>
+                                <TextBlock Text="Producto 3" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="Descripción corta" Margin="0,2,0,0"/>
+                                <TextBlock Text="2pz" Margin="0,2,0,0"/>
+                                <TextBlock Text="Categoria 3" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Producto 4 -->
+                        <Border Background="#F5F5F5"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10"
+                Margin="0,0,0,10"
+                MaxHeight="100">
+                            <StackPanel>
+                                <TextBlock Text="Producto 4" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="Texto ejemplo" Margin="0,2,0,0"/>
+                                <TextBlock Text="10pz" Margin="0,2,0,0"/>
+                                <TextBlock Text="Categoria 4" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Producto 5 -->
+                        <Border Background="#F5F5F5"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10"
+                Margin="0,0,0,10"
+                MaxHeight="100">
+                            <StackPanel>
+                                <TextBlock Text="Producto 5" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="Info rápida" Margin="0,2,0,0"/>
+                                <TextBlock Text="8pz" Margin="0,2,0,0"/>
+                                <TextBlock Text="Categoria 5" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Producto 6 -->
+                        <Border Background="#F5F5F5"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="10"
+                Margin="0,0,0,10"
+                MaxHeight="100">
+                            <StackPanel>
+                                <TextBlock Text="Producto 6" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="Otra descripción" Margin="0,2,0,0"/>
+                                <TextBlock Text="6pz" Margin="0,2,0,0"/>
+                                <TextBlock Text="Categoria 6" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
                 </ScrollViewer>
+
             </Grid>
 
-            <Grid Grid.Row="1" Grid.Column="1">
+            <Grid Grid.Row="1" Grid.Column="1" Margin="10">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="PRODUCTO 1" 
-                    FontSize="22" 
-                    FontWeight="Bold" 
-                    Foreground="Black" 
-                    Margin="20,0,0,20"
-                    HorizontalAlignment="Left"
-                    Grid.Column="0"
-                    VerticalAlignment="Center"/>
-                <Grid Grid.Row="1">
+               FontSize="22" 
+               FontWeight="Bold" 
+               Foreground="Black" 
+               Margin="10,0,0,10"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"/>
+
+                <Grid Grid.Row="1" Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3.5*"/>
                         <ColumnDefinition Width="6.5*"/>
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0" Background="#ffff" Margin="10,0,10,0" CornerRadius="15">
-                    </Border>
-                    <Border Grid.Column="1" Background="#767676" Margin="10,0,10,0" CornerRadius="15">
-                    </Border>
 
+                    <Border Grid.Column="0" Background="#ffffff" CornerRadius="15" Margin="5">
+                    </Border>
+                    <Border Grid.Column="1" Background="#767676" CornerRadius="15" Margin="5">
+                    </Border>
                 </Grid>
-                <TextBox Grid.Row="2" Background="White" MinHeight="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" MinWidth="580" Margin="10,10,10,0"/>
-                <TextBox Grid.Row="3" Background="White" MinHeight="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" MinWidth="580" Margin="10,10,10,0"/>
-                <TextBox Grid.Row="4" Background="White" MinHeight="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" MinWidth="580" Margin="10,10,10,0"/>
-                <TextBox Grid.Row="5" Background="White" MinHeight="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" MinWidth="580" Margin="10,10,10,0"/>
-                <TextBox Grid.Row="6" Background="White" MinHeight="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" MinWidth="580" Margin="10,10,10,0"/>
-                <TextBox Grid.Row="7" Background="White" MinHeight="40" HorizontalAlignment="Stretch" VerticalAlignment="Center" MinWidth="580" Margin="10,10,10,0"/>
-
+                <TextBox Grid.Row="2" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"/>
+                <TextBox Grid.Row="3" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"/>
+                <TextBox Grid.Row="4" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"/>
+                <TextBox Grid.Row="5" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"/>
+                <TextBox Grid.Row="6" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"/>
+                <TextBox Grid.Row="7" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"/>
             </Grid>
+
             <Grid Grid.Row="2" Grid.Column="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -181,20 +287,20 @@
                    FontSize="12" 
                    FontWeight="Bold" 
                    Foreground="Black" 
-                   Margin="0,0,0,20"
+                   Margin="0,25,10,0"
                    HorizontalAlignment="Right"
                    Grid.Column="1"
-                   VerticalAlignment="Center"/>
+                   VerticalAlignment="Top"/>
 
                 <TextBlock Text="Quitar Producto" 
                    FontSize="12" 
                    FontWeight="Bold" 
                    Foreground="Black" 
-                   Margin="0,0,0,20"
+                   Margin="0,23,24,0"
                    HorizontalAlignment="Right"
                    Grid.Column="4"
-                   VerticalAlignment="Center"/>
-                <Button Grid.Column="0" Content="+" Style="{StaticResource RoundedButtonStyle}" Width="auto" Height="Auto" Grid.ColumnSpan="2" Margin="0,-8,111,14"/>
+                   VerticalAlignment="Top"/>
+                <Button Grid.Column="0" Content="+" Style="{StaticResource RoundedButtonStyle}" Width="auto" Height="Auto" Margin="0,-8,0,14"/>
                 <Button Grid.Column="3" Content="-" Style="{StaticResource RoundedButtonStyle}" Width="auto" Height="Auto" Margin="0,-8,0,14"  />
             </Grid>
         </Grid>

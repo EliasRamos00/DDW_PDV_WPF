@@ -23,6 +23,7 @@ namespace DDW_PDV_WPF
         {
             InitializeComponent();
             MainFrame.Navigate(new frmVentas());
+            MainFrame.UpdateLayout();
         }
 
         private void NavigateToInventarios(object sender, RoutedEventArgs e)
