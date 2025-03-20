@@ -20,7 +20,7 @@ namespace DDW_PDV_WPF
     /// <summary>
     /// Lógica de interacción para frmVentas.xaml
     /// </summary>
-    public partial class frmVentas : Window
+    public partial class frmVentas : Page
     {
         private DispatcherTimer _timer;
         public frmVentas()

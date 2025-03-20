@@ -19,7 +19,7 @@ namespace DDW_PDV_WPF
    
 
    
-    public partial class frmInventarios : Window
+    public partial class frmInventarios : Page
     {
         private DispatcherTimer _timer;
 
@@ -54,6 +54,21 @@ namespace DDW_PDV_WPF
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
         {
 
         }
