@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDW_PDV_WPF.Controlador;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,21 +15,59 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using DDW_PDV_WPF.Modelo;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Threading;
 
 namespace DDW_PDV_WPF
 {
+
+
     /// <summary>
     /// Lógica de interacción para frmVentas.xaml
     /// </summary>
-    public partial class frmVentas : Page
+    public partial class frmVentas : Page, INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private DispatcherTimer _timer;
+        private readonly ApiService _apiService;
+        private ObservableCollection<ArticuloDTO> _listaArticulos;
+        
+        
+        public ObservableCollection<ArticuloDTO> ListaArticulos
+        {
+            get { return _listaArticulos; }
+            set
+            {
+                _listaArticulos = value;
+                OnPropertyChanged(nameof(ListaArticulos)); // ✅ Esto es correcto
+            }
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public frmVentas()
         {
             InitializeComponent();
+            time();
+            // Inicializar ApiService
+            _apiService = new ApiService();
+            CargarDatos();
+            DataContext = this;
+            
 
+        }
+
+        public void time ()
+        {
             _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1); // Actualizar cada segundo
+            _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += Timer_Tick;
             _timer.Start();
 
@@ -51,7 +90,18 @@ namespace DDW_PDV_WPF
             txtFecha.Text = now.ToString("dddd, dd 'de' MMMM 'de' yyyy", new CultureInfo("es-MX"));
 
             // Formatear la hora con minutos y segundos
-            txtHora.Text = now.ToString("HH:mm:ss", new CultureInfo("es-MX")); 
+            txtHora.Text = now.ToString("HH:mm:ss", new CultureInfo("es-MX"));
+        }
+
+
+        private async void CargarDatos()
+        {
+            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/");
+
+            if (resultado != null)
+            {
+                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado); // ✅ Asigna los datos a la propiedad
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

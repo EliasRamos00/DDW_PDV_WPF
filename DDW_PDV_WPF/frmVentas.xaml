@@ -245,32 +245,37 @@
                     </ScrollViewer>
                     <TextBox Background="White" Grid.Row="2" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="580" Margin="0,10,0,10"/>
                 </Grid>
+                
+            
+
+                <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding ListaArticulos}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel ItemWidth="150" ItemHeight="150" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Height="150" Width="150" Margin="5" Background="LightGray">
+                                        <!-- Imagen -->
+                                        <Button.Content>
+                                            <StackPanel>
+                                                <Image Height="100" Width="100" Source="{Binding Foto}" Stretch="UniformToFill"/>
+                                                <TextBlock Text="{Binding Descripcion}" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
 
 
 
-                <ScrollViewer VerticalScrollBarVisibility="Hidden" Margin="10,10,10,10" Grid.Row="1" Grid.ColumnSpan="2">
-
-                    <ScrollViewer.Resources>
-                        <Style TargetType="ScrollViewer" BasedOn="{StaticResource MaterialDesignScrollViewer}">
-                            <Setter Property="md:ScrollViewerAssist.IsAutoHideEnabled" Value="True" />
-                        </Style>
-                    </ScrollViewer.Resources>
-                    <UniformGrid>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                        <Button Template="{DynamicResource btnProducto}" Height="158" Width="138" Margin="5"/>
-                    </UniformGrid>
-                </ScrollViewer>
 
 
             </Grid>
@@ -405,7 +410,7 @@
 
                                 <!-- Imagen del producto -->
                                 <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+                        Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
                                 <!-- Nombre, categoría y número adicional -->
                                 <StackPanel Grid.Column="1">
@@ -437,7 +442,7 @@
 
                                 <!-- Imagen del producto -->
                                 <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
                                 <!-- Nombre, categoría y número adicional -->
                                 <StackPanel Grid.Column="1">
@@ -469,7 +474,7 @@
 
                                 <!-- Imagen del producto -->
                                 <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
                                 <!-- Nombre, categoría y número adicional -->
                                 <StackPanel Grid.Column="1">
@@ -490,262 +495,10 @@
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
 
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
 
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
 
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
                         <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -789,7 +542,7 @@
 
                                 <!-- Imagen del producto -->
                                 <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
                                 <!-- Nombre, categoría y número adicional -->
                                 <StackPanel Grid.Column="1">
@@ -821,7 +574,7 @@
 
                                 <!-- Imagen del producto -->
                                 <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
                                 <!-- Nombre, categoría y número adicional -->
                                 <StackPanel Grid.Column="1">
@@ -842,7 +595,6 @@
                                 </StackPanel>
                             </Grid>
                         </Border>
-
 
                         <!-- Repite más Borders con el mismo contenido si es necesario -->
                         <!-- ... -->
