@@ -36,15 +36,25 @@ namespace DDW_PDV_WPF.Controlador
                 return default;
             }
 
-            public async Task<bool> PostAsync<T>(string endpoint, T data)
-            {
-                string jsonData = JsonConvert.SerializeObject(data);
-                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        public async Task<bool> PostAsync<T>(string endpoint, T data)
+        {
+            string jsonData = JsonConvert.SerializeObject(data);
+            HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await _httpClient.PostAsync(endpoint, content);
-                return response.IsSuccessStatusCode;
-            }
+            HttpResponseMessage response = await _httpClient.PostAsync(endpoint, content);
+
+            return response.IsSuccessStatusCode;  // Devuelve true si la respuesta es exitosa (status code 2xx)
         }
 
-    
+        public async Task<bool> DeleteAsync(string endpoint)
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync(endpoint);
+                return response.IsSuccessStatusCode;
+            }
+
+
+
+    }
+
+
 }
