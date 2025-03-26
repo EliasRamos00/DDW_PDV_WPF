@@ -7,8 +7,6 @@
       mc:Ignorable="d"
       Title="frmInventarios">
 
-    <Page.Resources>
-    </Page.Resources>
 
     <Grid>
         <!-- Panel principal -->
@@ -88,11 +86,11 @@
                 <ScrollViewer Background="#767676" Grid.Row="1" Margin="10,10,0,0">
                     <Grid Grid.Row="1" Grid.ColumnSpan="2">
                         <ListBox x:Name="lstProductos" 
-         ItemsSource="{Binding ListaArticulos}" 
-         SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}"
-         Background="#dedede"
-         BorderThickness="0"
-         ScrollViewer.VerticalScrollBarVisibility="Auto">
+ ItemsSource="{Binding ListaArticulos}" 
+ SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}"
+ Background="#dedede"
+ BorderThickness="0"
+ ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
@@ -101,47 +99,33 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="#dedede"
-                                    Width="250"
-                                    MaxHeight="180"
-                                    Margin="0"         
-                                    Padding="0">
+               
+                Width="250"
+                MaxHeight="180"
+                Margin="0"         
+                Padding="0">
                                         <StackPanel Margin="0">
-                                            <TextBlock Text="Imagen:" />
-                                            <Button Content="Seleccionar Imagen" Click="SeleccionarImagen_Click" />
-                                            <Image x:Name="imgP" Width="150" Height="150"/>
                                             <!-- Descripción -->
                                             <TextBlock Text="{Binding Descripcion}" 
-                               FontWeight="Bold" 
-                               FontSize="13" 
-                               TextWrapping="Wrap"
-                               Margin="0"/>
+                       FontWeight="Bold" 
+                       FontSize="13" 
+                       TextWrapping="Wrap"
+                       Margin="0"/>
+                                            <!-- TextBlocks sin margen -->
                                             <!-- Color -->
                                             <TextBlock Text="{Binding Color}" 
-                               FontSize="12" 
-                               Margin="0"/>
+                       FontSize="12" 
+                       Margin="0"/>
                                             <!-- Categoría -->
                                             <TextBlock Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" 
-                               FontSize="11" 
-                               Margin="0"/>
-                                            <!-- Stock -->
-                                            <TextBlock Text="{Binding Stock, StringFormat='Stock: {0}'}" 
-                               FontSize="11" 
-                               Margin="0"
-                               FontWeight="Bold"/>
-                                            <!-- Precio Venta -->
-                                            <TextBlock Text="{Binding PrecioVenta, StringFormat='Precio Venta: {0}'}" 
-                               FontSize="11" 
-                               Margin="0"
-                               FontWeight="Bold"/>
-                                            <!-- ID -->
-                                            <TextBlock Text="{Binding IdArticulo, StringFormat='ID: {0}'}" 
-                               FontSize="11" 
-                               Margin="0"/>
+                       FontSize="11" 
+                       Margin="0"/>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+
                     </Grid>
                 </ScrollViewer>
             </Grid>
@@ -164,8 +148,9 @@
                Margin="10,0,0,10"
                HorizontalAlignment="Left"
                VerticalAlignment="Center"/>
+                
 
-    <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid Grid.Row="1" Margin="0,0,0,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3.5*"/>
             <ColumnDefinition Width="6.5*"/>
@@ -233,7 +218,7 @@
                    Foreground="#767676"
                    HorizontalAlignment="Center"/>
 
-                    <Popup x:Name="AgregarPopup" IsOpen="False" Placement="Center" StaysOpen="False">
+                    <Popup x:Name="AgregarPopup" IsOpen="False" Placement="Center" StaysOpen="True">
                         <Border BorderBrush="Black" BorderThickness="1" Background="White" Width="400" Height="300">
                             <StackPanel Margin="10">
                                 <Grid>
@@ -273,13 +258,16 @@
                                 </Grid>
 
                                 <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Foto:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Foto}" Margin="5"/>
-                                </Grid>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="120"/>
+        <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <TextBlock Text="Foto:" VerticalAlignment="Center"/>
+    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+        <Button Name="BtnSeleccionarImagen" Content="Seleccionar Imagen" Click="BtnSeleccionarImagen_Click" Width="120" Margin="5"/>
+        <TextBox Name="TxtImagenRuta" Text="{Binding ArticuloSeleccionado.Foto}" IsReadOnly="True" Margin="5"/>
+    </StackPanel>
+</Grid>
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
