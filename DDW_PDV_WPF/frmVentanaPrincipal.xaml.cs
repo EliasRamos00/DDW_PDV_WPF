@@ -40,6 +40,10 @@ namespace DDW_PDV_WPF
         {
             MainFrame.Navigate(new frmVentas(Usuario));
         }
+        private void NavigateToReportes(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new frmReportes());
+        }
 
         private void NavigateHistorial(object sender, RoutedEventArgs e)
         {
@@ -226,6 +230,42 @@ namespace DDW_PDV_WPF
             }
 
         }
+
+        private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)
+        {
+
+            var result = System.Windows.MessageBox.Show("¿Está seguro que desea cerrar sesión?",
+                               "Confirmar cierre de sesión",
+                               MessageBoxButton.YesNo,
+                               MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                this.IsEnabled = false;
+
+                try
+                {
+                    frmLogin loginWindow = new frmLogin();
+                    loginWindow.Show();
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show($"Error al cerrar sesión: {ex.Message}",
+                                  "Error",
+                                  MessageBoxButton.OK,
+                                  MessageBoxImage.Error);
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                    this.IsEnabled = true;
+                }
+            }
+        }
+
+       
 
     }
 }

@@ -159,6 +159,7 @@
     <None Include="Resources\f2.webp" />
     <None Include="Resources\f3.webp" />
     <None Include="Resources\f4.webp" />
+    <None Include="Resources\icon.webp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\flowers.png" />
+    <Resource Include="flower.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />

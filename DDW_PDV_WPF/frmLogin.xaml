@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DDW_PDV_WPF"
         mc:Ignorable="d"
+        Icon="/flower.png"
         Title="Iniciar Sesión" Height="450" Width="300"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="White" WindowStyle="None">
     <Grid Margin="20">

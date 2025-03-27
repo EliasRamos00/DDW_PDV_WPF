@@ -5,36 +5,37 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DDW_PDV_WPF.Controlador
 {
     class ApiService
     {
-        
-            private readonly HttpClient _httpClient;
 
-            public ApiService()
-            {
+        private readonly HttpClient _httpClient;
+
+        public ApiService()
+        {
             string apiUrl = Environment.GetEnvironmentVariable("API_OMEGA");
 
             _httpClient = new HttpClient
-                {
-                    BaseAddress = new Uri(apiUrl) // Reemplaza con la URL real
-                };
-            }
-
-            public async Task<T> GetAsync<T>(string endpoint)
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(endpoint);
+                BaseAddress = new Uri(apiUrl) // Reemplaza con la URL real
+            };
+        }
 
-                if (response.IsSuccessStatusCode)
-                {
-                    string jsonResponse = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<T>(jsonResponse);
-                }
+        public async Task<T> GetAsync<T>(string endpoint)
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync(endpoint);
 
-                return default;
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(jsonResponse);
             }
+
+            return default;
+        }
 
         public async Task<bool> PostAsync<T>(string endpoint, T data)
         {
@@ -47,10 +48,29 @@ namespace DDW_PDV_WPF.Controlador
         }
 
         public async Task<bool> DeleteAsync(string endpoint)
+        {
+            HttpResponseMessage response = await _httpClient.DeleteAsync(endpoint);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> PutAsync(string url, object data)
+        {
+            try
             {
-                HttpResponseMessage response = await _httpClient.DeleteAsync(endpoint);
+                var json = JsonConvert.SerializeObject(data);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync(url, content);
                 return response.IsSuccessStatusCode;
             }
+            catch (Exception ex)
+            {
+                // Manejo de error
+                MessageBox.Show($"Error al actualizar el artículo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+        }
+
 
 
 
