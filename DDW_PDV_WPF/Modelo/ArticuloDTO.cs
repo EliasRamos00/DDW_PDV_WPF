@@ -15,5 +15,10 @@ namespace DDW_PDV_WPF.Modelo
         public string Tamanio { get; set; }
         public string CodigoBarras { get; set; }
         public int IdCategoria { get; set; }
+        public int Stock { get; set; }
+        public int StockMinimo { get; set; }
+        public int StockMaximo { get; set; }
+        public decimal PrecioVenta { get; set; }
+        public decimal PrecioCompra { get; set; }
     }
 }

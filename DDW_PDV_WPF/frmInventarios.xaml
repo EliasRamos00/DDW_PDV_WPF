@@ -6,10 +6,31 @@
       xmlns:local="clr-namespace:DDW_PDV_WPF"
       mc:Ignorable="d"
       Title="frmInventarios">
-
-
+    <Page.Resources>
+        <Style TargetType="ListBoxItem">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#f0f0f0"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#d0d0d0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DetailTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="MinHeight" Value="35"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <local:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    </Page.Resources>
     <Grid>
-        <!-- Panel principal -->
         <Grid Grid.Column="0" Background="#dedede" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*"/>
@@ -20,8 +41,6 @@
                 <RowDefinition Height="7*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-
-            <!-- Encabezado -->
             <Grid Grid.ColumnSpan="2" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -42,7 +61,6 @@
                            Grid.ColumnSpan="2"/>
 
                 <TextBox x:Name="txtHora"
-                         Style="{DynamicResource txtFecha}"
                          Background="#f7f7f7"
                          Height="41"
                          VerticalAlignment="Top"
@@ -55,7 +73,6 @@
                          Grid.RowSpan="2"/>
 
                 <TextBox x:Name="txtFecha"
-                         Style="{DynamicResource txtFecha}"
                          Background="#f7f7f7"
                          Height="41"
                          VerticalAlignment="Top"
@@ -67,124 +84,214 @@
                          Margin="0,48,0,0"
                          Grid.RowSpan="2"/>
             </Grid>
-
-            <!-- Lista de productos -->
             <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="9*"/>
                 </Grid.RowDefinitions>
+                <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="10,10,0,0">
 
-                <TextBox Grid.Row="0"
-                         Background="White"
-                         MinHeight="40"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Center"
-                         Width="580"
-                         Margin="10,10,0,0"/>
-
-                <ScrollViewer Background="#767676" Grid.Row="1" Margin="10,10,0,0">
-                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                        <ListBox x:Name="lstProductos" 
- ItemsSource="{Binding ListaArticulos}" 
- SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}"
- Background="#dedede"
- BorderThickness="0"
- ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="#dedede"
-               
-                Width="250"
-                MaxHeight="180"
-                Margin="0"         
-                Padding="0">
-                                        <StackPanel Margin="0">
-                                            <!-- Descripción -->
-                                            <TextBlock Text="{Binding Descripcion}" 
-                       FontWeight="Bold" 
-                       FontSize="13" 
-                       TextWrapping="Wrap"
-                       Margin="0"/>
-                                            <!-- TextBlocks sin margen -->
-                                            <!-- Color -->
-                                            <TextBlock Text="{Binding Color}" 
-                       FontSize="12" 
-                       Margin="0"/>
-                                            <!-- Categoría -->
-                                            <TextBlock Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" 
-                       FontSize="11" 
-                       Margin="0"/>
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-
+                    <Grid>
+                        <Border BorderBrush="#FFABAdB3" BorderThickness="1" 
+            Background="White" CornerRadius="3"
+            Width="580" Height="40">
+                            <TextBox x:Name="txtBusqueda"
+                Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
+                Background="Transparent"
+                BorderThickness="0"
+                Padding="10"
+                FontSize="14"
+                VerticalAlignment="Center"
+                Foreground="Black"/>
+                        </Border>
                     </Grid>
+
+
+                    <TextBlock Text="Buscar artículos..."
+               Foreground="Gray"
+               FontStyle="Italic"
+               FontSize="14"
+               Padding="15,0,0,0"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Left"
+               Visibility="{Binding TextoBusqueda, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=inverse}"/>
+
+                      
+                        <Button x:Name="btnClearSearch"
+            Content="✕"
+            FontSize="12"
+            Foreground="Gray"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="0"
+            Width="20"
+            Height="20"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Margin="0,0,10,0"
+            Command="{Binding LimpiarBusquedaCommand}"
+            Visibility="{Binding TextoBusqueda, Converter={StaticResource StringToVisibilityConverter}}"/>
+                </Grid>
+
+
+
+                <ScrollViewer Grid.Row="1" 
+              Margin="10,10,0,0"
+              VerticalScrollBarVisibility="Auto"
+              CanContentScroll="False">
+                    <ListBox x:Name="lstProductos"
+             ItemsSource="{Binding ListaArticulos}"
+             SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}"
+             Background="Transparent"
+             BorderThickness="0"
+             Padding="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             ScrollViewer.CanContentScroll="False">
+
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <!-- Template con borde delgado -->
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,2" 
+                        BorderBrush="#9E9E9E" 
+                                    BorderThickness="0,0,0,1"
+                                  
+                                    Padding="5">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Descripcion}" 
+                                 FontWeight="Bold" 
+                                 FontSize="13"
+                                 TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Color}" FontSize="12"/>
+                                        <TextBlock Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" 
+                                 FontSize="11"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                        <!-- Estilo para la selección -->
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#E3F2FD"/>
+                                     
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
                 </ScrollViewer>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1" Margin="10" DataContext="{Binding ArticuloSeleccionado}">
-                <Grid.RowDefinitions>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="2*"/>   
+        <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="Auto"/> 
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <!-- Nombre del producto -->
-                <TextBlock Text="{Binding Descripcion}" 
-               FontSize="22"
-               FontWeight="Bold"
-               Foreground="Black"
-               Margin="10,0,0,10"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Center"/>
-                
+                    <RowDefinition Height="Auto"/> 
+        <RowDefinition Height="Auto"/> 
+    </Grid.RowDefinitions>
 
-                <Grid Grid.Row="1" Margin="0,0,0,10">
+    <StackPanel Grid.Row="0" Orientation="Horizontal">
+        <TextBlock Text="{Binding idArticulo, StringFormat='ID: {0}'}"
+                   FontSize="14"
+                   Foreground="#555555"
+                   Margin="10,0,0,0"
+                   VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding Descripcion}" 
+                   FontSize="22"
+                   FontWeight="Bold"
+                   Foreground="Black"
+                   Margin="10,0,0,10"
+                   VerticalAlignment="Center"/>
+    </StackPanel>
+
+    <Grid Grid.Row="1" Margin="0,0,0,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3.5*"/>
             <ColumnDefinition Width="6.5*"/>
         </Grid.ColumnDefinitions>
+        
 
-        <!-- Imagen del producto -->
-                    <Border Grid.Column="0" Background="#ffffff" CornerRadius="15" Margin="5" MaxHeight="250">
-                        <Image Source="{Binding Foto}" Stretch="Uniform" />
-                    </Border>
-
-                    <!-- Descripción adicional o detalles -->
-        <Border Grid.Column="1" Background="#767676" CornerRadius="15" Margin="5" MaxHeight="250"/>
+        <Border Grid.Column="0" Background="#ffffff" CornerRadius="15" Margin="5" MaxHeight="250">
+            <Image Source="{Binding Foto}" Stretch="Uniform" />
+        </Border>
+        
+  
+        <Border Grid.Column="1" Background="#767676" CornerRadius="15" Margin="5" MaxHeight="250">
+ 
+        </Border>
     </Grid>
 
-                <!-- Descripción -->
-                <TextBox Grid.Row="2" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"
-         Text="{Binding Descripcion, UpdateSourceTrigger=PropertyChanged, StringFormat='Descripción: {0}'}" 
-         FontSize="14" Foreground="#333333" Padding="5"/>
+    <TextBox Grid.Row="2" Text="{Binding Descripcion, StringFormat='Descripción: {0}'}" 
+             Style="{StaticResource DetailTextBoxStyle}"/>
+    
+    <TextBox Grid.Row="3" Text="{Binding Color, StringFormat='Color: {0}'}" 
+             Style="{StaticResource DetailTextBoxStyle}"/>
+    
+    <TextBox Grid.Row="4" Text="{Binding Tamanio, StringFormat='Tamaño: {0}'}" 
+             Style="{StaticResource DetailTextBoxStyle}"/>
+    
+    <TextBox Grid.Row="5" Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" 
+             Style="{StaticResource DetailTextBoxStyle}"/>
 
-                <!-- Color -->
-                <TextBox Grid.Row="3" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"
-         Text="{Binding Color, UpdateSourceTrigger=PropertyChanged, StringFormat='Color: {0}'}" 
-         FontSize="14" Foreground="#333333" Padding="5"/>
-
-                <!-- Tamaño -->
-                <TextBox Grid.Row="4" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"
-         Text="{Binding Tamanio, UpdateSourceTrigger=PropertyChanged, StringFormat='Tamaño: {0}'}" 
-         FontSize="14" Foreground="#333333" Padding="5"/>
-
-                <!-- Categoría -->
-                <TextBox Grid.Row="5" Background="White" MinHeight="35" Margin="0,5" HorizontalAlignment="Stretch"
-         Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" FontSize="14" Foreground="#333333" Padding="5"/>
-
-            </Grid>
+    <!-- Nuevos campos añadidos (con el mismo estilo) -->
+    <Grid Grid.Row="6">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.Column="0" Text="{Binding Stock, StringFormat='Stock: {0}'}" 
+                 Style="{StaticResource DetailTextBoxStyle}" Margin="0,5,5,5"/>
+        <TextBox Grid.Column="1" Text="{Binding StockMinimo, StringFormat='Mínimo: {0}'}" 
+                 Style="{StaticResource DetailTextBoxStyle}" Margin="5,5,0,5"/>
+    </Grid>
+    
+    <Grid Grid.Row="7">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.Column="0" Text="{Binding StockMaximo, StringFormat='Máximo: {0}'}" 
+                 Style="{StaticResource DetailTextBoxStyle}" Margin="0,0,5,5"/>
+        <TextBox Grid.Column="1" Text="{Binding CodigoBarras, StringFormat='Código: {0}'}" 
+                 Style="{StaticResource DetailTextBoxStyle}" Margin="5,0,0,5"/>
+    </Grid>
+    
+    <Grid Grid.Row="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.Column="0" Text="{Binding PrecioVenta, StringFormat='P. Venta: {0:C}'}" 
+                 Style="{StaticResource DetailTextBoxStyle}" Margin="0,0,5,5"/>
+        <TextBox Grid.Column="1" Text="{Binding PrecioCompra, StringFormat='P. Compra: {0:C}'}" 
+                 Style="{StaticResource DetailTextBoxStyle}" Margin="5,0,0,5"/>
+    </Grid>
+</Grid>
 
 
             <Grid Grid.Row="2" Grid.Column="0" Margin="0,10,0,0">
@@ -217,76 +324,129 @@
                    FontSize="13"
                    Foreground="#767676"
                    HorizontalAlignment="Center"/>
-
                     <Popup x:Name="AgregarPopup" IsOpen="False" Placement="Center" StaysOpen="True">
-                        <Border BorderBrush="Black" BorderThickness="1" Background="White" Width="400" Height="300">
-                            <StackPanel Margin="10">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Descripción:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Descripcion}" Margin="5"/>
-                                </Grid>
+                        <Border BorderBrush="Black" BorderThickness="1" Background="White" Width="450" Height="500">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel Margin="10">
+                                    <!-- Campos originales -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                    </Grid>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Color:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Color}" Margin="5"/>
-                                </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Descripción:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Descripcion}" Margin="5"/>
+                                    </Grid>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Tamaño:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Tamanio}" Margin="5"/>
-                                </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Color:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Color}" Margin="5"/>
+                                    </Grid>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Código Barras:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.CodigoBarras}" Margin="5"/>
-                                </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Tamaño:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Tamanio}" Margin="5"/>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Stock Actual:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Stock}" Margin="5"/>
+                                    </Grid>
 
-                                <Grid>
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="120"/>
-        <ColumnDefinition Width="*"/>
-    </Grid.ColumnDefinitions>
-    <TextBlock Text="Foto:" VerticalAlignment="Center"/>
-    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
-        <Button Name="BtnSeleccionarImagen" Content="Seleccionar Imagen" Click="BtnSeleccionarImagen_Click" Width="120" Margin="5"/>
-        <TextBox Name="TxtImagenRuta" Text="{Binding ArticuloSeleccionado.Foto}" IsReadOnly="True" Margin="5"/>
-    </StackPanel>
-</Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Stock Mínimo:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.StockMinimo}" Margin="5"/>
+                                    </Grid>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Categoría:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.IdCategoria}" Margin="5"/>
-                                </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Stock Máximo:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.StockMaximo}" Margin="5"/>
+                                    </Grid>
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
-                                    <Button Content="Guardar" Click="BotonGuardarPopup" Width="80" Margin="5"/>
-                                    <Button Content="Cancelar" Click="BotonCancelarPopup" Width="80" Margin="5"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Precio Venta:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.PrecioVenta}" Margin="5"/>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Precio Compra:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.PrecioCompra}" Margin="5"/>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Código Barras:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.CodigoBarras}" Margin="5"/>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Categoría:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.IdCategoria}" Margin="5"/>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Foto:" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+                                            <Button Name="BtnSeleccionarImagen" Content="Seleccionar Imagen" Click="BtnSeleccionarImagen_Click" Width="120" Margin="5"/>
+                                            <TextBox Name="TxtImagenRuta" Text="{Binding ArticuloSeleccionado.Foto}" IsReadOnly="True" Margin="5"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+                                        <Button Content="Guardar" Click="BotonGuardarPopup" Width="80" Margin="5"/>
+                                        <Button Content="Cancelar" Click="BotonCancelarPopup" Width="80" Margin="5"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
+                            </ScrollViewer>
                         </Border>
                     </Popup>
                 </Grid>
-                
+
 
                 <!-- Quitar Producto -->
                 <Grid Grid.Column="2">
@@ -313,8 +473,6 @@
                    HorizontalAlignment="Center"/>
                 </Grid>
             </Grid>
-
-
         </Grid>
     </Grid>
 </Page>

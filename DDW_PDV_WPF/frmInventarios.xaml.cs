@@ -19,7 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using System.IO;
-using System.Windows.Media.Imaging;
+
 
 namespace DDW_PDV_WPF
 {
@@ -33,6 +33,9 @@ namespace DDW_PDV_WPF
         private readonly ApiService _apiService;
         private ObservableCollection<ArticuloDTO> _listaArticulos;
         private ArticuloDTO _articuloSeleccionado;
+   
+        private string _textoBusqueda;
+    
 
         public ObservableCollection<ArticuloDTO> ListaArticulos
         {
@@ -59,8 +62,48 @@ namespace DDW_PDV_WPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public string TextoBusqueda
+        {
+            get => _textoBusqueda;
+            set
+            {
+                _textoBusqueda = value;
+                OnPropertyChanged(nameof(TextoBusqueda));
+                FiltrarArticulos(); // Filtrado automático al escribir
+            }
+        }
+
+
+        private ObservableCollection<ArticuloDTO> _todosLosArticulos; 
+        public ICommand LimpiarBusquedaCommand => new RelayCommand(LimpiarBusqueda);
+
+        private void LimpiarBusqueda()
+        {
+            TextoBusqueda = string.Empty;
+        }
+
+        public class RelayCommand : ICommand
+        {
+            private readonly Action _execute;
+            private readonly Func<bool> _canExecute;
+
+            public RelayCommand(Action execute, Func<bool> canExecute = null)
+            {
+                _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+                _canExecute = canExecute;
+            }
+
+            public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
+            public void Execute(object parameter) => _execute();
+            public event EventHandler CanExecuteChanged
+            {
+                add => CommandManager.RequerySuggested += value;
+                remove => CommandManager.RequerySuggested -= value;
+            }
+        }
         public frmInventarios()
         {
+            DataContext = this;
             InitializeComponent();
 
             _timer = new DispatcherTimer();
@@ -73,7 +116,6 @@ namespace DDW_PDV_WPF
             CargarDatos();
             DataContext = this;
 
-            // Actualizar la fecha y hora al iniciar
             UpdateDateTime();
         }
 
@@ -81,19 +123,21 @@ namespace DDW_PDV_WPF
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            // Actualizar la fecha y hora en cada tick del timer
             UpdateDateTime();
         }
 
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool isEmpty = string.IsNullOrEmpty(value as string);
+            if (parameter?.ToString() == "inverse") return isEmpty ? Visibility.Visible : Visibility.Collapsed;
+            return isEmpty ? Visibility.Collapsed : Visibility.Visible;
+        }
         private void UpdateDateTime()
         {
-            // Obtener la fecha y hora actual
             DateTime now = DateTime.Now;
 
-            // Formatear la fecha
             txtFecha.Text = now.ToString("dddd, dd 'de' MMMM 'de' yyyy", new CultureInfo("es-MX"));
 
-            // Formatear la hora con minutos y segundos
             txtHora.Text = now.ToString("HH:mm:ss", new CultureInfo("es-MX"));
         }
 
@@ -103,9 +147,34 @@ namespace DDW_PDV_WPF
 
             if (resultado != null)
             {
-                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado); // Asigna los datos a la propiedad
+                _todosLosArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
             }
         }
+
+        private void FiltrarArticulos()
+        {
+            if (_todosLosArticulos == null) return;
+
+            if (string.IsNullOrWhiteSpace(TextoBusqueda))
+            {
+                ListaArticulos = new ObservableCollection<ArticuloDTO>(_todosLosArticulos);
+            }
+            else
+            {
+                var texto = TextoBusqueda.ToLower();
+                var resultados = _todosLosArticulos
+                    .Where(a => (a.Descripcion != null && a.Descripcion.ToLower().Contains(texto)) ||
+                               (a.IdCategoria.ToString().Contains(texto)) ||
+                               (a.idArticulo.ToString().Contains(texto)) ||
+                               (a.Color != null && a.Color.ToLower().Contains(texto)))
+                    .ToList();
+
+                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultados);
+            }
+        }
+
+
 
         private void BotonAgregar(object sender, RoutedEventArgs e)
         {
@@ -151,35 +220,31 @@ namespace DDW_PDV_WPF
                 return;
             }
 
-
             if (string.IsNullOrEmpty(ArticuloSeleccionado.Foto))
             {
                 MessageBox.Show("Debe seleccionar una imagen.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
+            if (ArticuloSeleccionado.PrecioVenta <= 0)
+            {
+                MessageBox.Show("El Precio de Venta debe ser mayor a 0.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             var resultado = await _apiService.PostAsync("api/CArticulos/", ArticuloSeleccionado);
 
-            if (resultado)  
+            if (resultado)
             {
-
                 ListaArticulos.Add(ArticuloSeleccionado);
                 MessageBox.Show("Artículo agregado exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-
-
                 AgregarPopup.IsOpen = false;
             }
             else
             {
-
                 MessageBox.Show("Error al guardar el artículo.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-
-
-
 
 
         private void BotonCancelarPopup(object sender, RoutedEventArgs e)
@@ -190,44 +255,37 @@ namespace DDW_PDV_WPF
 
         private void BtnSeleccionarImagen_Click(object sender, RoutedEventArgs e)
         {
-
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Imágenes|*.jpg;*.jpeg;*.png;*.gif"; 
-
+            openFileDialog.Filter = "Imágenes|*.jpg;*.jpeg;*.png;*.gif";
 
             if (openFileDialog.ShowDialog() == true)
             {
-                string imagenSeleccionada = openFileDialog.FileName;
-
-
-                string destinoCarpeta = System.IO.Path.Combine(Directory.GetCurrentDirectory(),"Imagenes");
-
-
-                if (!Directory.Exists(destinoCarpeta))
-                {
-                    Directory.CreateDirectory(destinoCarpeta);
-                }
-
-
-                string nombreImagen =    System.IO.Path.GetFileName(imagenSeleccionada);
-                string rutaDestino = System.IO.Path.Combine(destinoCarpeta, nombreImagen);
-
                 try
                 {
-                    File.Copy(imagenSeleccionada, rutaDestino, true); 
+                    string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                    string resourcesDir = System.IO.Path.Combine(appDir, "Resources");
 
-                    TxtImagenRuta.Text = System.IO.Path.Combine("Imagenes", nombreImagen);
-                    ArticuloSeleccionado.Foto = rutaDestino;
+                    if (!Directory.Exists(resourcesDir))
+                        Directory.CreateDirectory(resourcesDir);
+
+                    string extension = System.IO.Path.GetExtension(openFileDialog.FileName);
+                    string nombreImagen = $"art_{DateTime.Now:yyyyMMddHHmmss}{extension}";
+                    string rutaDestino = System.IO.Path.Combine(resourcesDir, nombreImagen);
+
+                    File.Copy(openFileDialog.FileName, rutaDestino, true);
+
+                    TxtImagenRuta.Text = nombreImagen;
+                    ArticuloSeleccionado.Foto = nombreImagen;
+
+                    OnPropertyChanged(nameof(ArticuloSeleccionado));
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al guardar la imagen: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error al guardar la imagen: {ex.Message}", "Error",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
-
-
-
 
     }
 }
