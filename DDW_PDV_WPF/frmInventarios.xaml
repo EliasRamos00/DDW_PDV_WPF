@@ -246,52 +246,52 @@
         </Border>
     </Grid>
 
-    <TextBox Grid.Row="2" Text="{Binding Descripcion, StringFormat='Descripción: {0}'}" 
-             Style="{StaticResource DetailTextBoxStyle}"/>
+            <TextBox Grid.Row="2" Text="{Binding Descripcion, StringFormat='Descripción: {0}'}" 
+                     Style="{StaticResource DetailTextBoxStyle}"/>
     
-    <TextBox Grid.Row="3" Text="{Binding Color, StringFormat='Color: {0}'}" 
-             Style="{StaticResource DetailTextBoxStyle}"/>
+            <TextBox Grid.Row="3" Text="{Binding Color, StringFormat='Color: {0}'}" 
+                     Style="{StaticResource DetailTextBoxStyle}"/>
     
-    <TextBox Grid.Row="4" Text="{Binding Tamanio, StringFormat='Tamaño: {0}'}" 
-             Style="{StaticResource DetailTextBoxStyle}"/>
+            <TextBox Grid.Row="4" Text="{Binding Tamanio, StringFormat='Tamaño: {0}'}" 
+                     Style="{StaticResource DetailTextBoxStyle}"/>
     
-    <TextBox Grid.Row="5" Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" 
+            <TextBox Grid.Row="5" Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" 
              Style="{StaticResource DetailTextBoxStyle}"/>
 
     <!-- Nuevos campos añadidos (con el mismo estilo) -->
-    <Grid Grid.Row="6">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Text="{Binding Stock, StringFormat='Stock: {0}'}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="0,5,5,5"/>
-        <TextBox Grid.Column="1" Text="{Binding StockMinimo, StringFormat='Mínimo: {0}'}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="5,5,0,5"/>
-    </Grid>
+                <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding Stock, StringFormat='Stock: {0}'}" 
+                             Style="{StaticResource DetailTextBoxStyle}" Margin="0,5,5,5"/>
+                    <TextBox Grid.Column="1" Text="{Binding Min, StringFormat='Mínimo: {0}'}" 
+                             Style="{StaticResource DetailTextBoxStyle}" Margin="5,5,0,5"/>
+                </Grid>
     
-    <Grid Grid.Row="7">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Text="{Binding StockMaximo, StringFormat='Máximo: {0}'}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="0,0,5,5"/>
-        <TextBox Grid.Column="1" Text="{Binding CodigoBarras, StringFormat='Código: {0}'}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="5,0,0,5"/>
-    </Grid>
+                <Grid Grid.Row="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding Max, StringFormat='Máximo: {0}'}" 
+                             Style="{StaticResource DetailTextBoxStyle}" Margin="0,0,5,5"/>
+                    <TextBox Grid.Column="1" Text="{Binding CodigoBarras, StringFormat='Código: {0}'}" 
+                             Style="{StaticResource DetailTextBoxStyle}" Margin="5,0,0,5"/>
+                </Grid>
     
-    <Grid Grid.Row="8">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Text="{Binding PrecioVenta, StringFormat='P. Venta: {0:C}'}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="0,0,5,5"/>
-        <TextBox Grid.Column="1" Text="{Binding PrecioCompra, StringFormat='P. Compra: {0:C}'}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="5,0,0,5"/>
-    </Grid>
-</Grid>
+                <Grid Grid.Row="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding PrecioVenta, StringFormat='P. Venta: {0:C}'}" 
+                             Style="{StaticResource DetailTextBoxStyle}" Margin="0,0,5,5"/>
+                    <TextBox Grid.Column="1" Text="{Binding PrecioCompra, StringFormat='P. Compra: {0:C}'}" 
+                             Style="{StaticResource DetailTextBoxStyle}" Margin="5,0,0,5"/>
+                </Grid>
+            </Grid>
 
 
             <Grid Grid.Row="2" Grid.Column="0" Margin="0,10,0,0">
@@ -377,7 +377,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="Stock Mínimo:" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.StockMinimo}" Margin="5"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Min}" Margin="5"/>
                                     </Grid>
 
                                     <Grid>
@@ -386,7 +386,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="Stock Máximo:" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.StockMaximo}" Margin="5"/>
+                                        <TextBox Grid.Column="1" Text="{Binding ArticuloSeleccionado.Max}" Margin="5"/>
                                     </Grid>
 
                                     <Grid>
