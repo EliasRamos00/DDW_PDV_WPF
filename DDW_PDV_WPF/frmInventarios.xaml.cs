@@ -19,6 +19,8 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using System.IO;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 
 namespace DDW_PDV_WPF
@@ -29,11 +31,10 @@ namespace DDW_PDV_WPF
     public partial class frmInventarios : Page, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private DispatcherTimer _timer;
         private readonly ApiService _apiService;
         private ObservableCollection<ArticuloDTO> _listaArticulos;
         private ArticuloDTO _articuloSeleccionado;
-   
+        private bool _hasChanges;
         private string _textoBusqueda;
     
 
@@ -53,9 +54,22 @@ namespace DDW_PDV_WPF
             set
             {
                 _articuloSeleccionado = value;
+                btnCancelarCambios.Visibility = Visibility.Hidden;
+                 btnGuardarCambios.Visibility = Visibility.Hidden;
                 OnPropertyChanged(nameof(ArticuloSeleccionado)); // Notificar cambios
             }
         }
+
+        public bool HasChanges
+        {
+            get => _hasChanges;
+            set
+            {
+                _hasChanges = value;
+                OnPropertyChanged(nameof(HasChanges));
+            }
+        }
+
 
         protected void OnPropertyChanged(string propertyName)
         {
@@ -106,24 +120,108 @@ namespace DDW_PDV_WPF
             DataContext = this;
             InitializeComponent();
 
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1); // Actualizar cada segundo
-            _timer.Tick += Timer_Tick;
-            _timer.Start();
-
             // Inicializar ApiService
             _apiService = new ApiService();
             CargarDatos();
             DataContext = this;
 
-            UpdateDateTime();
+            btnCancelarCambios.Visibility = Visibility.Hidden;
+            btnGuardarCambios.Visibility = Visibility.Hidden;
+
         }
 
 
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            UpdateDateTime();
+            HasChanges = true;
+           
+        }
+        private void Cancelar_Click(object sender, RoutedEventArgs e)
+        {
+            if (ArticuloSeleccionado != null)
+            {
+                // Restaurar valores originales
+                var articuloOriginal = _todosLosArticulos.FirstOrDefault(a => a.idArticulo == ArticuloSeleccionado.idArticulo);
+                if (articuloOriginal != null)
+                {
+                    ArticuloSeleccionado = new ArticuloDTO
+                    {
+                        // Propiedades básicas del artículo
+                        idArticulo = articuloOriginal.idArticulo,
+                        Foto = articuloOriginal.Foto,
+                        Color = articuloOriginal.Color,
+                        Descripcion = articuloOriginal.Descripcion,
+                        Tamanio = articuloOriginal.Tamanio,
+                        CodigoBarras = articuloOriginal.CodigoBarras,
+                        IdCategoria = articuloOriginal.IdCategoria,
+
+                        // Propiedades de inventario
+                        idInventario = articuloOriginal.idInventario,
+                        Stock = articuloOriginal.Stock,
+                        Min = articuloOriginal.Min,
+                        Max = articuloOriginal.Max,
+                        PrecioVenta = articuloOriginal.PrecioVenta,
+                        PrecioCompra = articuloOriginal.PrecioCompra,
+
+                    };
+                }
+            }
+
+            HasChanges = false;
+            btnCancelarCambios.Visibility = Visibility.Hidden;
+            btnGuardarCambios.Visibility = Visibility.Hidden;
+        }
+
+        private async void Guardar_Click(object sender, RoutedEventArgs e)
+        {
+            if (ArticuloSeleccionado == null)
+            {
+                MessageBox.Show("Seleccione un artículo para guardar cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                if (string.IsNullOrEmpty(ArticuloSeleccionado.Descripcion))
+                {
+                    MessageBox.Show("La descripción es obligatoria", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+               
+                bool resultado = await _apiService.PutAsync($"/api/CArticulos/{ArticuloSeleccionado.idArticulo}", ArticuloSeleccionado);
+
+                if (resultado)
+                {
+          
+                     CargarDatos();
+                    bool resultado2 = await _apiService.PutAsync($"/api/CArticulos/productos/inventario", ArticuloSeleccionado);
+
+                    if (resultado)
+                    {
+
+                        CargarDatos();
+                        
+
+                        btnCancelarCambios.Visibility = Visibility.Hidden;
+                        btnGuardarCambios.Visibility = Visibility.Hidden;
+                        HasChanges = false;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error al actualizar el artículo.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Error al actualizar el artículo.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar cambios: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -132,18 +230,9 @@ namespace DDW_PDV_WPF
             if (parameter?.ToString() == "inverse") return isEmpty ? Visibility.Visible : Visibility.Collapsed;
             return isEmpty ? Visibility.Collapsed : Visibility.Visible;
         }
-        private void UpdateDateTime()
-        {
-            DateTime now = DateTime.Now;
-
-            txtFecha.Text = now.ToString("dddd, dd 'de' MMMM 'de' yyyy", new CultureInfo("es-MX"));
-
-            txtHora.Text = now.ToString("HH:mm:ss", new CultureInfo("es-MX"));
-        }
-
         private async void CargarDatos()
         {
-            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/");
+            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("/api/CArticulos/productos/inventario");
 
             if (resultado != null)
             {
@@ -182,6 +271,37 @@ namespace DDW_PDV_WPF
             ArticuloSeleccionado = new ArticuloDTO();
             AgregarPopup.IsOpen = true;
         }
+        private async void BotonGuardarPopup(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Validar datos obligatorios antes de enviar
+                if (string.IsNullOrEmpty(ArticuloSeleccionado.Descripcion))
+                {
+                    MessageBox.Show("La descripción es obligatoria", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Usar el endpoint correcto para crear artículos
+                var response = await _apiService.PostAsync("/api/CArticulos", ArticuloSeleccionado);
+
+                if (response)
+                {
+                    ListaArticulos.Add(ArticuloSeleccionado);
+                    MessageBox.Show("Artículo agregado exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    AgregarPopup.IsOpen = false;
+                }
+                else
+                {
+                    MessageBox.Show("El servidor rechazó la solicitud. Revisa los datos enviados.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hubo un error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
 
         private async void BotonQuitar(object sender, RoutedEventArgs e)
         {
@@ -194,7 +314,7 @@ namespace DDW_PDV_WPF
 
                 if (resultado == MessageBoxResult.Yes)
                 {
-                    bool eliminado = await _apiService.DeleteAsync($"api/CArticulos/{ArticuloSeleccionado.idArticulo}");
+                    bool eliminado = await _apiService.DeleteAsync($"/api/CArticulos/productos{ArticuloSeleccionado.idArticulo}");
 
                     if (eliminado)
                     {
@@ -212,39 +332,10 @@ namespace DDW_PDV_WPF
                 MessageBox.Show("Seleccione un artículo para eliminar.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-        private async void BotonGuardarPopup(object sender, RoutedEventArgs e)
-        {
-            if (ArticuloSeleccionado == null)
-            {
-                MessageBox.Show("No hay artículo seleccionado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+      
 
-            if (string.IsNullOrEmpty(ArticuloSeleccionado.Foto))
-            {
-                MessageBox.Show("Debe seleccionar una imagen.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
 
-            if (ArticuloSeleccionado.PrecioVenta <= 0)
-            {
-                MessageBox.Show("El Precio de Venta debe ser mayor a 0.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
 
-            var resultado = await _apiService.PostAsync("api/CArticulos/", ArticuloSeleccionado);
-
-            if (resultado)
-            {
-                ListaArticulos.Add(ArticuloSeleccionado);
-                MessageBox.Show("Artículo agregado exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                AgregarPopup.IsOpen = false;
-            }
-            else
-            {
-                MessageBox.Show("Error al guardar el artículo.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
 
 
         private void BotonCancelarPopup(object sender, RoutedEventArgs e)
@@ -255,37 +346,14 @@ namespace DDW_PDV_WPF
 
         private void BtnSeleccionarImagen_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Imágenes|*.jpg;*.jpeg;*.png;*.gif";
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                try
-                {
-                    string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                    string resourcesDir = System.IO.Path.Combine(appDir, "Resources");
-
-                    if (!Directory.Exists(resourcesDir))
-                        Directory.CreateDirectory(resourcesDir);
-
-                    string extension = System.IO.Path.GetExtension(openFileDialog.FileName);
-                    string nombreImagen = $"art_{DateTime.Now:yyyyMMddHHmmss}{extension}";
-                    string rutaDestino = System.IO.Path.Combine(resourcesDir, nombreImagen);
-
-                    File.Copy(openFileDialog.FileName, rutaDestino, true);
-
-                    TxtImagenRuta.Text = nombreImagen;
-                    ArticuloSeleccionado.Foto = nombreImagen;
-
-                    OnPropertyChanged(nameof(ArticuloSeleccionado));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error al guardar la imagen: {ex.Message}", "Error",
-                                  MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            
         }
 
+        private void txtDescripcion_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            HasChanges = true;
+            btnCancelarCambios.Visibility = Visibility.Visible;
+            btnGuardarCambios.Visibility = Visibility.Visible;
+        }
     }
 }
