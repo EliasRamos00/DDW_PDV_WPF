@@ -41,6 +41,7 @@
             <Button Content="Iniciar Sesión" Margin="0,20,0,0" Background="#D8D8D8" Padding="8"
                     FontWeight="SemiBold" BorderBrush="Transparent" BorderThickness="0" 
                     HorizontalAlignment="Center" Width="140" Height="40" Click="Button_Click"
+                    IsDefault="True"
                     />
         </StackPanel>
     </Grid>

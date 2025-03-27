@@ -107,6 +107,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controlador\ApiService.cs" />
+    <Compile Include="Controlador\ImpresoraTicket.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="frmInventarios.xaml.cs">
       <DependentUpon>frmInventarios.xaml</DependentUpon>
@@ -180,6 +181,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\f1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ceramic.png" />
+    <Resource Include="Resources\DDW.png" />
+    <Resource Include="Resources\flower.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\flowers.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" />

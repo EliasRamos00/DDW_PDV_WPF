@@ -55,8 +55,8 @@ namespace DDW_PDV_WPF
 
                 if (usuarioAutenticado != null)
                 {
-                    MessageBox.Show($"Bienvenido {usuarioAutenticado.Usuario}");
-                    var VentanaPrincipal = new frmVentanaPrincipal();
+                    //MessageBox.Show($"Bienvenido {usuarioAutenticado.Usuario}"); SE REQUIERE AGREGAR ALGUNA LIBRERIA SENCILLA DE POPUPS PARA MOSTRAR MENSAJES
+                    var VentanaPrincipal = new frmVentanaPrincipal(usuarioAutenticado.idUsuario.ToString());
                     VentanaPrincipal.Show();
                     this.Close();
                 }

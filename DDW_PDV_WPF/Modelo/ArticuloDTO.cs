@@ -35,11 +35,9 @@ namespace DDW_PDV_WPF.Modelo
         {
             get => _totalCarrito;
             set
-            {
-              
+            {              
                     _totalCarrito = PrecioVenta * _cantidad;
-                    OnPropertyChanged(nameof(TotalCarrito));
-                
+                    OnPropertyChanged(nameof(TotalCarrito));                
             }
         }
 

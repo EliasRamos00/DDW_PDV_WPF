@@ -39,6 +39,7 @@ namespace DDW_PDV_WPF
         private int _cantidad;
         private decimal _subTotal;
         private decimal _total;
+        private string _usuario;
 
         private ObservableCollection<MCategorias> _categorias;
 
@@ -107,7 +108,7 @@ namespace DDW_PDV_WPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public frmVentas()
+        public frmVentas(string currentUser)
         {
             InitializeComponent();
             time();
@@ -116,7 +117,7 @@ namespace DDW_PDV_WPF
             CargarProductos();
             CargarCategorias();
             DataContext = this;
-            
+            _usuario = currentUser;
 
         }
 
@@ -176,7 +177,7 @@ namespace DDW_PDV_WPF
 
         private async void CargarProductos()
         {
-            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/");
+            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/productos/inventario");
 
             if (resultado != null)
             {
@@ -267,7 +268,7 @@ namespace DDW_PDV_WPF
                         idArticulo = producto.idArticulo, // Asumiendo que el producto tiene un ID
                         Descripcion = producto.Descripcion,
                         Foto = producto.Foto,
-                        PrecioVenta = 30, // precio
+                        PrecioVenta = producto.PrecioVenta, // precio
                         Cantidad = 1
                     };
 
@@ -281,7 +282,64 @@ namespace DDW_PDV_WPF
                 CalcularTotalCarro();
             }
         }
-        
+
+        private async void CerrarVenta(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(200); // Espera que termine la animación
+            
+                if (_carritoVenta == null)
+                {
+                    MessageBox.Show("El carrito está vacío.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Construimos el objeto para la API
+                var ventaDTO = new
+                {
+                    venta = new
+                    {
+                        idVenta = 0,  // Será generado en la BD
+                        total = _total ,
+                        fechahora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        vendedor = 1, // Aquí puedes usar un ID real del vendedor
+                        tieneFactura = 0, // O puedes hacer que el usuario lo seleccione
+                        idSucursal = 1 // Modifica según la sucursal correspondiente
+                    },
+                    detalle = _carritoVenta.Select(a => new
+                    {
+                        idArticulo = a.idArticulo,
+                        idVenta = 0, // Se actualizará en la BD
+                        precioVenta = a.PrecioVenta,
+                        cantidad = a.Cantidad
+                    }).ToList()
+                };            
+
+            try
+            {
+                var resultado = await _apiService.PostAsync("api/CVentas/crear", ventaDTO);
+
+                if (resultado)
+                {
+                    MessageBox.Show("Venta registrada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ImpresoraTicket.ImprimeTicket(_carritoVenta, _total);
+                    _carritoVenta.Clear(); // Limpiar el carrito después de la venta
+                    _total = 0;
+                    _subTotal = 0;
+                    CalcularTotalCarro();
+
+
+                }
+                else
+                {
+                    MessageBox.Show("Error al registrar la venta.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error en la conexión con la API: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
     }
-    
+
 }

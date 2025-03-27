@@ -240,7 +240,7 @@
                                     <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <!-- Imagen de categoría -->
-                                            <Image Source="{Binding ImagenUrl}" Width="50" Height="50" VerticalAlignment="Center"/>
+                                            <Image Source="{Binding Foto}" Stretch="UniformToFill" Width="75" Height="75" VerticalAlignment="Center" Margin="0,0,0,20"/>
                                             <!-- Nombre de la categoría -->
                                             <TextBlock Text="{Binding Nombre}" HorizontalAlignment="Center"/>
                                         </StackPanel>
@@ -254,7 +254,7 @@
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                    <ScrollViewer Margin="35,0,35,0" VerticalScrollBarVisibility="Hidden">
                         <ItemsControl ItemsSource="{Binding ListaArticulos}" MaxHeight="500">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -328,8 +328,8 @@
                                     <!-- Nombre, categoría y número adicional -->
                                     <StackPanel Grid.Column="1" Margin="0,0,4,0">
                                         <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" FontSize="12" FontWeight="Bold" Width="100"/>
-                                        <TextBlock Text="{Binding IdCategoria}" FontSize="10" Foreground="#666666"/>
-                                        <TextBlock Text="{Binding NumeroAdicional}" FontSize="10" Foreground="#B0B0B0"/>
+                                        <TextBlock Text="{Binding PrecioVenta, StringFormat=C }" FontSize="10" Foreground="#666666"/>
+                                        <TextBlock Text="{Binding IdCategoria}" FontSize="10" Foreground="#B0B0B0"/>
                                     </StackPanel>
 
                                     <!-- Precio -->
@@ -338,8 +338,8 @@
                                     <!-- Contador de cantidad con botones -->
                                     <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1">
                                         <Button Padding="2,2,2,2" Click="DecrementarCantidad" FontSize="20" Content="-" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10"/>
-                                        <Label Content="{Binding Cantidad}" Width="40" HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
-                                        <Button Padding="2,2,2,2" Click="IncrementarCantidad" IsEnabled="True" FontSize="20" Content="+" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10"/>
+                                        <Label Padding="0,0,0,0" Margin="2,0,0,0" Content="{Binding Cantidad}" Width="20" HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                        <Button Padding="0,2,2,2" Click="IncrementarCantidad" IsEnabled="True" FontSize="20" Content="+" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="5,0,0,10"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -375,7 +375,9 @@
                 HorizontalAlignment="Stretch"
                 Background="#8b8b8b" Foreground="White"
                 FontWeight="Bold" BorderThickness="0"
-                MinWidth="217" Height="46" FontFamily="Arial"/>
+                MinWidth="217" Height="46" FontFamily="Arial"
+                Click="CerrarVenta"        
+                        />
             </Grid>
         </Border>
 

@@ -66,7 +66,7 @@
                     <Button Content="Ventas" Style="{StaticResource MenuButtonStyle}" Click="NavigateToVentas"/>
                     <Button Content="Inventario" Style="{StaticResource MenuButtonStyle}" Click="NavigateToInventarios"/>
                     <Button Content="Historial" Style="{StaticResource MenuButtonStyle}" Click="NavigateHistorial"/>
-                    <Button Content="Ticket" Style="{StaticResource MenuButtonStyle}" Click="ImprimeTicket"/>
+                    <Button Content="Ticket" Style="{StaticResource MenuButtonStyle}"/>
 
                 </StackPanel>
             </Grid>

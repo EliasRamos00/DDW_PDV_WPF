@@ -10,6 +10,7 @@ namespace DDW_PDV_WPF.Modelo
     {
         public int idCategoria { get; set; }
         public string Nombre { get; set; }
+        public string Foto { get; set; }
 
     }
 }

@@ -1,64 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Printing;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Xps;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Controls;
+using DDW_PDV_WPF.Modelo;
+using System.Collections.ObjectModel;
 
-
-
-namespace DDW_PDV_WPF
+namespace DDW_PDV_WPF.Controlador
 {
-    /// <summary>
-    /// Lógica de interacción para frmVentanaPrincipal.xaml
-    /// </summary>
-    public partial class frmVentanaPrincipal : Window
+    public class ImpresoraTicket
     {
-        private string Usuario { get; set; }
 
-        public frmVentanaPrincipal(string Usuario)
+
+        public static void ImprimeTicket(ObservableCollection<ArticuloDTO> productos, decimal totalCarro)
         {
-            InitializeComponent();
-            MainFrame.Navigate(new frmVentas(Usuario));
-            MainFrame.UpdateLayout();
-            this.Usuario = Usuario;
-        }
+           
 
-        private void NavigateToInventarios(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new frmInventarios());
-        }
-
-        private void NavigateToVentas(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new frmVentas(Usuario));
-        }
-
-        private void NavigateHistorial(object sender, RoutedEventArgs e)
-        {
-           // MainFrame.Navigate(new Page2());
-        }
-
-        private void ImprimeTicket(object sender, RoutedEventArgs e)
-        {
-            // Lista de productos y precios
-            var productos = new List<Tuple<string, decimal>>()
-            {
-              
-                new Tuple<string, decimal>("Flor Cafe 2", 204.50m),
-                new Tuple<string, decimal>("Flor Amarilla con Cafe 20304 SN.", 204.01m),
-                new Tuple<string, decimal>("Flores Rosas 1", 10.76m)
-
-            };
-
-            string RFC="GUSY970729", Nombre="YECENIA GURROLA SANCHEZ", Dirr="PASTEUR 301 SUR", Cel="618 230 9875", Ciudad="DURANGO DGO.", CP="34000";
+            string RFC = "GUSY970729", Nombre = "YECENIA GURROLA SANCHEZ", Dirr = "PASTEUR 301 SUR", Cel = "618 230 9875", Ciudad = "DURANGO DGO.", CP = "34000";
 
 
             // Crear el FlowDocument
@@ -136,7 +102,7 @@ namespace DDW_PDV_WPF
                 Margin = new Thickness(0)
             };
 
-            Encabezado.Inlines.Add(new Run($"Pzas.  Descrip. \t\t Precio.\n"));
+            Encabezado.Inlines.Add(new Run($"(Pzas).  Descrip.  \t\t Precio.\n"));
 
             flowDoc.Blocks.Add(Encabezado);
 
@@ -146,19 +112,21 @@ namespace DDW_PDV_WPF
             table.Columns.Add(new TableColumn() { Width = new GridLength(80, GridUnitType.Pixel) }); // Columna para el precio
 
             // Añadir una fila para cada producto
-            foreach (var producto in productos)
+            foreach (ArticuloDTO producto in productos)
             {
                 TableRow row = new TableRow();
 
                 // Celda para el nombre del producto (alineado a la izquierda)
-                TableCell nameCell = new TableCell(new Paragraph(new Run("(1) " + producto.Item1)))
+                TableCell nameCell = new TableCell(new Paragraph(new Run($"({producto.Cantidad}) " + producto.Descripcion)))
                 {
                     TextAlignment = TextAlignment.Left,
                     Padding = new Thickness(0)
                 };
 
+                int totalPorProd = Convert.ToInt32(producto.Cantidad) * Convert.ToInt32(producto.PrecioVenta);
+
                 // Celda para el precio (alineado a la derecha)
-                TableCell priceCell = new TableCell(new Paragraph(new Run(producto.Item2.ToString("C2"))))
+                TableCell priceCell = new TableCell(new Paragraph(new Run(producto.TotalCarrito.ToString("C2"))))
                 {
                     TextAlignment = TextAlignment.Right,
                     Padding = new Thickness(0)
@@ -182,7 +150,7 @@ namespace DDW_PDV_WPF
                 Margin = new Thickness(0)
             };
             totalParagraph.Inlines.Add(new Run("\n\n\n"));
-            totalParagraph.Inlines.Add(new Run("TOTAL: $35.50\n")); // Esto puede ser calculado dinámicamente también
+            totalParagraph.Inlines.Add(new Run($"TOTAL: {totalCarro.ToString("C2")}\n")); // Esto puede ser calculado dinámicamente también
             flowDoc.Blocks.Add(totalParagraph);
 
             // Crear un párrafo con el mensaje de agradecimiento
@@ -205,9 +173,9 @@ namespace DDW_PDV_WPF
 
         }
 
-        private void PrintFlowDocument(FlowDocument flowDoc)
+        private static void PrintFlowDocument(FlowDocument flowDoc)
         {
-          
+
             try
             {
                 // Obtener la impresora predeterminada del sistema
