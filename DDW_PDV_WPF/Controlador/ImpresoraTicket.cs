@@ -129,7 +129,7 @@ namespace DDW_PDV_WPF.Controlador
                 TableCell priceCell = new TableCell(new Paragraph(new Run(producto.TotalCarrito.ToString("C2"))))
                 {
                     TextAlignment = TextAlignment.Right,
-                    Padding = new Thickness(0)
+                    Padding = new Thickness(0,0,20,0)
                 };
 
                 // Agregar celdas a la fila
@@ -147,7 +147,7 @@ namespace DDW_PDV_WPF.Controlador
             Paragraph totalParagraph = new Paragraph
             {
                 TextAlignment = TextAlignment.Right, // Alineación a la izquierda para el total
-                Margin = new Thickness(0)
+                Margin = new Thickness(0,0,6,0)
             };
             totalParagraph.Inlines.Add(new Run("\n\n\n"));
             totalParagraph.Inlines.Add(new Run($"TOTAL: {totalCarro.ToString("C2")}\n")); // Esto puede ser calculado dinámicamente también
