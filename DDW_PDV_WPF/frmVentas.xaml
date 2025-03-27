@@ -34,25 +34,25 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
 
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="auto"/>
 
                     </Grid.ColumnDefinitions>
 
 
                     <Image Source="Imagenes\pink-flower-white-background.jpg" 
-           Width="100" 
-           Height="100" 
-           HorizontalAlignment="Center"
-           VerticalAlignment="Top"
-           Margin="0,10,0,0"
-           Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+                       Width="100" 
+                       Height="100" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,10,0,0"
+                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
 
                     <TextBlock Text="Nombre del Producto" 
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               FontSize="12"
-               FontWeight="Bold"
-               Grid.Row="1"/>
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="12"
+                       FontWeight="Bold"
+                       Grid.Row="1"/>   
 
                     <TextBlock Text="Categoría" 
                                Background="#d9d9d9"
@@ -112,6 +112,8 @@
             <Setter Property="AllowDrop" Value="true"/>
             <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            
+            
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -160,8 +162,8 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="7.5*"/>
-            <ColumnDefinition Width="2.5*" />
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="390" />
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0" Background="#DEDEDE" HorizontalAlignment="Stretch">
@@ -181,29 +183,28 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <!-- Definición de columnas con proporciones porcentuales -->
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.4*"/>
-                            <!-- 40% del ancho -->
-                            <ColumnDefinition Width="0.4*"/>
-                            <!-- 40% del ancho -->
-                            <ColumnDefinition Width="0.2*"/>
-                            <!-- 20% del ancho -->
-                        </Grid.ColumnDefinitions>
 
+
+
+
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="10,10,10,10" 
+                         Orientation="Horizontal" HorizontalAlignment="Right">
                         <!-- TextBox para la fecha -->
-                        <TextBox x:Name="txtFecha" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Margin="10,0" VerticalAlignment="Center" IsEnabled="False" Grid.Column="0"
-             Foreground="#767676" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Fecha"/>
+                        <TextBox x:Name="txtFecha" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Width="250"
+                         Foreground="#767676" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Fecha"
+                         IsEnabled="False" Margin="0,0,20,0"/>
+                        <!-- Margen derecho para separación -->
 
                         <!-- TextBox para la hora -->
-                        <TextBox x:Name="txtHora" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Margin="10,0" VerticalAlignment="Center" IsEnabled="False" Grid.Column="1"
-             Foreground="#767676" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Hora"/>
-                    </Grid>
+                        <TextBox x:Name="txtHora" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Width="120"
+                         Foreground="#767676" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Hora"
+                         IsEnabled="False"/>
+                       </StackPanel>
 
-                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" PanningMode="HorizontalOnly">
+
+                    <!--<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" PanningMode="HorizontalOnly">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
-                            <!-- Botón con ícono y texto -->
+                            --><!-- Botón con ícono y texto --><!--
                             <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <Image Source="Imagenes\bag.png" Width="50" Height="50" VerticalAlignment="Center"/>
@@ -211,46 +212,50 @@
                                 </StackPanel>
                             </Button>
 
-                            <!-- Repite para los demás botones -->
+                            --><!-- Repite para los demás botones --><!--
                             <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <Image Source="Imagenes\flower-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
                                     <TextBlock Text="Categoria 2" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
-
-                            <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="Imagenes\flower.png" Width="50" Height="50"/>
-                                    <TextBlock Text="Categoria 3" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="Imagenes\lily.png" Width="50" Height="50" Margin="0,0,0,10"/>
-                                    <TextBlock Text="Categoria 4" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="Imagenes\merchant-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
-                                    <TextBlock Text="Categoria 5" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-
                         </StackPanel>
+                    </ScrollViewer>-->
+
+
+
+
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" PanningMode="HorizontalOnly">
+                        <ListView ItemsSource="{Binding Categorias}" HorizontalAlignment="Center" Margin="0,10,0,10" 
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <!-- Establecer Orientation del ListView a Horizontal -->
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
+                                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <!-- Imagen de categoría -->
+                                            <Image Source="{Binding ImagenUrl}" Width="50" Height="50" VerticalAlignment="Center"/>
+                                            <!-- Nombre de la categoría -->
+                                            <TextBlock Text="{Binding Nombre}" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </ScrollViewer>
+
                     <TextBox Background="White" Grid.Row="2" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="580" Margin="0,10,0,10"/>
                 </Grid>
-                
-            
 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding ListaArticulos}">
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                        <ItemsControl ItemsSource="{Binding ListaArticulos}" MaxHeight="500">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel ItemWidth="150" ItemHeight="150" />
@@ -259,12 +264,11 @@
 
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Height="150" Width="150" Margin="5" Background="LightGray">
-                                        <!-- Imagen -->
+                                    <Button Height="150" Width="150" Margin="5" Background="LightGray" Click="ClickProducto">
                                         <Button.Content>
                                             <StackPanel>
                                                 <Image Height="100" Width="100" Source="{Binding Foto}" Stretch="UniformToFill"/>
-                                                <TextBlock Text="{Binding Descripcion}" HorizontalAlignment="Center"/>
+                                                <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" HorizontalAlignment="Center" />
                                             </StackPanel>
                                         </Button.Content>
                                     </Button>
@@ -274,359 +278,106 @@
                     </ScrollViewer>
                 </Grid>
 
-
-
-
-
             </Grid>
         </Border>
+        <Border Grid.Column="2" Background="#FFFFFF" Padding="15" Grid.ColumnSpan="2" Margin="10,0,0,0">
+            <Grid>
+                <!-- Definir filas -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Título -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Subtítulo -->
+                    <RowDefinition Height="*"/>
+                    <!-- ListView que se expandirá sin salir de la pantalla -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Detalles de pago -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Botón -->
+                </Grid.RowDefinitions>
 
-        <Border Grid.Column="2" Background="#FFFFFF" Padding="15" Grid.ColumnSpan="2" Margin="10,0,0,0" >
-            <StackPanel Margin="-15,-15,-15,0">
                 <!-- Título -->
-                <TextBlock Text="DETALLES DE LA VENTA" 
-                   FontSize="18" 
-                   FontWeight="Bold" 
-                   Foreground="Black" 
-                   Margin="0,0,0,20"
-                   HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="0" Text="DETALLES DE LA VENTA" 
+                   FontSize="18" FontWeight="Bold" Foreground="Black"
+                   Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
                 <!-- Subtítulo -->
-                <TextBlock Text="Carrito de artículos" 
-                   FontSize="16" 
-                   FontWeight="Bold" 
-                   Foreground="Black" 
-                   Margin="0,0,0,10" 
-                   Width="241"/>
+                <TextBlock Grid.Row="1" Text="Carrito de artículos" 
+                   FontSize="16" FontWeight="Bold" Foreground="Black"
+                   Margin="0,0,0,10" Width="241"/>
 
-                <!-- ScrollViewer para los artículos -->
-                <ScrollViewer VerticalScrollBarVisibility="Hidden" MaxHeight="400" Margin="0,0,10,0" >
-                    <StackPanel>
-                        <!-- Repite tu contenido aquí -->
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                <!-- ListView dentro de la fila que se expande -->
+                <ListView Grid.Row="2" ItemsSource="{Binding CarritoVenta}" 
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  MaxHeight="{Binding PantallaDisponible}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" 
+                            CornerRadius="5" Height="70" Width="auto">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-                               Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+                                    <!-- Imagen del producto -->
+                                    <Image Source="{Binding Foto}" Width="60" Height="60" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
+                                    <!-- Nombre, categoría y número adicional -->
+                                    <StackPanel Grid.Column="1" Margin="0,0,4,0">
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" FontSize="12" FontWeight="Bold" Width="100"/>
+                                        <TextBlock Text="{Binding IdCategoria}" FontSize="10" Foreground="#666666"/>
+                                        <TextBlock Text="{Binding NumeroAdicional}" FontSize="10" Foreground="#B0B0B0"/>
+                                    </StackPanel>
 
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
+                                    <!-- Precio -->
+                                    <TextBlock Text="{Binding TotalCarrito, StringFormat=C}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2" Width="60"/>
 
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                                    <!-- Contador de cantidad con botones -->
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1">
+                                        <Button Padding="2,2,2,2" Click="DecrementarCantidad" FontSize="20" Content="-" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10"/>
+                                        <Label Content="{Binding Cantidad}" Width="40" HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                        <Button Padding="2,2,2,2" Click="IncrementarCantidad" IsEnabled="True" FontSize="20" Content="+" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+               
+                <StackPanel Grid.Row="3" Margin="10,5,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
+                        <!-- Subtotal -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Subtotal: " FontSize="21" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock Margin="0,0,10,0" Grid.Row="0" Grid.Column="1" TextAlignment="Right" Text="{Binding SubTotal, StringFormat=C2}" FontSize="26" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-       Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-                        Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-
-
-
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-                        Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                        <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" CornerRadius="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Imagen del producto -->
-                                <Image Source="C:\Users\Acer Nitro V15\Documents\GitHub\DDW_PDV_WPF\DDW_PDV_WPF\Imagenes\pink-flower-white-background.jpg" 
-Width="30" Height="30" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
-
-                                <!-- Nombre, categoría y número adicional -->
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="Producto 1" FontSize="12" FontWeight="Bold"/>
-                                    <TextBlock Text="Categoría 1" FontSize="10" Foreground="#666666"/>
-                                    <TextBlock Text="25" FontSize="10" Foreground="#B0B0B0"/>
-                                </StackPanel>
-
-                                <!-- Precio -->
-                                <TextBlock Text="$50" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
-
-                                <!-- Contador de cantidad -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Cantidad:" FontSize="10" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="-" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto" Margin="0,0,3,0"/>
-                                    <TextBlock Text="1" FontSize="12" VerticalAlignment="Center" Margin="0,0,3,0"/>
-                                    <Button Content="+" Style="{StaticResource RoundedButtonStyle}" Width="17" Height="Auto"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <!-- Repite más Borders con el mismo contenido si es necesario -->
-                        <!-- ... -->
-                    </StackPanel>
-                </ScrollViewer>
-
-                <!-- Detalles de pago -->
-                <TextBlock Text="Detalles de pago" 
-                   FontSize="16" 
-                   FontWeight="Bold" 
-                   Foreground="Black" 
-                   Margin="0,20,0,10" 
-                   MinWidth="223"/>
-
-                <StackPanel Margin="10,5,0,0">
-                    <TextBlock Text="Sub total: $260" FontSize="14" Foreground="Black" MinWidth="213"/>
-                    <TextBlock Text="Total: $260" FontSize="16" FontWeight="Bold" Foreground="#8b8b8b" Margin="0,5,0,0" MinWidth="216"/>
+                        <!-- Total -->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Total: " FontSize="33" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock Margin="0,0,10,0" Grid.Row="1" Grid.Column="1" TextAlignment="Right" Text="{Binding Total, StringFormat=C2}" FontSize="44" FontWeight="Bold" Foreground="#8b8b8b" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    </Grid>
                 </StackPanel>
 
                 <!-- Botón de cerrar venta -->
-                <Button Content="CERRAR VENTA" 
-                Margin="0,20,0,0" 
-                Padding="15" 
-                HorizontalAlignment="Stretch" 
-                Background="#8b8b8b" 
-                Foreground="White" 
-                FontWeight="Bold" 
-                BorderThickness="0" 
-                MinWidth="217" 
-                Height="46" 
-                FontFamily="Arial" />
-            </StackPanel>
+                <Button Grid.Row="4" Content="CERRAR VENTA" 
+                Margin="0,20,0,0" Padding="15"
+                HorizontalAlignment="Stretch"
+                Background="#8b8b8b" Foreground="White"
+                FontWeight="Bold" BorderThickness="0"
+                MinWidth="217" Height="46" FontFamily="Arial"/>
+            </Grid>
         </Border>
+
     </Grid>
 </Page>

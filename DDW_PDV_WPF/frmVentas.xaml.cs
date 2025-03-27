@@ -35,17 +35,72 @@ namespace DDW_PDV_WPF
         private DispatcherTimer _timer;
         private readonly ApiService _apiService;
         private ObservableCollection<ArticuloDTO> _listaArticulos;
-        
-        
+        private ObservableCollection<ArticuloDTO> _carritoVenta = new ObservableCollection<ArticuloDTO>();
+        private int _cantidad;
+        private decimal _subTotal;
+        private decimal _total;
+
+        private ObservableCollection<MCategorias> _categorias;
+
+
+        public decimal SubTotal
+        {
+            get => _subTotal;
+           
+        }
+
+        public decimal Total
+        {
+            get => _total;           
+        }
+
+
+
+        public int Cantidad
+        {
+            get => _cantidad;
+            set
+            {
+                if (_cantidad != value)
+                {
+                    _cantidad = value;
+                    OnPropertyChanged(nameof(Cantidad));
+                }
+            }
+        }
+
+
         public ObservableCollection<ArticuloDTO> ListaArticulos
         {
             get { return _listaArticulos; }
             set
             {
                 _listaArticulos = value;
-                OnPropertyChanged(nameof(ListaArticulos)); // ✅ Esto es correcto
+                OnPropertyChanged(nameof(ListaArticulos)); // 
             }
         }
+
+        public ObservableCollection<MCategorias> Categorias
+        {
+            get { return _categorias; }
+            set
+            {
+                _categorias = value;
+                OnPropertyChanged(nameof(Categorias)); // 
+            }
+        }
+
+
+        public ObservableCollection<ArticuloDTO> CarritoVenta
+        {
+            get { return _carritoVenta; }
+            set
+            {
+                _carritoVenta = value;
+                OnPropertyChanged(nameof(CarritoVenta)); // 
+            }
+        }
+
 
         protected void OnPropertyChanged(string propertyName)
         {
@@ -58,10 +113,21 @@ namespace DDW_PDV_WPF
             time();
             // Inicializar ApiService
             _apiService = new ApiService();
-            CargarDatos();
+            CargarProductos();
+            CargarCategorias();
             DataContext = this;
             
 
+        }
+
+        private async void CargarCategorias()
+        {
+            var resultado = await _apiService.GetAsync<List<MCategorias>>("api/CCategorias/");
+
+            if (resultado != null)
+            {
+                Categorias = new ObservableCollection<MCategorias>(resultado); //  Asigna los datos a la propiedad
+            }
         }
 
         public void time ()
@@ -81,6 +147,20 @@ namespace DDW_PDV_WPF
             UpdateDateTime();
         }
 
+
+        private void CalcularTotalCarro()
+        {
+            decimal aux = 0;
+            foreach (ArticuloDTO dto in _carritoVenta)
+            {
+                aux = aux + (dto.PrecioVenta * dto.Cantidad);
+            }
+            _total = aux;
+            _subTotal = aux;
+            OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(SubTotal));
+
+        }
         private void UpdateDateTime()
         {
             // Obtener la fecha y hora actual
@@ -94,13 +174,49 @@ namespace DDW_PDV_WPF
         }
 
 
-        private async void CargarDatos()
+        private async void CargarProductos()
         {
             var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/");
 
             if (resultado != null)
             {
-                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado); // ✅ Asigna los datos a la propiedad
+                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado); //  Asigna los datos a la propiedad
+            }
+        }
+
+
+        private void IncrementarCantidad(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
+            {
+                producto.Cantidad++;
+                producto.TotalCarrito = producto.Cantidad * producto.PrecioVenta;
+            }
+            CalcularTotalCarro();
+
+
+        }
+
+        private void DecrementarCantidad(object sender, RoutedEventArgs e)
+        {
+
+            if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
+            {
+
+                if (producto.Cantidad > 0)
+                {
+                    producto.Cantidad--;
+                    producto.TotalCarrito = producto.Cantidad * producto.PrecioVenta;
+
+
+                }
+                CalcularTotalCarro();
+
+                if (producto.Cantidad == 0)
+                {
+                    _carritoVenta.Remove(producto);
+                }
+
             }
         }
 
@@ -127,5 +243,45 @@ namespace DDW_PDV_WPF
         {
 
         }
+
+        private void ClickProducto(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
+            {
+
+                // Verificar si el artículo ya existe en el carrito
+                var articuloExistente = _carritoVenta.FirstOrDefault(item => item.idArticulo == producto.idArticulo);
+
+                if (articuloExistente != null)
+                {
+                    // Si el artículo ya existe, incrementamos su cantidad
+                    articuloExistente.Cantidad++;
+                    articuloExistente.TotalCarrito = articuloExistente.Cantidad * articuloExistente.PrecioVenta;
+
+                }
+                else
+                {
+                    // Si el artículo no existe, creamos un nuevo objeto y lo agregamos al carrito
+                    ArticuloDTO nuevoArticulo = new ArticuloDTO
+                    {
+                        idArticulo = producto.idArticulo, // Asumiendo que el producto tiene un ID
+                        Descripcion = producto.Descripcion,
+                        Foto = producto.Foto,
+                        PrecioVenta = 30, // precio
+                        Cantidad = 1
+                    };
+
+                    // Agregar el nuevo artículo al carrito de ventas
+                    _carritoVenta.Add(nuevoArticulo);
+                    nuevoArticulo.TotalCarrito = nuevoArticulo.Cantidad * nuevoArticulo.PrecioVenta;
+                }
+
+                // Notificar que el carrito ha cambiado 
+                OnPropertyChanged(nameof(CarritoVenta));
+                CalcularTotalCarro();
+            }
+        }
+        
     }
+    
 }
