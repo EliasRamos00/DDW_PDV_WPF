@@ -378,7 +378,7 @@
         </Grid>
 
         <!-- Popup para agregar producto -->
-        <Popup x:Name="AgregarPopup" IsOpen="False" Placement="Left" >
+        <Popup x:Name="AgregarPopup" IsOpen="False" Placement="Center" StaysOpen="False" AllowsTransparency="True">
             <Border BorderBrush="Black" BorderThickness="1" Background="White" Width="450" Height="500">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="10">

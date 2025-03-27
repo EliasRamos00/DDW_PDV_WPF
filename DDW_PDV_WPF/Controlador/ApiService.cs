@@ -65,7 +65,6 @@ namespace DDW_PDV_WPF.Controlador
             }
             catch (Exception ex)
             {
-                // Manejo de error
                 MessageBox.Show($"Error al actualizar el artículo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }

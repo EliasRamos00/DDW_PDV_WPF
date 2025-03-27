@@ -21,6 +21,7 @@ using Microsoft.Win32;
 using System.IO;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Xml.Linq;
 
 
 namespace DDW_PDV_WPF
@@ -196,22 +197,11 @@ namespace DDW_PDV_WPF
                 {
           
                      CargarDatos();
-                    bool resultado2 = await _apiService.PutAsync($"/api/CArticulos/productos/inventario", ArticuloSeleccionado);
+                    MessageBox.Show("Artículo actualizado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                    if (resultado)
-                    {
-
-                        CargarDatos();
-                        
-
-                        btnCancelarCambios.Visibility = Visibility.Hidden;
-                        btnGuardarCambios.Visibility = Visibility.Hidden;
-                        HasChanges = false;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Error al actualizar el artículo.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    btnCancelarCambios.Visibility = Visibility.Hidden;
+                    btnGuardarCambios.Visibility = Visibility.Hidden;
+                    HasChanges = false;
                 }
                 else
                 {
@@ -232,7 +222,7 @@ namespace DDW_PDV_WPF
         }
         private async void CargarDatos()
         {
-            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("/api/CArticulos/productos/inventario");
+            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("/api/CArticulos");
 
             if (resultado != null)
             {
@@ -279,6 +269,7 @@ namespace DDW_PDV_WPF
                 if (string.IsNullOrEmpty(ArticuloSeleccionado.Descripcion))
                 {
                     MessageBox.Show("La descripción es obligatoria", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    AgregarPopup.IsOpen = true;
                     return;
                 }
 
@@ -289,16 +280,19 @@ namespace DDW_PDV_WPF
                 {
                     ListaArticulos.Add(ArticuloSeleccionado);
                     MessageBox.Show("Artículo agregado exitosamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
                     AgregarPopup.IsOpen = false;
                 }
                 else
                 {
                     MessageBox.Show("El servidor rechazó la solicitud. Revisa los datos enviados.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    AgregarPopup.IsOpen = true;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Hubo un error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                AgregarPopup.IsOpen = true;
             }
         }
 
@@ -314,16 +308,18 @@ namespace DDW_PDV_WPF
 
                 if (resultado == MessageBoxResult.Yes)
                 {
-                    bool eliminado = await _apiService.DeleteAsync($"/api/CArticulos/productos{ArticuloSeleccionado.idArticulo}");
+                    bool eliminado = await _apiService.DeleteAsync($"/api/CArticulos/{ArticuloSeleccionado.idArticulo}");
 
                     if (eliminado)
                     {
                         ListaArticulos.Remove(ArticuloSeleccionado);
                         MessageBox.Show("Artículo eliminado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                       
                     }
                     else
                     {
                         MessageBox.Show("Error al eliminar el artículo.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        AgregarPopup.IsOpen = true;
                     }
                 }
             }
@@ -340,13 +336,83 @@ namespace DDW_PDV_WPF
 
         private void BotonCancelarPopup(object sender, RoutedEventArgs e)
         {
-
             AgregarPopup.IsOpen = false;
         }
 
         private void BtnSeleccionarImagen_Click(object sender, RoutedEventArgs e)
         {
-            
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "Imágenes|*.jpg;*.jpeg;*.png;*.bmp;*.gif",
+                Title = "Seleccionar imagen del artículo"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // 1. Ruta de destino (carpeta Resources del proyecto)
+                    string projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+                    string resourcesPath = System.IO.Path.Combine(projectRoot, "Resources");
+
+                    // 2. Crear directorio si no existe
+                    if (!Directory.Exists(resourcesPath))
+                        Directory.CreateDirectory(resourcesPath);
+
+                    // 3. Generar nombre único para evitar colisiones
+                    string fileName = $"art_{DateTime.Now:yyyyMMddHHmmss}{System.IO.Path.GetExtension(openFileDialog.FileName)}";
+                    string finalPath = System.IO.Path.Combine(resourcesPath, fileName);
+
+                    // 4. Copiar el archivo
+                    File.Copy(openFileDialog.FileName, finalPath, overwrite: true);
+
+                    // 5. Guardar ruta relativa en el modelo
+                    ArticuloSeleccionado.Foto = $"Resources\\{fileName}";
+
+                    // 6. Actualizar UI
+                    OnPropertyChanged(nameof(ArticuloSeleccionado));
+
+                    // 7. (NUEVO) Añadir el archivo al .csproj para que aparezca en el Explorador de Soluciones
+                    AddFileToProject(System.IO.Path.Combine("Resources", fileName));
+
+                    MessageBox.Show("Imagen guardada correctamente", "Éxito",
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
+                    AgregarPopup.IsOpen = true;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al guardar la imagen: {ex.Message}", "Error",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+       
+        private void AddFileToProject(string relativePath)
+        {
+            string projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            string projectFile = Directory.GetFiles(projectRoot, "*.csproj").FirstOrDefault();
+
+            if (projectFile != null)
+            {
+                XDocument doc = XDocument.Load(projectFile);
+                XNamespace ns = doc.Root.GetDefaultNamespace();
+
+                // Verificar si el archivo ya está incluido
+                bool alreadyIncluded = doc.Descendants(ns + "Content")
+                                         .Any(x => x.Attribute("Include")?.Value == relativePath);
+
+                if (!alreadyIncluded)
+                {
+                    doc.Root.Add(new XElement(ns + "ItemGroup",
+                        new XElement(ns + "Content",
+                            new XAttribute("Include", relativePath),
+                            new XElement(ns + "CopyToOutputDirectory", "PreserveNewest")
+                        )
+                    ));
+                    doc.Save(projectFile);
+                }
+            }
         }
 
         private void txtDescripcion_MouseDoubleClick(object sender, MouseButtonEventArgs e)
