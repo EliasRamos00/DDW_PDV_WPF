@@ -8,6 +8,39 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="frmReportes">
 
+    <Page.Resources>
+        <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#999999"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#666666"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style TargetType="DatePicker">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Page.Resources>
+
     <Grid Margin="20" Background="#dedede">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,25 +49,35 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="RESUMEN DE INFORMACIÓN" 
-                   FontSize="20" FontWeight="Bold" 
+        <!-- Título -->
+        <TextBlock Grid.Row="0" 
+                   Text="RESUMEN DE INFORMACIÓN" 
+                   FontSize="20" 
+                   FontWeight="Bold" 
                    HorizontalAlignment="Center" 
                    Margin="0,10"
-                   />
+                   Foreground="#333333"/>
 
-        <!-- Filtros de Fecha y Sucursal -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+        <!-- Filtros -->
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Center" 
+                    Margin="0,15">
             <StackPanel Orientation="Horizontal" Margin="5">
-                
-                <DatePicker SelectedDate="{Binding FechaInicio}" Width="150"/>
+                <DatePicker SelectedDate="{Binding FechaInicio}" 
+                            Width="150"
+                            Style="{StaticResource {x:Type DatePicker}}"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="5">
-               
-                <DatePicker SelectedDate="{Binding FechaFin}" Width="150"/>
+                <DatePicker SelectedDate="{Binding FechaFin}" 
+                            Width="150"
+                            Style="{StaticResource {x:Type DatePicker}}"/>
             </StackPanel>
 
-            <ComboBox Width="150" Margin="5">
+            <ComboBox Width="150" 
+                      Margin="5"
+                      SelectedIndex="0">
                 <ComboBoxItem Content="Sucursal 1"/>
                 <ComboBoxItem Content="Sucursal 2"/>
                 <ComboBoxItem Content="Sucursal 3"/>
@@ -42,7 +85,8 @@
         </StackPanel>
 
         <!-- Contenedores de Información -->
-        <Grid Grid.Row="2" Margin="0,20">
+        <Grid Grid.Row="2" 
+              Margin="0,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -54,48 +98,118 @@
             </Grid.RowDefinitions>
 
             <!-- Ventas -->
-            <Border Grid.Column="0" Grid.Row="0" Margin="5" Padding="10" Background="White" BorderBrush="Gray" BorderThickness="1">
+            <Border Grid.Column="0" 
+                    Grid.Row="0" 
+                    Margin="5" 
+                    Padding="10">
                 <StackPanel>
-                    <TextBlock Text="VENTAS" FontWeight="Bold" Background="Gray" Foreground="White" Padding="5" TextAlignment="Center"/>
-                    <TextBlock Text="54" FontSize="16" TextAlignment="Center"/>
+                    <TextBlock Text="VENTAS" 
+                               FontWeight="Bold" 
+                               Background="Gray" 
+                               Foreground="White" 
+                               Padding="5" 
+                               TextAlignment="Center"
+                               FontSize="14"/>
+                    <TextBlock Text="54" 
+                               FontSize="18" 
+                               TextAlignment="Center"
+                               Margin="0,10"/>
                 </StackPanel>
             </Border>
 
             <!-- Total Ventas -->
-            <Border Grid.Column="1" Grid.Row="0" Margin="5" Padding="10" Background="White" BorderBrush="Gray" BorderThickness="1">
+            <Border Grid.Column="1" 
+                    Grid.Row="0" 
+                    Margin="5" 
+                    Padding="10">
                 <StackPanel>
-                    <TextBlock Text="TOTAL DE VENTAS" FontWeight="Bold" Background="Gray" Foreground="White" Padding="5" TextAlignment="Center"/>
-                    <TextBlock Text="$ 5678.50 MXN" FontSize="16" TextAlignment="Center"/>
+                    <TextBlock Text="TOTAL DE VENTAS" 
+                               FontWeight="Bold" 
+                               Background="Gray" 
+                               Foreground="White" 
+                               Padding="5" 
+                               TextAlignment="Center"
+                               FontSize="14"/>
+                    <TextBlock Text="$ 5678.50 MXN" 
+                               FontSize="18" 
+                               TextAlignment="Center"
+                               Margin="0,10"/>
                 </StackPanel>
             </Border>
 
             <!-- Ganancias -->
-            <Border Grid.Column="2" Grid.Row="0" Margin="5" Padding="10" Background="White" BorderBrush="Gray" BorderThickness="1">
+            <Border Grid.Column="2" 
+                    Grid.Row="0" 
+                    Margin="5" 
+                    Padding="10">
                 <StackPanel>
-                    <TextBlock Text="GANANCIAS" FontWeight="Bold" Background="Gray" Foreground="White" Padding="5" TextAlignment="Center"/>
-                    <TextBlock Text="$ 2345.00 MXN" FontSize="16" TextAlignment="Center"/>
+                    <TextBlock Text="GANANCIAS" 
+                               FontWeight="Bold" 
+                               Background="Gray" 
+                               Foreground="White" 
+                               Padding="5" 
+                               TextAlignment="Center"
+                               FontSize="14"/>
+                    <TextBlock Text="$ 2345.00 MXN" 
+                               FontSize="18" 
+                               TextAlignment="Center"
+                               Margin="0,10"/>
                 </StackPanel>
             </Border>
 
             <!-- Producto Más Vendido -->
-            <Border Grid.Column="0" Grid.Row="1" Margin="5" Padding="10" Background="White" BorderBrush="Gray" BorderThickness="1">
+            <Border Grid.Column="0" 
+                    Grid.Row="1" 
+                    Margin="5" 
+                    Padding="10">
                 <StackPanel>
-                    <TextBlock Text="PRODUCTO MAS VENDIDO" FontWeight="Bold" Background="Gray" Foreground="White" Padding="5" TextAlignment="Center"/>
-                    <TextBlock Text="RAMO ROSA #44" FontSize="14" TextAlignment="Center"/>
-                    <TextBlock Text="30 PZ." FontSize="14" TextAlignment="Center"/>
+                    <TextBlock Text="PRODUCTO MÁS VENDIDO" 
+                               FontWeight="Bold" 
+                               Background="Gray" 
+                               Foreground="White" 
+                               Padding="5" 
+                               TextAlignment="Center"
+                               FontSize="14"/>
+                    <TextBlock Text="RAMO ROSA #44" 
+                               FontSize="16" 
+                               TextAlignment="Center"
+                               Margin="0,5"/>
+                    <TextBlock Text="30 PZ." 
+                               FontSize="16" 
+                               TextAlignment="Center"/>
                 </StackPanel>
             </Border>
 
             <!-- Usuario con Más Ventas -->
-            <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="5" Padding="10" Background="White" BorderBrush="Gray" BorderThickness="1">
+            <Border Grid.Column="1" 
+                    Grid.Row="1" 
+                    Grid.ColumnSpan="2" 
+                    Margin="5,5,5,0" 
+                    Padding="10" Height="98" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="USUARIO CON MAS VENTAS" FontWeight="Bold" Background="Gray" Foreground="White" Padding="5" TextAlignment="Center"/>
-                    <TextBlock Text="JUAN PEREZ" FontSize="16" TextAlignment="Center"/>
+                    <TextBlock Text="USUARIO CON MÁS VENTAS" 
+                               FontWeight="Bold" 
+                               Background="Gray" 
+                               Foreground="White" 
+                               Padding="5" 
+                               TextAlignment="Center"
+                               FontSize="14"/>
+                    <TextBlock Text="JUAN PÉREZ" 
+                               FontSize="18" 
+                               TextAlignment="Center"
+                               />
                 </StackPanel>
             </Border>
         </Grid>
 
         <!-- Botón Generar PDF -->
-        <Button Grid.Row="3" Content="GENERAR PDF" Background="Gray" Foreground="White" Padding="10" Width="150" HorizontalAlignment="Center" Margin="0,20,0,22" Click="Button_Click"/>
+        <Button Grid.Row="3" 
+                Content="GENERAR PDF" 
+                Background="Gray" 
+                Foreground="White" 
+                Width="150" 
+                HorizontalAlignment="Center" 
+                Margin="0,20"
+                FontSize="14"/>
     </Grid>
 </Page>

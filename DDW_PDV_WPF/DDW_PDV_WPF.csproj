@@ -193,32 +193,20 @@
     <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.9.0\build\MaterialDesignThemes.targets'))" />
   </Target>
   <ItemGroup>
-    <Content Include="Resources\art_20250327130225.jpg">
+    <Resource Include="Resources\f2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\art_20250331220233.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\art_20250327130813.jpg">
+    <Content Include="Resources\art_20250331220338.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\art_20250327131418.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\art_20250327141149.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\art_20250327141410.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\art_20250327141646.jpg">
+    <Content Include="Resources\art_20250331232502.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
