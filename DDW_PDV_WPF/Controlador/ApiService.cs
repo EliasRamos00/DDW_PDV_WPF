@@ -69,10 +69,6 @@ namespace DDW_PDV_WPF.Controlador
                 return false;
             }
         }
-
-
-
-
     }
 
 
