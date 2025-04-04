@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modelo\ArticuloDTO.cs" />
+    <Compile Include="Modelo\HistorialDTO.cs" />
     <Compile Include="Modelo\UsuarioDTO.cs" />
     <Compile Include="Modelo\MCategorias.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

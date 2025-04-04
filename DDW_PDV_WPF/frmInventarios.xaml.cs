@@ -24,6 +24,7 @@ using System.Net.Http;
 using System.Xml.Linq;
 using System.Diagnostics;
 using QRCoder;
+using System.Xml.Serialization;
 
 
 namespace DDW_PDV_WPF
@@ -39,7 +40,9 @@ namespace DDW_PDV_WPF
         private ArticuloDTO _articuloSeleccionado;
         private bool _hasChanges;
         private string _textoBusqueda;
+        private ArticuloDTO _articuloOriginal;
         private bool _isNewItem = false;
+
 
 
         public ObservableCollection<ArticuloDTO> ListaArticulos
@@ -54,16 +57,41 @@ namespace DDW_PDV_WPF
 
         public ArticuloDTO ArticuloSeleccionado
         {
-            get { return _articuloSeleccionado; }
+            get => _articuloSeleccionado;
             set
             {
                 _articuloSeleccionado = value;
-                btnCancelarCambios.Visibility = Visibility.Hidden;
-                btnGuardarCambios.Visibility = Visibility.Hidden;
+               
 
-                OnPropertyChanged(nameof(ArticuloSeleccionado)); // Notificar cambios
+                if (_articuloSeleccionado != null && !_isNewItem && value != null)
+                {
+                    _articuloOriginal = new ArticuloDTO
+                    {
+                        idArticulo = _articuloSeleccionado.idArticulo,
+                        Foto = _articuloSeleccionado.Foto,
+                        Color = _articuloSeleccionado.Color,
+                        Descripcion = _articuloSeleccionado.Descripcion,
+                        Tamanio = _articuloSeleccionado.Tamanio,
+                        CodigoBarras = _articuloSeleccionado.CodigoBarras,
+                        IdCategoria = _articuloSeleccionado.IdCategoria,
+                        idInventario = _articuloSeleccionado.idInventario,
+                        Stock = _articuloSeleccionado.Stock,
+                        Min = _articuloSeleccionado.Min,
+                        Max = _articuloSeleccionado.Max,
+
+                    };
+                }
+
+                
+                btnCancelarCambios.Visibility = value != null ? Visibility.Visible : Visibility.Hidden;
+                btnGuardarCambios.Visibility = value != null ? Visibility.Visible : Visibility.Hidden;
+
+                OnPropertyChanged(nameof(ArticuloSeleccionado));
+                OnPropertyChanged(nameof(HasChanges));
             }
         }
+
+
 
         public bool HasChanges
         {
@@ -136,7 +164,7 @@ namespace DDW_PDV_WPF
 
         private void txtCodigo_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string textoQR = txtCodigo.Text; // Asume que tu TextBox se llama 'txtCodigo'
+            string textoQR = txtCodigo.Text; 
             BitmapImage qrImage = GenerarCodigoQR(textoQR);
 
             if (qrImage != null)
@@ -150,17 +178,17 @@ namespace DDW_PDV_WPF
             HasChanges = true;
 
         }
+
         private void Cancelar_Click(object sender, RoutedEventArgs e)
         {
             if (_isNewItem)
             {
-                // Si estaba creando un nuevo artículo, simplemente limpiamos la selección
                 ArticuloSeleccionado = null;
                 _isNewItem = false;
             }
             else if (ArticuloSeleccionado != null)
             {
-                // Para edición, recargamos los datos como antes
+            
                 int idSeleccionado = ArticuloSeleccionado.idArticulo;
                 CargarDatos();
                 ArticuloSeleccionado = _todosLosArticulos.FirstOrDefault(a => a.idArticulo == idSeleccionado);
@@ -256,7 +284,27 @@ namespace DDW_PDV_WPF
 
         }
 
+        private string SerializarAXml(ArticuloDTO articulo)
+        {
+            if (articulo == null) return null;
 
+            try
+            {
+                var serializer = new XmlSerializer(typeof(ArticuloDTO));
+                using (var writer = new StringWriter())
+                {
+                    serializer.Serialize(writer, articulo);
+                    return writer.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al serializar a XML: {ex.Message}");
+                return null;
+            }
+        }
+
+       
         private async void GuardarCambios(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null) return;
@@ -264,9 +312,11 @@ namespace DDW_PDV_WPF
             try
             {
                 bool success;
+                string accion = _isNewItem ? "CREATE" : "UPDATE";
+
+                // Guardar el artículo
                 if (_isNewItem)
                 {
-                    
                     success = await _apiService.PostAsync("/api/CArticulos", ArticuloSeleccionado);
                 }
                 else
@@ -276,12 +326,29 @@ namespace DDW_PDV_WPF
 
                 if (success)
                 {
-                    MessageBox.Show("Operación exitosa");
-                    CargarDatos(); 
-                }
-                else
-                {
-                    MessageBox.Show("Error en la operación");
+                    var historial = new HistorialDTO
+                    {
+                        fechaHora = DateTime.Now,
+                        idUsuario = "1",
+                        accion = accion,
+                        clase = "ArticulosDTO",
+                        antes =  SerializarAXml(_articuloOriginal),
+                        despues = SerializarAXml(ArticuloSeleccionado)
+                    };
+
+                    bool historialSuccess = await _apiService.PostAsync("/api/CHistoriales", historial);
+
+                    string mensaje = historialSuccess
+                        ? "Operación completada con registro de historial"
+                        : "Operación completada pero falló registro de historial";
+
+                    MessageBox.Show(mensaje);
+
+                    _isNewItem = false;
+                    CargarDatos();
+                    HasChanges = false;
+                    btnCancelarCambios.Visibility = Visibility.Hidden;
+                    btnGuardarCambios.Visibility = Visibility.Hidden;
                 }
             }
             catch (Exception ex)
@@ -289,26 +356,83 @@ namespace DDW_PDV_WPF
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+
+       
 
         private async void EliminarArticulo(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null) return;
 
+            var confirmacion = MessageBox.Show(
+                $"¿Está seguro que desea eliminar el artículo {ArticuloSeleccionado.idArticulo}?",
+                "Confirmar eliminación",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirmacion != MessageBoxResult.Yes) return;
+
             try
             {
-                bool success = await _apiService.DeleteAsync($"/api/CArticulosDTO/{ArticuloSeleccionado.idArticulo}");
+                // Registrar en historial antes de eliminar
+                var historial = new HistorialDTO
+                {
+                    fechaHora = DateTime.Now,
+                    idUsuario = "1",
+                    accion = "DELETE",
+                    clase = "ArticulosDTO",
+                    antes = SerializarAXml(ArticuloSeleccionado),
+                    despues = null
+                };
+
+                bool historialSuccess = await _apiService.PostAsync("/api/CHistoriales", historial);
+
+                // Eliminar el artículo
+                bool success = await _apiService.DeleteAsync($"/api/CArticulos/{ArticuloSeleccionado.idArticulo}");
+
                 if (success)
                 {
-                    MessageBox.Show("Artículo eliminado");
+                    string mensaje = historialSuccess
+                        ? "Artículo eliminado con registro de historial"
+                        : "Artículo eliminado pero falló registro de historial";
+
+                    MessageBox.Show(mensaje);
                     CargarDatos();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                MessageBox.Show($"Error al eliminar: {ex.Message}");
             }
         }
 
+
+        private void PrecioTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                // Quitar el formato monetario al recibir el foco
+                if (decimal.TryParse(textBox.Text, NumberStyles.Currency, CultureInfo.CurrentCulture, out decimal valor))
+                {
+                    textBox.Text = valor.ToString(CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
+        private void PrecioTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                // Aplicar formato monetario al perder el foco
+                if (decimal.TryParse(textBox.Text, out decimal valor))
+                {
+                    textBox.Text = valor.ToString("C");
+                }
+                else
+                {
+                    textBox.Text = 0.ToString("C");
+                }
+            }
+        }
         private void BtnSeleccionarImagen_Click(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null)

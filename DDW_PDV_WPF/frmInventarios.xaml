@@ -336,29 +336,37 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+
+                    <!-- Precio Venta -->
                     <Grid Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" MinWidth="120"/>
                             <ColumnDefinition Width="*" MinWidth="100"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="P. Venta:" VerticalAlignment="Center" Margin="10,5,5,5"
-                       FontSize="14" Foreground="#333333"/>
-                        <TextBox Grid.Column="1" Text="{Binding PrecioVenta, StringFormat='{}{0:C}', UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                     MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                     TextChanged="TextBox_TextChanged"/>
+                   FontSize="14" Foreground="#333333"/>
+                        <TextBox x:Name="txtPrecioVenta" Grid.Column="1" 
+                 Text="{Binding PrecioVenta, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" 
+                 Style="{StaticResource DetailTextBoxStyle}" 
+                 Margin="5"
+                 GotFocus="PrecioTextBox_GotFocus"
+                 LostFocus="PrecioTextBox_LostFocus"/>
                     </Grid>
+
+                    <!-- Precio Compra -->
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" MinWidth="120"/>
                             <ColumnDefinition Width="*" MinWidth="100"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="P. Compra:" VerticalAlignment="Center" Margin="10,5,5,5"
-                       FontSize="14" Foreground="#333333"/>
-                        <TextBox x:Name="txtCodigo1" Grid.Column="1" Text="{Binding PrecioCompra, StringFormat='{}{0:C}', UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                     MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                     TextChanged="TextBox_TextChanged"/>
+                   FontSize="14" Foreground="#333333"/>
+                        <TextBox x:Name="txtPrecioCompra" Grid.Column="1" 
+                 Text="{Binding PrecioCompra, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" 
+                 Style="{StaticResource DetailTextBoxStyle}" 
+                 Margin="5"
+                 GotFocus="PrecioTextBox_GotFocus"
+                 LostFocus="PrecioTextBox_LostFocus"/>
                     </Grid>
                 </Grid>
 
@@ -409,7 +417,7 @@
                             Background="Transparent"
                             Foreground="#767676"
                             Click="EliminarArticulo"/>
-                    <TextBlock Text="Quitar Producto"
+                    <TextBlock Text="ELIMINAR PRODUCTO"
                                FontSize="13"
                                Foreground="#767676"
                                HorizontalAlignment="Center"/>
