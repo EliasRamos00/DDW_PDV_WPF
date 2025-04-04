@@ -35,7 +35,10 @@ namespace DDW_PDV_WPF
         {
             MainFrame.Navigate(new frmInventarios());
         }
-
+        private void NavigateToCierreDeCajas(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new frmCierreDeCajas());
+        }
         private void NavigateToVentas(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new frmVentas(Usuario));
@@ -47,7 +50,7 @@ namespace DDW_PDV_WPF
 
         private void NavigateHistorial(object sender, RoutedEventArgs e)
         {
-           // MainFrame.Navigate(new Page2());
+            MainFrame.Navigate(new frmHistorialModificaciones());
         }
 
 
