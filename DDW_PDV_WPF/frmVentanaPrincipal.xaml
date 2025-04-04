@@ -23,17 +23,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Botón cerrar sesión -->
-                <Button Content="CERRAR SESIÓN"
-                        FontSize="12"
-                        HorizontalAlignment="Left"
-                        Padding="10 5"
-                        Background="Transparent"
-                        Foreground="#FFE74C3C"
-                        FontWeight="Bold"
-                        BorderThickness="0"
-                        Margin="0,0,0,10"
-                        Grid.Row="0" Click="BtnCerrarSesion_Click"/>
+              
                 
                 <TextBlock Text="Bienvenido: 
                            "
@@ -63,12 +53,22 @@
                         </Style>
                     </StackPanel.Resources>
 
-                    <Button Content="Ventas" Style="{StaticResource MenuButtonStyle}" Click="NavigateToVentas"/>
-                    <Button Content="Inventario" Style="{StaticResource MenuButtonStyle}" Click="NavigateToInventarios"/>
-                    <Button Content="Historial" Style="{StaticResource MenuButtonStyle}" Click="NavigateHistorial"/>
-                    <Button Content="Ticket" Style="{StaticResource MenuButtonStyle}"/>
-                    <Button Content="Reportes" Style="{StaticResource MenuButtonStyle}" Click="NavigateToReportes"/>
-
+                    <Button Content="Ventas" Style="{StaticResource MenuButtonStyle}" Click="NavigateToVentas" FontSize="23" HorizontalAlignment="Left" Margin="10"/>
+                    <Button Content="Inventario" Style="{StaticResource MenuButtonStyle}" Click="NavigateToInventarios" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
+                    <Button Content="Resumen" Style="{StaticResource MenuButtonStyle}" Click="NavigateToReportes" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
+                    <Button Content="Historial" Style="{StaticResource MenuButtonStyle}" Click="NavigateHistorial" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
+                    <!-- Botón cerrar sesión -->
+                    <Button Content="CERRAR SESIÓN"
+                      FontSize="13"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Bottom"
+                      Padding="10 5"
+                      Background="Transparent"
+                      Foreground="#FFE74C3C"
+                      FontWeight="Bold"
+                      BorderThickness="0"
+                      Margin="0,0,0,10"
+                      Grid.Row="0" Click="BtnCerrarSesion_Click"/>  
                 </StackPanel>
             </Grid>
         </Border>

@@ -40,9 +40,52 @@ namespace DDW_PDV_WPF
         private decimal _subTotal;
         private decimal _total;
         private string _usuario;
+        private string qrLeido="";
+        private decimal _montoRecibido;
+        private decimal _cambio;
+
 
         private ObservableCollection<MCategorias> _categorias;
 
+        public decimal Cambio
+        {
+            get => _montoRecibido-_total;
+
+        }
+
+
+        public decimal MontoRecibido
+        {
+            get => _montoRecibido;
+            set
+            {
+                if (_montoRecibido != value)
+                {
+                    _montoRecibido = value;
+                    _cambio = _montoRecibido - _total;
+                    CambiarColorCambio();
+                    OnPropertyChanged(nameof(Cambio));
+                    OnPropertyChanged(nameof(MontoRecibido));
+                }
+            }
+
+        }
+
+        private void CambiarColorCambio()
+        {
+            if(Cambio > 0)
+            {
+                txtCambio.Foreground = new SolidColorBrush(Colors.Green);
+            }
+            else if (Cambio < 0)
+            {
+                txtCambio.Foreground = new SolidColorBrush(Colors.Red);
+            }
+            else
+            {
+                txtCambio.Foreground = new SolidColorBrush(Colors.Black);
+            }
+        }
 
         public decimal SubTotal
         {
@@ -148,6 +191,23 @@ namespace DDW_PDV_WPF
             UpdateDateTime();
         }
 
+        private void Window_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+           
+            if (e.Text == "\r") // Si detecta Enter, significa que el código está completo
+            {
+
+                string CodigoArticulo = qrLeido;
+                Console.WriteLine(CodigoArticulo);
+                //ProcesarCodigo(codigoActual);
+                ScannArticulo(CodigoArticulo);
+                qrLeido = ""; // Reinicia el código
+            }
+            else
+            {
+                qrLeido += e.Text; // Agrega cada carácter leído
+            }
+        }
 
         private void CalcularTotalCarro()
         {
@@ -157,9 +217,12 @@ namespace DDW_PDV_WPF
                 aux = aux + (dto.PrecioVenta * dto.Cantidad);
             }
             _total = aux;
-            _subTotal = aux;
+            _subTotal = aux;            
+            CambiarColorCambio();
             OnPropertyChanged(nameof(Total));
             OnPropertyChanged(nameof(SubTotal));
+            OnPropertyChanged(nameof(Cambio));
+
 
         }
         private void UpdateDateTime()
@@ -245,6 +308,50 @@ namespace DDW_PDV_WPF
 
         }
 
+        private void ScannArticulo(string CodigoArticulo)
+        {
+            // Buscar el artículo en la lista de productos disponibles
+            var articuloEscaneado = _listaArticulos.FirstOrDefault(a => a.CodigoBarras == CodigoArticulo);
+
+            if (articuloEscaneado != null)
+            {
+                // Buscar si el artículo ya está en el carrito de ventas
+                var articuloEnCarrito = _carritoVenta.FirstOrDefault(item => item.idArticulo == articuloEscaneado.idArticulo);
+
+                if (articuloEnCarrito != null)
+                {
+                    // Si el artículo ya existe en el carrito, incrementar cantidad
+                    articuloEnCarrito.Cantidad++;
+                    articuloEnCarrito.TotalCarrito = articuloEnCarrito.Cantidad * articuloEnCarrito.PrecioVenta;
+                }
+                else
+                {
+                    // Si el artículo no está en el carrito, agregarlo como nuevo
+                    ArticuloDTO nuevoArticulo = new ArticuloDTO
+                    {
+                        idArticulo = articuloEscaneado.idArticulo,
+                        Descripcion = articuloEscaneado.Descripcion,
+                        Foto = articuloEscaneado.Foto,
+                        PrecioVenta = articuloEscaneado.PrecioVenta,
+                        Cantidad = 1
+                    };
+
+                    _carritoVenta.Add(nuevoArticulo);
+                    nuevoArticulo.TotalCarrito = nuevoArticulo.Cantidad * nuevoArticulo.PrecioVenta;
+                }
+
+                // Notificar cambios en el carrito y recalcular el total
+                OnPropertyChanged(nameof(CarritoVenta));
+                CalcularTotalCarro();
+            }
+            else
+            {
+                MessageBox.Show("Artículo no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+
         private void ClickProducto(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
@@ -321,10 +428,11 @@ namespace DDW_PDV_WPF
                 if (resultado)
                 {
                     MessageBox.Show("Venta registrada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                    ImpresoraTicket.ImprimeTicket(_carritoVenta, _total);
+                    ImpresoraTicket.ImprimeTicket(_carritoVenta, _total, Cambio);
                     _carritoVenta.Clear(); // Limpiar el carrito después de la venta
                     _total = 0;
                     _subTotal = 0;
+                    _montoRecibido = 0;
                     CalcularTotalCarro();
 
 

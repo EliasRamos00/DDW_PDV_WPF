@@ -24,7 +24,7 @@ namespace DDW_PDV_WPF.Controlador
         {
            
 
-            string RFC = "GUSY970729", Nombre = "YECENIA GURROLA SANCHEZ", Dirr = "PASTEUR 301 SUR", Cel = "618 230 9875", Ciudad = "DURANGO DGO.", CP = "34000";
+            string RFC = "GUSY970729 868", Nombre = "YECENIA GURROLA SANCHEZ", Dirr = "PASTEUR 301 SUR", Cel = "618 230 9875", Ciudad = "DURANGO DGO.", CP = "34000";
 
 
             // Crear el FlowDocument
@@ -36,12 +36,12 @@ namespace DDW_PDV_WPF.Controlador
 
             // Crear un párrafo para la imagen (por ejemplo, logo en la parte superior)
             Paragraph imageParagraph = new Paragraph();
-            imageParagraph.TextAlignment = TextAlignment.Left; // Centrar la imagen
+            imageParagraph.TextAlignment = TextAlignment.Center; // Centrar la imagen
                                                                // Obtener la ruta del directorio raíz del proyecto
             string rutaRaiz = Directory.GetParent(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.FullName).FullName;
 
             // Ruta completa del archivo de imagen en la carpeta Resources
-            string rutaImagen = System.IO.Path.Combine(rutaRaiz, "Resources", "DDW.png");
+            string rutaImagen = System.IO.Path.Combine(rutaRaiz, "Resources", "omegasymbol.png");
 
             // Crear la URI a partir de la ruta combinada
             Uri imagenUri = new Uri(rutaImagen);
@@ -50,18 +50,19 @@ namespace DDW_PDV_WPF.Controlador
             Image logoImage = new Image
             {
                 Source = new BitmapImage(imagenUri),
-                Height = 200, // Ajusta la altura de la imagen según necesidad
+                Height = 150, // Ajusta la altura de la imagen según necesidad
+                Width = 150,
                 Margin = new Thickness(0),
-                MaxHeight = 200,
-                MaxWidth = 200
+                MaxHeight = 150,
+                MaxWidth = 150
 
             };
 
             // Añadir la imagen al párrafo
-            //imageParagraph.Inlines.Add(new Run(""));
+            //imageParagraph.Inlines.Add(new Run(""));            
 
             imageParagraph.Inlines.Add(new InlineUIContainer(logoImage));
-            //flowDoc.Blocks.Add(imageParagraph); AGREGAR EN CASO DE NECESITAR LA IMAGEN ******************
+            flowDoc.Blocks.Add(imageParagraph); //AGREGAR EN CASO DE NECESITAR LA IMAGEN ******************
 
             // Crear un párrafo con contenido para el encabezado "TICKET"
             Paragraph headerParagraph = new Paragraph
@@ -73,7 +74,7 @@ namespace DDW_PDV_WPF.Controlador
             };
 
             // Añadir el texto de encabezado
-            headerParagraph.Inlines.Add(new Run(" Flores Artifiales y Merceria Omega \n"));
+            headerParagraph.Inlines.Add(new Run(" Flores Artificiales y Artesanias Omega \n"));
             flowDoc.Blocks.Add(headerParagraph);
 
             // Crear un párrafo con la fecha
