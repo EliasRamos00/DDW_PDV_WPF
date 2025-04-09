@@ -428,7 +428,7 @@ namespace DDW_PDV_WPF
                 if (resultado)
                 {
                     MessageBox.Show("Venta registrada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                    ImpresoraTicket.ImprimeTicket(_carritoVenta, _total, Cambio);
+                    ImpresoraTicket.ImprimeTicket(_carritoVenta, _total);
                     _carritoVenta.Clear(); // Limpiar el carrito después de la venta
                     _total = 0;
                     _subTotal = 0;

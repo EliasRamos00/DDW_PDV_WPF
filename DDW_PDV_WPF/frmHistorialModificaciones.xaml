@@ -4,6 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DDW_PDV_WPF"
+      
+     
       mc:Ignorable="d" 
       Title="frmHistorialModificaciones">
 
@@ -53,54 +55,253 @@
                 </Grid>
             </Border>
 
-            <DataGrid AutoGenerateColumns="False" Height="400" Background="#dedede">
+            <DataGrid AutoGenerateColumns="False" Height="400" Background="#dedede" 
+          SelectionChanged="DataGrid_SelectionChanged"  IsReadOnly="True"               
+                SelectionMode="Single"
+         
+                
+               
+                ItemsSource="{Binding ListaHistorial}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="FECHA Y HORA" Binding="{Binding FechaHora}" Width="150"/>
-                    <DataGridTextColumn Header="USUARIO" Binding="{Binding Usuario}" Width="100"/>
-                    <DataGridTextColumn Header="TIPO DE MODIFICACIÓN" Binding="{Binding TipoModificacion}" Width="120"/>
-                    <DataGridTextColumn Header="PRODUCTOS" Binding="{Binding Producto}" Width="120"/>
-                    <DataGridTextColumn Header="MOTIVO" Binding="{Binding Motivo}" Width="180"/>
+                    <!-- Formatear la fecha para mejor visualización -->
+                    <DataGridTextColumn Header="FECHA Y HORA" Width="150">
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="fechaHora" StringFormat="{}{0:}"/>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="USUARIO" Binding="{Binding idUsuario}" Width="100"/>
+
+                    <!-- Mostrar el tipo de acción (CREATE/UPDATE/DELETE) -->
+                    <DataGridTextColumn Header="ACCIÓN" Binding="{Binding accion}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding accion}" Value="CREATE">
+                                        <Setter Property="Foreground" Value="Green"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding accion}" Value="UPDATE">
+                                        <Setter Property="Foreground" Value="Blue"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding accion}" Value="DELETE">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Mostrar resumen del estado anterior -->
+                    <DataGridTextColumn Header="ANTES" Width="120">
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="antes">
+                                <Binding.Converter>
+                                    <local:XmlToSummaryConverter/>
+                                </Binding.Converter>
+                            </Binding>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
+
+                    <!-- Mostrar resumen del nuevo estado -->
+                    <DataGridTextColumn Header="DESPUÉS" Width="180">
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="despues">
+                                <Binding.Converter>
+                                    <local:XmlToSummaryConverter/>
+                                </Binding.Converter>
+                            </Binding>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
 
         <!-- Panel Derecho -->
-        <Grid Grid.Column="1" Background="#E5E5E5" >
+        <Grid Grid.Column="1" Background="#E5E5E5" Margin="10" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <!-- Encabezado -->
                 <RowDefinition Height="Auto"/>
+                <!-- Fecha y Hora -->
                 <RowDefinition Height="Auto"/>
+                <!-- Usuario -->
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <!-- Tipo de Modificación -->
+                <RowDefinition Height="200"/>
+                <!-- Imagen del Producto -->
                 <RowDefinition Height="*"/>
+                <!-- Motivo -->
+                <RowDefinition Height="Auto"/>
+                <!-- Botones (si los hubiera) -->
             </Grid.RowDefinitions>
 
-            <TextBlock Text="DETALLES DE LA MODIFICACIÓN" FontSize="22" FontWeight="Bold" Foreground="Gray" HorizontalAlignment="Center" Grid.Row="0" Margin="0,0,0,10"/>
+            <!-- Encabezado -->
+            <TextBlock Grid.Row="0" Text="DETALLES DE LA MODIFICACIÓN" 
+               FontSize="22" FontWeight="Bold" Foreground="#333333" 
+               HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
-            <StackPanel Grid.Row="1" Margin="10">
-                <TextBlock Text="FECHA Y HORA" FontWeight="Bold"/>
-                <TextBlock Name="txtFechaHora" FontSize="14" Foreground="#333"/>
-            </StackPanel>
+            <!-- Fecha y Hora -->
+            <Grid Grid.Row="1" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*" MinWidth="200"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="FECHA Y HORA:" VerticalAlignment="Center" Margin="10,5,5,5"
+                   FontSize="14" Foreground="#333333" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Name="txtFechaHora" 
+                   FontSize="14" Foreground="#333333" Margin="5"
+                   VerticalAlignment="Center"/>
+            </Grid>
 
-            <StackPanel Grid.Row="2" Margin="10">
-                <TextBlock Text="USUARIO" FontWeight="Bold"/>
-                <TextBlock Name="txtUsuario" FontSize="14" Foreground="#333"/>
-            </StackPanel>
+            <!-- Usuario -->
+            <Grid Grid.Row="2" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*" MinWidth="200"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="USUARIO:" VerticalAlignment="Center" Margin="10,5,5,5"
+                   FontSize="14" Foreground="#333333" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Name="txtUsuario" 
+                   FontSize="14" Foreground="#333333" Margin="5"
+                   VerticalAlignment="Center"/>
+            </Grid>
 
-            <StackPanel Grid.Row="3" Margin="10">
-                <TextBlock Text="TIPO DE MODIFICACIÓN" FontWeight="Bold"/>
-                <TextBlock Name="txtTipoModificacion" FontSize="14" Foreground="#333"/>
-            </StackPanel>
+            <!-- Tipo de Modificación -->
+            <Grid Grid.Row="3" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*" MinWidth="200"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="ACCION:" VerticalAlignment="Center" Margin="10,5,5,5"
+                   FontSize="14" Foreground="#333333" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" Name="txtTipoModificacion" 
+                   FontSize="14" Foreground="#333333" Margin="5"
+                   VerticalAlignment="Center"/>
+            </Grid>
 
-            <StackPanel Grid.Row="4" Margin="10">
-                <TextBlock Text="PRODUCTOS" FontWeight="Bold"/>
-                <Image Name="imgProducto"  Stretch="Uniform" Margin="10" HorizontalAlignment="Center"/>
-            </StackPanel>
+            <!-- Imagen del Producto -->
+            <Grid Grid.Row="4" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="5" Margin="10">
-                <TextBlock Text="Motivo:" FontWeight="Bold"/>
-                <TextBlock Name="txtMotivo" TextWrapping="Wrap" FontSize="14" Foreground="#333"/>
-            </StackPanel>
+                <TextBlock Grid.ColumnSpan="2" Text="PRODUCTOS" 
+                   FontWeight="Bold" FontSize="14" Foreground="#333333"
+                   Margin="10,5,5,5" VerticalAlignment="Top"/>
+
+                <!-- Reemplaza el Border con imagen por este código -->
+                <ScrollViewer Grid.Column="0" Margin="0,25,10,0" 
+              VerticalScrollBarVisibility="Auto"
+              HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl Name="lstProductos" Background="White" Width="170" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="5" Padding="10" Background="#F5F5F5" CornerRadius="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Imagen del producto -->
+                                        <Image x:Name="imagenProducto" 
+                               Stretch="Uniform" 
+                               Width="60" Height="60"
+                               Margin="0,0,10,0"/>
+
+                                        <!-- Detalles del producto -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Nombre}" 
+                                       FontWeight="Bold" 
+                                       TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Cantidad, StringFormat='Cantidad: {0}'}" 
+                                       Foreground="#555"/>
+                                            <TextBlock Text="{Binding Codigo, StringFormat='Código: {0}'}" 
+                                       Foreground="#555" FontSize="12"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- Sección de Comparación -->
+            <Grid Grid.Row="5" Margin="0,0,0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Encabezado -->
+                <TextBlock Text="COMPARACIÓN DE CAMBIOS" 
+               FontSize="14" FontWeight="Bold" Foreground="#333333"
+               Margin="10,5,5,5" Grid.Row="0"/>
+
+                <!-- Contenedor principal de comparación -->
+                <Grid Grid.Row="1" Margin="10,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <!-- Separador -->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Columna ANTES -->
+                    <Border Grid.Column="0" Background="#FAFAFA" CornerRadius="5" 
+                BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="ESTADO ANTERIOR" FontWeight="Bold" Margin="0,0,0,5"
+                           Foreground="#555555" HorizontalAlignment="Center"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                                <TextBlock Name="txtAntes" TextWrapping="Wrap" FontSize="13"
+                               Foreground="#333333"/>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Separador visual -->
+                    <Rectangle Grid.Column="1" Fill="#E0E0E0" Width="1" HorizontalAlignment="Center"/>
+
+                    <!-- Columna DESPUÉS -->
+                    <Border Grid.Column="2" Background="#FAFAFA" CornerRadius="5" 
+                BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="ESTADO ACTUAL" FontWeight="Bold" Margin="0,0,0,5"
+                           Foreground="#555555" HorizontalAlignment="Center"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                                <TextBlock Name="txtDespues" TextWrapping="Wrap" FontSize="13"
+                               Foreground="#333333"/>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Sección de Motivo -->
+            <Grid Grid.Row="6" Margin="0,0,0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="DETALLE DE CAMBIOS" 
+               FontSize="14" FontWeight="Bold" Foreground="#333333"
+               Margin="10,5,5,5" Grid.Row="0"/>
+
+                <Border Grid.Row="1" Background="#FFF9F9F9" CornerRadius="5" 
+            BorderBrush="#E0E0E0" BorderThickness="1" Margin="10,0,10,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                        <TextBlock Name="txtMotivo" TextWrapping="Wrap" FontSize="13"
+                       Margin="10" Foreground="#333333"/>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+
+
         </Grid>
     </Grid>
 </Page>
