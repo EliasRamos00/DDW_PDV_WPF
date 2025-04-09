@@ -78,6 +78,8 @@ namespace DDW_PDV_WPF
                         Stock = _articuloSeleccionado.Stock,
                         Min = _articuloSeleccionado.Min,
                         Max = _articuloSeleccionado.Max,
+                        PrecioVenta=_articuloSeleccionado.PrecioVenta,
+                        PrecioCompra=_articuloSeleccionado.PrecioCompra
 
                     };
                 }
@@ -328,7 +330,7 @@ namespace DDW_PDV_WPF
                 {
                     var historial = new HistorialDTO
                     {
-                        fechaHora = DateTime.Now,
+                        fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
                         idUsuario = "1",
                         accion = accion,
                         clase = "ArticulosDTO",
@@ -376,7 +378,7 @@ namespace DDW_PDV_WPF
                 // Registrar en historial antes de eliminar
                 var historial = new HistorialDTO
                 {
-                    fechaHora = DateTime.Now,
+                    fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
                     idUsuario = "1",
                     accion = "DELETE",
                     clase = "ArticulosDTO",

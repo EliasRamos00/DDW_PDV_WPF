@@ -11,7 +11,7 @@ namespace DDW_PDV_WPF.Modelo
     public class HistorialDTO
     {
         public int idHistorial { get; set; }
-        public DateTime fechaHora { get; set; }
+        public string fechaHora { get; set; }
         public string idUsuario { get; set; }
         public string accion { get; set; }  
         public string clase { get; set; }   

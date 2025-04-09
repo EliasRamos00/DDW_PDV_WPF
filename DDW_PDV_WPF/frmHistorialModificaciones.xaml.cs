@@ -128,7 +128,7 @@ namespace DDW_PDV_WPF
             try
             {
                 // Mostrar información básica
-                txtFechaHora.Text = historial.fechaHora.ToString("g");
+                txtFechaHora.Text = historial.fechaHora.ToString();
                 txtUsuario.Text = historial.idUsuario;
                 txtTipoModificacion.Text = historial.accion;
 
@@ -142,7 +142,6 @@ namespace DDW_PDV_WPF
                         txtAntes.Text = FormatearDatosArticulo(articuloAntes);
                     }
                 }
-
                 // Decodificar y mostrar datos "después"
                 ArticuloDTO articuloDespues = null;
                 if (!string.IsNullOrEmpty(historial.despues))
@@ -153,7 +152,6 @@ namespace DDW_PDV_WPF
                         txtDespues.Text = FormatearDatosArticulo(articuloDespues);
                     }
                 }
-
                 // Mostrar comparación de cambios
                 txtMotivo.Text = CompararCambios(articuloAntes, articuloDespues);
 
@@ -174,7 +172,6 @@ namespace DDW_PDV_WPF
         private string FormatearDatosArticulo(ArticuloDTO articulo)
         {
             if (articulo == null) return "N/A";
-
             return $@"ID: {articulo.idArticulo}
             Descripción: {articulo.Descripcion}
             Categoría: {articulo.IdCategoria}
@@ -264,7 +261,7 @@ namespace DDW_PDV_WPF
             if (e.AddedItems.Count > 0 && e.AddedItems[0] is HistorialDTO historial)
             {
                
-                    DecodificarDatosHistorial(historial);
+                  DecodificarDatosHistorial(historial);
                
                 HistorialSeleccionado = historial;
 
@@ -273,7 +270,7 @@ namespace DDW_PDV_WPF
                 var despues = DeserializarDeXml<ArticuloDTO>(historial.despues);
 
                 // Actualizar controles del panel derecho
-                txtFechaHora.Text = historial.fechaHora.ToString("");
+                txtFechaHora.Text = historial.fechaHora.ToString();
                 txtUsuario.Text = historial.idUsuario;
                 txtTipoModificacion.Text = historial.accion;
 

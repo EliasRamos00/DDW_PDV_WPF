@@ -30,15 +30,6 @@
                  VerticalAlignment="Center"
                  Foreground="Black"/>
 
-                    <TextBlock Text="Buscar artículos..."
-                   Foreground="Gray"
-                   FontStyle="Italic"
-                   FontSize="14"
-                   Padding="15,0,0,0"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   />
-
                     <Button x:Name="btnClearSearch"
                 Content="✕"
                 FontSize="12"
