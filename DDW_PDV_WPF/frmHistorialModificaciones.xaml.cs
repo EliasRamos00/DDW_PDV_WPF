@@ -113,13 +113,72 @@ namespace DDW_PDV_WPF
                 var texto = TextoBusqueda.ToLower();
                 var resultados = _todosLosHistoriales
                     .Where(h =>
-                        (h.idUsuario != null && h.idUsuario.ToLower().Contains(texto)) ||
-                        (h.accion != null && h.accion.ToLower().Contains(texto)) ||
-                        (h.fechaHora.ToString().Contains(texto)) ||
-                        (h.clase != null && h.clase.ToLower().Contains(texto)))
+                    {
+                        // Filtros básicos (originales)
+                        var coincideBasico =
+                            (h.idUsuario != null && h.idUsuario.ToLower().Contains(texto)) ||
+                            (h.accion != null && h.accion.ToLower().Contains(texto)) ||
+                            (h.fechaHora.ToString().Contains(texto)) ||
+                            (h.clase != null && h.clase.ToLower().Contains(texto));
+
+                        if (coincideBasico) return true;
+
+                        // Filtro por datos "antes"
+                        if (!string.IsNullOrEmpty(h.antes))
+                        {
+                            try
+                            {
+                                var articuloAntes = DeserializarArticuloParcial(h.antes);
+                                if (articuloAntes != null &&
+                                    articuloAntes.Descripcion != null &&
+                                    articuloAntes.Descripcion.ToLower().Contains(texto))
+                                {
+                                    return true;
+                                }
+                            }
+                            catch { /* Ignorar errores de deserialización */ }
+                        }
+
+                        // Filtro por datos "después"
+                        if (!string.IsNullOrEmpty(h.despues))
+                        {
+                            try
+                            {
+                                var articuloDespues = DeserializarArticuloParcial(h.despues);
+                                if (articuloDespues != null &&
+                                    articuloDespues.Descripcion != null &&
+                                    articuloDespues.Descripcion.ToLower().Contains(texto))
+                                {
+                                    return true;
+                                }
+                            }
+                            catch { /* Ignorar errores de deserialización */ }
+                        }
+
+                        return false;
+                    })
                     .ToList();
 
                 ListaHistorial = new ObservableCollection<HistorialDTO>(resultados);
+            }
+        }
+
+        // Método optimizado para deserializar solo lo necesario
+        private ArticuloDTO DeserializarArticuloParcial(string xml)
+        {
+            if (string.IsNullOrEmpty(xml)) return null;
+
+            try
+            {
+                using (var reader = new StringReader(xml))
+                {
+                    var serializer = new XmlSerializer(typeof(ArticuloDTO));
+                    return (ArticuloDTO)serializer.Deserialize(reader);
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -132,39 +191,58 @@ namespace DDW_PDV_WPF
                 txtUsuario.Text = historial.idUsuario;
                 txtTipoModificacion.Text = historial.accion;
 
-                // Decodificar y mostrar datos "antes"
+                // Decodificar datos "antes"
                 ArticuloDTO articuloAntes = null;
                 if (!string.IsNullOrEmpty(historial.antes))
                 {
                     articuloAntes = DeserializarDeXml<ArticuloDTO>(historial.antes);
                     if (articuloAntes != null)
                     {
+                        // Cargar imagen ANTES
+                        imgAntes.Source = CargarImagen(articuloAntes.Foto);
                         txtAntes.Text = FormatearDatosArticulo(articuloAntes);
                     }
                 }
-                // Decodificar y mostrar datos "después"
+
+                // Decodificar datos "después"
                 ArticuloDTO articuloDespues = null;
                 if (!string.IsNullOrEmpty(historial.despues))
                 {
                     articuloDespues = DeserializarDeXml<ArticuloDTO>(historial.despues);
                     if (articuloDespues != null)
                     {
+                        // Cargar imagen DESPUÉS
+                        imgDespues.Source = CargarImagen(articuloDespues.Foto);
                         txtDespues.Text = FormatearDatosArticulo(articuloDespues);
                     }
                 }
+
                 // Mostrar comparación de cambios
                 txtMotivo.Text = CompararCambios(articuloAntes, articuloDespues);
-
-                // Configurar lista de productos (mostrar ambos estados si existen)
-                var productos = new List<ArticuloDTO>();
-                if (articuloAntes != null) productos.Add(articuloAntes);
-                if (articuloDespues != null) productos.Add(articuloDespues);
-                lstProductos.ItemsSource = productos;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error al decodificar historial: {ex.Message}");
                 txtMotivo.Text = "Error al mostrar los cambios";
+            }
+        }
+
+        private BitmapImage CargarImagen(string rutaImagen)
+        {
+            if (string.IsNullOrEmpty(rutaImagen)) return null;
+
+            try
+            {
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(rutaImagen, UriKind.RelativeOrAbsolute);
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.EndInit();
+                return image;
+            }
+            catch
+            {
+                return null;
             }
         }
 
@@ -258,30 +336,57 @@ namespace DDW_PDV_WPF
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count > 0 && e.AddedItems[0] is HistorialDTO historial)
+            if (e.AddedItems.Count == 0) return;
+
+            if (e.AddedItems[0] is HistorialDTO historial)
             {
-               
-                  DecodificarDatosHistorial(historial);
-               
-                HistorialSeleccionado = historial;
+                try
+                {
+                    // 1. Actualizar el historial seleccionado
+                    HistorialSeleccionado = historial;
 
-                // Decodificar los XML para el panel de detalles
-                var antes = DeserializarDeXml<ArticuloDTO>(historial.antes);
-                var despues = DeserializarDeXml<ArticuloDTO>(historial.despues);
+                    // 2. Decodificar los XML
+                    var articuloAntes = !string.IsNullOrEmpty(historial.antes)
+                        ? DeserializarDeXml<ArticuloDTO>(historial.antes)
+                        : null;
 
-                // Actualizar controles del panel derecho
-                txtFechaHora.Text = historial.fechaHora.ToString();
-                txtUsuario.Text = historial.idUsuario;
-                txtTipoModificacion.Text = historial.accion;
+                    var articuloDespues = !string.IsNullOrEmpty(historial.despues)
+                        ? DeserializarDeXml<ArticuloDTO>(historial.despues)
+                        : null;
 
-                // Configurar lista de productos
-                lstProductos.ItemsSource = new List<ArticuloDTO>
-        {
-            new ArticuloDTO { Descripcion = "ANTES", Stock = antes?.Stock ?? 0 },
-            new ArticuloDTO { Descripcion = "DESPUÉS", Stock = despues?.Stock ?? 0 }
-        };
+                    // 3. Mostrar información básica
+                    txtFechaHora.Text = historial.fechaHora.ToString();
+                    txtUsuario.Text = historial.idUsuario;
+                    txtTipoModificacion.Text = historial.accion;
 
-               
+                    // 4. Cargar imágenes
+                    imgAntes.Source = articuloAntes?.Foto != null
+                        ? new BitmapImage(new Uri(articuloAntes.Foto, UriKind.RelativeOrAbsolute))
+                        : null;
+
+                    imgDespues.Source = articuloDespues?.Foto != null
+                        ? new BitmapImage(new Uri(articuloDespues.Foto, UriKind.RelativeOrAbsolute))
+                        : null;
+
+                    // 5. Mostrar datos textuales
+                    txtAntes.Text = articuloAntes != null
+                        ? $"Descripción: {articuloAntes.Descripcion}\nStock: {articuloAntes.Stock}"
+                        : "No hay datos anteriores";
+
+                    txtDespues.Text = articuloDespues != null
+                        ? $"Descripción: {articuloDespues.Descripcion}\nStock: {articuloDespues.Stock}"
+                        : "No hay datos posteriores";
+
+                    // 6. Mostrar comparación detallada
+                    txtMotivo.Text = CompararCambios(articuloAntes, articuloDespues);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error al cargar detalles: {ex.Message}");
+                    txtMotivo.Text = "Error al cargar los detalles del historial";
+                }
+                txtNoImagenAntes.Visibility = imgAntes.Source == null ? Visibility.Visible : Visibility.Collapsed;
+                txtNoImagenDespues.Visibility = imgDespues.Source == null ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
