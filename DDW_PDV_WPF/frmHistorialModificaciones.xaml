@@ -49,9 +49,6 @@
             <DataGrid AutoGenerateColumns="False" MinHeight="400" Background="#dedede" 
           SelectionChanged="DataGrid_SelectionChanged"  IsReadOnly="True"               
                 SelectionMode="Single"
-         
-                
-               
                 ItemsSource="{Binding ListaHistorial}">
                 <DataGrid.Columns>
                     <!-- Formatear la fecha para mejor visualización -->

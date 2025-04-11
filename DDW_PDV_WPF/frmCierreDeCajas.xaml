@@ -7,111 +7,210 @@
       mc:Ignorable="d" 
       Title="frmCierreDeCajas">
 
-    <Grid Margin="20" Background="#dedede">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-           
-            <RowDefinition Height="279*"/>
-            <RowDefinition Height="7*"/>
-        
-        </Grid.RowDefinitions>
+    <Grid Background="#dedede">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-           
-            <ColumnDefinition Width="1.2*"/>
-     
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.ColumnSpan="2" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Cierre de Cajas" FontSize="24" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Center" Margin="10,0,0,0"/>
-        </Grid>
+        <!-- Panel Izquierdo -->
+        <StackPanel Margin="20" Grid.Column="0">
+            <TextBlock Text="CIERRE DE CAJAS" FontSize="18" FontWeight="Bold"/>
+            <Border Grid.Row="0" BorderBrush="#FFABAdB3" BorderThickness="1" 
+                Background="White" CornerRadius="3" Margin="10,0,10,10">
+                <Grid>
+                    <TextBox x:Name="txtBusqueda"
+                     Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Padding="10"
+                     FontSize="14"
+                     VerticalAlignment="Center"
+                     Foreground="Black"/>
 
-   
-        <Grid Grid.Row="1" Grid.Column="0" Margin="0,10,10,0" Grid.RowSpan="2">
+                    <Button x:Name="btnClearSearch"
+                    Content="✕"
+                    FontSize="12"
+                    Foreground="Gray"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="0"
+                    Width="20"
+                    Height="20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="0,0,10,0"
+                    Click="btnClearSearch_Click"/>
+                </Grid>
+            </Border>
+
+            <DataGrid AutoGenerateColumns="False" MinHeight="400" Background="#dedede" 
+                  SelectionChanged="DataGrid_SelectionChanged" IsReadOnly="True"               
+                  SelectionMode="Single" ItemsSource="{Binding ListaCierres}">
+                <DataGrid.Columns>
+                    <!-- Fecha -->
+                    <DataGridTextColumn Header="FECHA" Binding="{Binding Fecha}" Width="100"/>
+                    <!-- Hora -->
+                    <DataGridTextColumn Header="HORA" Binding="{Binding Hora}" Width="80"/>
+                    <!-- ID Usuario -->
+                    <DataGridTextColumn Header="USUARIO" Binding="{Binding idUsuario}" Width="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- ID Caja -->
+                    <DataGridTextColumn Header="CAJA" Binding="{Binding idCaja}" Width="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Total Sistema -->
+                    <DataGridTextColumn Header="T. SISTEMA" Binding="{Binding TotalSistema, StringFormat='{}{0:C}'}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Total Físico -->
+                    <DataGridTextColumn Header="T. FÍSICO" Binding="{Binding TotalFisico, StringFormat='{}{0:C}'}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Diferencia -->
+                    <DataGridTextColumn Header="DIFERENCIA" Binding="{Binding Diferencia, StringFormat='{}{0:C}'}" Width="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Diferencia}" Value="0">
+                                        <Setter Property="Foreground" Value="Green"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Diferencia}">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+        <!-- Panel Derecho - Detalles de Cierre -->
+        <Grid Grid.Column="1" Background="#E5E5E5" Margin="10" DataContext="{Binding CierreSeleccionado}">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-     
-            <Border Grid.Row="0" BorderBrush="#FFABAdB3" BorderThickness="1" Background="White" CornerRadius="3" Margin="10,0,10,10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="txtBusqueda" Text="" Background="Transparent" BorderThickness="0" Padding="10" FontSize="14" VerticalAlignment="Center" Foreground="Black" Grid.Column="0"/>
-                    <Button x:Name="btnClearSearch" Content="✕" FontSize="12" Foreground="Gray" Background="Transparent" BorderThickness="0" Padding="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Grid.Column="1"/>
-                </Grid>
-            </Border>
+            <!-- Encabezado -->
+            <TextBlock Grid.Row="0" Text="DETALLES DEL CIERRE" 
+                   FontSize="22" FontWeight="Bold" Foreground="#333333" 
+                   HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
- 
-            <DataGrid Grid.Row="1" AutoGenerateColumns="False" HeadersVisibility="Column" Background="White" Margin="10,0,0,0">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Fecha y Hora" Width="*"/>
-                    <DataGridTextColumn Header="Sucursal" Width="*"/>
-                    <DataGridTextColumn Header="Número de Caja" Width="*"/>
-                    <DataGridTextColumn Header="Saldo Inicial" Width="*"/>
-                    <DataGridTextColumn Header="Total Sistema" Width="*"/>
-                    <DataGridTextColumn Header="Total Físico" Width="*"/>
-                    <DataGridTextColumn Header="Diferencia" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+            <!-- Fecha -->
+            <Grid Grid.Row="1" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Fecha:" FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding Fecha}"/>
+            </Grid>
 
+            <!-- Hora -->
+            <Grid Grid.Row="2" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Hora:" FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding Hora}"/>
+            </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="1" Background="#F5F5F5"  Margin="10,0,0,0" Grid.RowSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            <!-- ID Usuario -->
+            <Grid Grid.Row="3" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="ID Usuario:" FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding idUsuario}"/>
+            </Grid>
 
-            <Grid Background="#F5F5F5" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <!-- ID Caja -->
+            <Grid Grid.Row="4" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="ID Caja:" FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding idCaja}"/>
+            </Grid>
 
-                <TextBlock Text="DETALLES DEL CIERRE" FontSize="18" FontWeight="Bold" Foreground="Gray" Grid.Row="0"/>
-                <TextBlock Text="FECHA Y HORA" FontWeight="Bold" Grid.Row="1"/>
-                <TextBlock Name="txtFechaHora" Grid.Row="2"/>
-                <TextBlock Text="CAJA No:" FontWeight="Bold" Grid.Row="3"/>
-                <TextBlock Name="txtCajaNumero" Grid.Row="4"/>
-                <TextBlock Text="SUCURSAL:" FontWeight="Bold" Grid.Row="5"/>
-                <TextBlock Name="txtSucursal" Grid.Row="6"/>
-                <Separator Grid.Row="7" Margin="0,10,0,10"/>
-                <TextBlock Text="TOTAL DECIMAL DEL SISTEMA:" FontWeight="Bold" Grid.Row="8"/>
-                <TextBlock Name="txtTotalSistema" Grid.Row="9"/>
-                <TextBlock Text="TOTAL DECIMAL FÍSICO:" FontWeight="Bold" Grid.Row="10"/>
-                <TextBlock Name="txtTotalFisico" Grid.Row="11"/>
-                <TextBlock Text="DIFERENCIA:" FontWeight="Bold" Grid.Row="12"/>
-                <TextBlock Name="txtDiferencia" Grid.Row="13"/>
-                <Button Content="VER INFORME DETALLADO" Width="183" Height="40" Margin="2,10,0,0" 
-            Background="Gray" Foreground="White" BorderThickness="0" Cursor="Hand" Grid.Row="14" HorizontalAlignment="Left"/>
+            <!-- Línea divisoria -->
+            <Border Grid.Row="5" BorderBrush="LightGray" BorderThickness="0,1,0,0" Margin="10,15,10,15"/>
+
+            <!-- Total Sistema -->
+            <Grid Grid.Row="6" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Total Sistema:" FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding TotalSistema, StringFormat='{}{0:C}'}" FontWeight="Bold"/>
+            </Grid>
+
+            <!-- Total Físico -->
+            <Grid Grid.Row="7" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Total Físico:" FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding TotalFisico, StringFormat='{}{0:C}'}" FontWeight="Bold"/>
+            </Grid>
+
+            <!-- Diferencia -->
+            <Grid Grid.Row="8" Margin="10,5,10,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Diferencia:" FontWeight="Bold" Margin="0,0,5,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding Diferencia, StringFormat='{}{0:C}'}" FontWeight="Bold">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Green"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Diferencia}" Value="0">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Diferencia}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
         </Grid>
     </Grid>

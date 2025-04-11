@@ -14,7 +14,8 @@
     <WarningLevel>4</WarningLevel>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp></NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>C:\APP-WPF-FLOR-PUBLISH\</PublishUrl>
     <Install>true</Install>
@@ -109,6 +110,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Modelo\CierreCajasDTO.cs" />
     <Compile Include="XmlToSummaryConverter.cs" />
     <Page Include="frmCierreDeCajas.xaml">
       <SubType>Designer</SubType>
