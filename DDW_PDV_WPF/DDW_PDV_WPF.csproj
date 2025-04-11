@@ -53,16 +53,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>F017063E0BE3A1208315AF0BE7C0352C03CC3AD1</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>CE158DED1ED28BC75C86C43F9CCDD6639EE3670D</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>DDW_PDV_WPF_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>DDW_PDV_WPF_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
@@ -110,6 +110,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="CierrCaj.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="frmCierreCajaEmergente.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="frmCierreDeCajas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -146,9 +154,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CierrCaj.xaml.cs">
+      <DependentUpon>CierrCaj.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controlador\ApiService.cs" />
     <Compile Include="Controlador\ImpresoraTicket.cs" />
     <Compile Include="Converter.cs" />
+    <Compile Include="frmCierreCajaEmergente.xaml.cs">
+      <DependentUpon>frmCierreCajaEmergente.xaml</DependentUpon>
+    </Compile>
     <Compile Include="frmCierreDeCajas.xaml.cs">
       <DependentUpon>frmCierreDeCajas.xaml</DependentUpon>
     </Compile>
@@ -174,12 +188,21 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PopUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modelo\ArticuloDTO.cs" />
+    <Compile Include="Modelo\CierreCajasDTO.cs" />
+    <Compile Include="Modelo\GenericMessageDTO.cs" />
     <Compile Include="Modelo\HistorialDTO.cs" />
     <Compile Include="Modelo\UsuarioDTO.cs" />
     <Compile Include="Modelo\MCategorias.cs" />
+    <Compile Include="PopUp.xaml.cs">
+      <DependentUpon>PopUp.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -197,6 +220,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="DDW_PDV_WPF_1_TemporaryKey.pfx" />
     <None Include="DDW_PDV_WPF_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -408,9 +408,10 @@ namespace DDW_PDV_WPF
                         idVenta = 0,  // Será generado en la BD
                         total = _total ,
                         fechahora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                        vendedor = 1, // Aquí puedes usar un ID real del vendedor
+                        vendedor = Properties.Settings.Default.Usuario, // Aquí puedes usar un ID real del vendedor
                         tieneFactura = 0, // O puedes hacer que el usuario lo seleccione
-                        idSucursal = 1 // Modifica según la sucursal correspondiente
+                        idSucursal = 1, // Modifica según la sucursal correspondiente
+                        idCaja = Properties.Settings.Default.Caja
                     },
                     detalle = _carritoVenta.Select(a => new
                     {
@@ -428,7 +429,7 @@ namespace DDW_PDV_WPF
                 if (resultado)
                 {
                     MessageBox.Show("Venta registrada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                    ImpresoraTicket.ImprimeTicket(_carritoVenta, _total, Cambio);
+                    ImpresoraTicket.ImprimeTicket(_carritoVenta, _total);
                     _carritoVenta.Clear(); // Limpiar el carrito después de la venta
                     _total = 0;
                     _subTotal = 0;

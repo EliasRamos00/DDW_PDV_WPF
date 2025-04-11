@@ -89,7 +89,21 @@ namespace DDW_PDV_WPF
             }
         }
 
-       
+        //CIERRE DE CAJA
+        private void btnCerrarCaja(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = System.Windows.MessageBox.Show("¿Está seguro que desea cerrar la caja?",
+                               "Confirmar cierre de caja",
+                               MessageBoxButton.YesNo,
+                               MessageBoxImage.Question);
 
+            if (result == MessageBoxResult.Yes)
+            {
+
+                // Navegar a la nueva página si el usuario confirma
+                CierrCaj paginaDestino = new CierrCaj(Usuario, Properties.Settings.Default.Caja);
+                paginaDestino.Show();
+            }
+        }
     }
 }

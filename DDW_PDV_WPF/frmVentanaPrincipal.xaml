@@ -52,11 +52,16 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Resources>
+                    
+                    <Button Content="Cerrar caja" Style="{StaticResource MenuButtonStyle}" Click="btnCerrarCaja" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
 
-                    <Button Content="Ventas" Style="{StaticResource MenuButtonStyle}" Click="NavigateToVentas" FontSize="23" HorizontalAlignment="Left" Margin="10"/>
+                    <Button Content="Ventas" Style="{StaticResource MenuButtonStyle}" Click="NavigateToVentas" FontSize="23" HorizontalAlignment="Left" Margin="10" FontWeight="Bold"/>
+                                   
                     <Button Content="Inventario" Style="{StaticResource MenuButtonStyle}" Click="NavigateToInventarios" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
                     <Button Content="Resumen" Style="{StaticResource MenuButtonStyle}" Click="NavigateToReportes" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
                     <Button Content="Historial" Style="{StaticResource MenuButtonStyle}" Click="NavigateHistorial" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
+                    
+
                     <!-- Botón cerrar sesión -->
                     <Button Content="CERRAR SESIÓN"
                       FontSize="13"
@@ -67,7 +72,7 @@
                       Foreground="#FFE74C3C"
                       FontWeight="Bold"
                       BorderThickness="0"
-                      Margin="0,0,0,10"
+                      Margin="0,10,0,10"
                       Grid.Row="0" Click="BtnCerrarSesion_Click"/>  
                 </StackPanel>
             </Grid>

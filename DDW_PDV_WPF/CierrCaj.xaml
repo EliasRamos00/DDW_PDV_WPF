@@ -1,0 +1,176 @@
+﻿<Window
+    x:Class="DDW_PDV_WPF.CierrCaj"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DDW_PDV_WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="CierrCaj"
+    Width="492"
+    Height="550"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <Grid Margin="0,0,0,-31">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="190" />
+            <!--  Encabezado  -->
+            <RowDefinition Height="100*" />
+            <!--  Contenido principal  -->
+        </Grid.RowDefinitions>
+
+        <!--  Encabezado  -->
+        <StackPanel Grid.Row="0" Margin="20">
+            <TextBlock
+                Margin="0,0,0,0"
+                FontSize="28"
+                FontWeight="Bold"
+                Text="Cierre de caja"
+                TextAlignment="Center" />
+            <TextBlock
+                Margin="0,0,0,15"
+                FontSize="18"
+                FontWeight="SemiBold"
+                Text="Flores Artificiales y Artesanías Omega"
+                TextAlignment="Center" />
+            <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                <!--  CAJA  -->
+
+                <TextBlock FontSize="16" Text="Caja: " />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="17"
+                    Text="{Binding Caja}"
+                    TextAlignment="Center" />
+            </StackPanel>
+
+            <!--  SUCURSAL  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Text="Sucursal: " />
+                <TextBlock
+                    Margin="1,1,1,1"
+                    VerticalAlignment="Center"
+                    FontSize="17"
+                    Text="{Binding Sucursal}" />
+
+
+
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <!--  Fecha y hora  -->
+                <TextBlock
+                    Margin="0,0,0,0"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Text="Fecha y hora: "
+                    TextAlignment="Left" />
+                <TextBlock
+                    Margin="20,0,0,10"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Text="{Binding FechaHora, StringFormat='dd-MMM-yyyy'}" />
+
+            </StackPanel>
+
+        </StackPanel>
+
+        <!--  Contenido principal  -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Margin="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+
+
+                <!--  Panel contenedor con fondo y bordes redondeados  -->
+                <Border
+                    Width="350"
+                    Margin="10"
+                    Padding="20"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="White"
+                    BorderBrush="Black"
+                    BorderThickness="3"
+                    CornerRadius="10">
+
+
+                    <StackPanel>
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            FontSize="14"
+                            Foreground="Black"
+                            Text="Total calculado en sistema:" />
+                        <TextBox
+                            Margin="0,5,0,15"
+                            IsEnabled="False"
+                            TextAlignment="Right" />
+
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            FontSize="14"
+                            Foreground="Black"
+                            Text="Total contado físico:" />
+                        <TextBox
+                            Margin="0,5,0,15"
+                            FontWeight="Bold"
+                            Text="{Binding TotalFisico}"
+                            TextAlignment="Right" />
+
+                        <!--<Canvas Height="3" Margin="0,10">
+                            <Line X1="0" Y1="0" X2="300" Y2="0"
+                              Stroke="Black"
+                              StrokeThickness="1"
+                              StrokeDashArray="2,5"/>
+                        </Canvas>-->
+
+                        <TextBlock
+                            Margin="5,10,0,0"
+                            FontSize="14"
+                            FontWeight="Bold"
+                            Foreground="Black"
+                            Text="Diferencia" />
+
+                        <TextBox
+                            Margin="0,5,0,15"
+                            IsEnabled="False"
+                            TextAlignment="Right" />
+
+                    </StackPanel>
+                </Border>
+
+                <!--  Botones  -->
+                <StackPanel
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        Width="auto"
+                        Height="30"
+                        Margin="15,0,30,0"
+                        BorderBrush="Black"
+                        Click="CancelarCierre"
+                        Content="Cancelar" />
+                    <Button
+                        Width="auto"
+                        Height="30"
+                        Margin="15,0,30,0"
+                        BorderBrush="Black"
+                        Click="btnHacerCierre"
+                        Content="Hacer Cierre" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</Window>
