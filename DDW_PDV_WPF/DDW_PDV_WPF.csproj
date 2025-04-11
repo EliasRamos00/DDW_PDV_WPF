@@ -118,6 +118,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="Modelo\CierreCajasDTO.cs" />
+    <Compile Include="XmlToSummaryConverter.cs" />
     <Page Include="frmCierreDeCajas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -319,6 +321,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\art_20250401180427.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\art_20250409194235.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

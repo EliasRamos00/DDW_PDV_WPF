@@ -53,6 +53,11 @@ namespace DDW_PDV_WPF
             MainFrame.Navigate(new frmHistorialModificaciones());
         }
 
+        private void NavigateCierre(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new frmCierreDeCajas());
+        }
+
 
 
         private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)

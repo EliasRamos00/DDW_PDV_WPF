@@ -59,9 +59,8 @@
                                    
                     <Button Content="Inventario" Style="{StaticResource MenuButtonStyle}" Click="NavigateToInventarios" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
                     <Button Content="Resumen" Style="{StaticResource MenuButtonStyle}" Click="NavigateToReportes" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
-                    <Button Content="Historial" Style="{StaticResource MenuButtonStyle}" Click="NavigateHistorial" FontSize="20" HorizontalAlignment="Left" Margin="10"/>
-                    
-
+                    <Button Content="Historial" Style="{StaticResource MenuButtonStyle}" Click="NavigateHistorial" FontSize="20" HorizontalAlignment="Left" Margin="10"/>                    
+                    <Button Content="Cierre de cajas " Style="{StaticResource MenuButtonStyle}" Click="NavigateCierre" FontSize="15" HorizontalAlignment="Left" Margin="10"/>
                     <!-- Botón cerrar sesión -->
                     <Button Content="CERRAR SESIÓN"
                       FontSize="13"
