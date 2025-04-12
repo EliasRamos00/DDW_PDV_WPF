@@ -111,8 +111,8 @@ namespace DDW_PDV_WPF
             var texto = TextoBusqueda.ToLower();
             var resultados = _todosLosCierres
                 .Where(c =>
-                    (c.Fecha?.ToLower().Contains(texto) ?? false) ||
-                    (c.Hora?.ToLower().Contains(texto) ?? false) ||
+                    (c.Fecha.ToString()?.ToLower().Contains(texto) ?? false) ||
+                    (c.Hora.ToString()?.ToLower().Contains(texto) ?? false) ||
                     (c.idUsuario.ToString().Contains(texto)) ||
                     (c.idCaja.ToString().Contains(texto)) ||
                     (c.TotalSistema.ToString("C").ToLower().Contains(texto)) ||

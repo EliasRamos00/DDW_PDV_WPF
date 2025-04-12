@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DDW_PDV_WPF.Modelo
 {
-    class CierreCajasDTO
+    public class CierreCajasDTO
     {
         public int idCierreCaja { get; set; }
         public DateTime Fecha { get; set; }

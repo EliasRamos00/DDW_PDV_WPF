@@ -114,6 +114,7 @@
                         <TextBox
                             Margin="0,5,0,15"
                             IsEnabled="False"
+                            Text="{Binding TotalSistema}"
                             TextAlignment="Right" />
 
                         <TextBlock
@@ -124,7 +125,7 @@
                         <TextBox
                             Margin="0,5,0,15"
                             FontWeight="Bold"
-                            Text="{Binding TotalFisico}"
+                            Text="{Binding TotalFisico, UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Right" />
 
                         <!--<Canvas Height="3" Margin="0,10">
@@ -144,6 +145,7 @@
                         <TextBox
                             Margin="0,5,0,15"
                             IsEnabled="False"
+                            Text="{Binding Diferencia}"
                             TextAlignment="Right" />
 
                     </StackPanel>

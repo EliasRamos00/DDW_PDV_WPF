@@ -30,8 +30,21 @@ namespace DDW_PDV_WPF
         private readonly ApiService _apiService;
         private decimal _totalSistema;
         private string _nombreUsuario;
+        private decimal _diferencia;
 
 
+        public decimal Diferencia
+        {
+            get => _diferencia;
+            set
+            {
+                if (_diferencia != value)
+                {
+                    _diferencia = value;
+                    OnPropertyChanged(nameof(Diferencia));
+                }
+            }
+        }
         public string NombreUsuario
         {
             get => _nombreUsuario;
@@ -81,6 +94,7 @@ namespace DDW_PDV_WPF
                 {
                     _totalFisico = value;
                     OnPropertyChanged(nameof(TotalFisico));
+                    CalcularDiferencia(); // Llama a la función para calcular la diferencia
                 }
             }
         }
@@ -133,15 +147,25 @@ namespace DDW_PDV_WPF
 
         }
 
+        public void CalcularDiferencia()
+        {
+            
+                Diferencia = TotalFisico - TotalSistema;
+                OnPropertyChanged(nameof(Diferencia));
+                    
+        }
+
         private async void setTotalSistema()
         {
-            string url = $"api/CCierresCajas/totalsistema/{1}/{1}";
+            string url = $"api/CCierresCajas/totalsistema/{1}/{1}/{DateTime.Now.ToString("yyyy-MM-dd")}";
             var aux = await _apiService.GetAsync<GenericMessageDTO>(url);
 
             // Esto esta mal y hay que cambiarse desde la API
             if (aux != null)
             {
                 TotalSistema = decimal.Parse(aux.data);
+                OnPropertyChanged(nameof(TotalSistema));
+
             }
             else
             {
@@ -178,6 +202,7 @@ namespace DDW_PDV_WPF
                 idCaja = int.Parse(Caja),
                 idUsuario = int.Parse(Usuario),
                 TotalFisico = TotalFisico,
+                TotalSistema = TotalSistema,
                 Fecha = DateTime.Now.Date,
                 Hora = DateTime.Now.TimeOfDay
             };
