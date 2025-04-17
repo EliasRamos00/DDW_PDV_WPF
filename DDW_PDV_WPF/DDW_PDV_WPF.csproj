@@ -214,6 +214,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Vistas\" />
     <Folder Include="Vista\" />
   </ItemGroup>
   <ItemGroup>

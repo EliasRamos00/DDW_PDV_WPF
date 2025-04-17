@@ -7,8 +7,7 @@
       mc:Ignorable="d"
       xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
       Title="Flores artificiales OMEGA"
-      PreviewTextInput="Window_PreviewTextInput"
-    >
+      PreviewTextInput="Window_PreviewTextInput">
     <Page.Resources>
         <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
         <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
@@ -19,26 +18,17 @@
         <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
         <ControlTemplate x:Key="btnProducto" TargetType="{x:Type ButtonBase}">
             <Border x:Name="border" CornerRadius="20" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
-
                 <Grid>
-
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-
                         <RowDefinition Height="Auto"/>
-
                         <RowDefinition Height="Auto"/>
-
                         <RowDefinition Height="Auto"/>
-
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-
                         <ColumnDefinition Width="auto"/>
-
                     </Grid.ColumnDefinitions>
-
 
                     <Image Source="Imagenes\pink-flower-white-background.jpg" 
                        Width="100" 
@@ -56,8 +46,8 @@
                        Grid.Row="1"/>
 
                     <TextBlock Text="Categoría" 
-                               Background="#d9d9d9"
-                               Foreground="#4a4a4a"
+                               Background="#6B9D89"
+                               Foreground="White"
                HorizontalAlignment="Left"
                VerticalAlignment="Top"
                FontSize="12"
@@ -114,7 +104,6 @@
             <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
 
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
@@ -146,7 +135,7 @@
             </Style.Triggers>
         </Style>
         <Style x:Key="RoundedButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Background" Value="#A01A7D"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="Template">
@@ -167,7 +156,7 @@
             <ColumnDefinition Width="390" />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" Background="#DEDEDE" HorizontalAlignment="Stretch">
+        <Border Grid.Column="0" Background="#ffff" HorizontalAlignment="Stretch">
             <Grid Margin="0,0,-10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="49*"/>
@@ -185,56 +174,19 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-
-
-
                     <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="10,10,10,10" 
                          Orientation="Horizontal" HorizontalAlignment="Right">
-
-                        <!-- TextBox para la fecha -->
-                        <TextBox x:Name="txtFecha" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Width="250"
-                         Foreground="#767676" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Fecha"
+                        <TextBox x:Name="txtFecha" Style="{DynamicResource txtFecha}" Background="#F1E6D3" Height="41" Width="250"
+                         Foreground="#2E5E4E" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Fecha"
                          IsEnabled="False" Margin="0,0,20,0"/>
-                        <!-- Margen derecho para separación -->
-
-                        <!-- TextBox para la hora -->
-                        <TextBox x:Name="txtHora" Style="{DynamicResource txtFecha}" Background="#f7f7f7" Height="41" Width="120"
-                         Foreground="#767676" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Hora"
+                        <TextBox x:Name="txtHora" Style="{DynamicResource txtFecha}" Background="#F1E6D3" Height="41" Width="120"
+                         Foreground="#2E5E4E" FontWeight="Bold" TextAlignment="Center" md:HintAssist.Hint="Hora"
                          IsEnabled="False"/>
                     </StackPanel>
-
-
-                    <!--<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" PanningMode="HorizontalOnly">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
-                            -->
-                    <!-- Botón con ícono y texto -->
-                    <!--
-                            <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="Imagenes\bag.png" Width="50" Height="50" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Categoria 1" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            -->
-                    <!-- Repite para los demás botones -->
-                    <!--
-                            <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="Imagenes\flower-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
-                                    <TextBlock Text="Categoria 2" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </ScrollViewer>-->
-
-
-
 
                     <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" PanningMode="HorizontalOnly">
                         <ListView ItemsSource="{Binding Categorias}" HorizontalAlignment="Center" Margin="0,10,0,10" 
                             ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                            <!-- Establecer Orientation del ListView a Horizontal -->
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel Orientation="Horizontal"/>
@@ -245,10 +197,8 @@
                                 <DataTemplate>
                                     <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
                                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <!-- Imagen de categoría -->
                                             <Image Source="{Binding Foto}" Stretch="UniformToFill" Width="75" Height="75" VerticalAlignment="Center" Margin="0,0,0,20"/>
-                                            <!-- Nombre de la categoría -->
-                                            <TextBlock Text="{Binding Nombre}" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Nombre}" HorizontalAlignment="Center" Foreground="#2E5E4E"/>
                                         </StackPanel>
                                     </Button>
                                 </DataTemplate>
@@ -256,7 +206,7 @@
                         </ListView>
                     </ScrollViewer>
 
-                    <TextBox Background="White" Grid.Row="2" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="580" Margin="0,10,0,10"/>
+                    <TextBox Background="#F1E6D3" Grid.Row="2" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="580" Margin="0,10,0,10" Foreground="#2E5E4E"/>
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
@@ -274,11 +224,11 @@
 
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Height="150" Width="150" Margin="5" Background="LightGray" Click="ClickProducto">
+                                    <Button Height="150" Width="150" Margin="5" BorderBrush="#A01A7D" BorderThickness="1,1,1,1"  Background="Transparent" Click="ClickProducto">
                                         <Button.Content>
                                             <StackPanel>
                                                 <Image Height="100" Width="100" Source="{Binding Foto}" Stretch="UniformToFill"/>
-                                                <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" HorizontalAlignment="Center" />
+                                                <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" HorizontalAlignment="Center" Foreground="White"/>
                                             </StackPanel>
                                         </Button.Content>
                                     </Button>
@@ -287,52 +237,32 @@
                         </ItemsControl>
                     </ScrollViewer>
                 </Grid>
-
             </Grid>
         </Border>
         <Border Grid.Column="2" Background="#FFFFFF" Padding="15" Grid.ColumnSpan="2" Margin="10,0,0,0">
             <Grid>
-                <!-- Definir filas -->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <!-- Título -->
                     <RowDefinition Height="Auto"/>
-
-                    <!-- Subtítulo -->
                     <RowDefinition Height="*"/>
-                    <!-- ListView que se expandirá sin salir de la pantalla -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Detalles de pago -->
                     <RowDefinition Height="Auto"/>
-                    <!-- Botón -->
                 </Grid.RowDefinitions>
 
-                <!-- Título -->
                 <TextBlock Grid.Row="0" Text="DETALLES DE LA VENTA" 
-                   FontSize="18" FontWeight="Bold" Foreground="Black"
+                   FontSize="18" FontWeight="Bold" Foreground="#2E5E4E"
                    Margin="0,20,0,20" HorizontalAlignment="Center"/>
 
-
-
-                <!--<ToggleButton Grid.Row="1" FontSize="10" HorizontalAlignment="Right" Content="Scan" Margin="0,0,0,0" Background="LightSlateGray" Grid.RowSpan="2" Width="80"></ToggleButton>-->
-
-                <!-- Subtítulo -->
                 <TextBlock Grid.Row="1" Text="Carrito de artículos" 
-                   FontSize="16" FontWeight="Bold" Foreground="Black"
+                   FontSize="16" FontWeight="Bold" Foreground="#2E5E4E"
                    Margin="0,0,0,10" Width="241"/>
 
-
-
-                <!-- Botón de escanear artículo -->
-
-
-                <!-- ListView dentro de la fila que se expande -->
                 <ListView Grid.Row="2" ItemsSource="{Binding CarritoVenta}" 
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   MaxHeight="{Binding PantallaDisponible}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="#FFFFFF" Padding="5" Margin="0,0,0,5" 
+                            <Border Background="#F5F5F5" Padding="5" Margin="0,0,0,5" 
                             CornerRadius="5" Height="70" Width="auto">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -342,31 +272,26 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Imagen del producto -->
                                     <Image Source="{Binding Foto}" Width="60" Height="60" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
-                                    <!-- Nombre, categoría y número adicional -->
                                     <StackPanel Grid.Column="1" Margin="0,0,4,0">
-                                        <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" FontSize="12" FontWeight="Bold" Width="100"/>
-                                        <TextBlock Text="{Binding PrecioVenta, StringFormat=C }" FontSize="10" Foreground="#666666"/>
-                                        <TextBlock Text="{Binding IdCategoria}" FontSize="10" Foreground="#B0B0B0"/>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" FontSize="12" FontWeight="Bold" Width="100" Foreground="#2E5E4E"/>
+                                        <TextBlock Text="{Binding PrecioVenta, StringFormat=C }" FontSize="10" Foreground="#6B9D89"/>
+                                        <TextBlock Text="{Binding IdCategoria}" FontSize="10" Foreground="#8FBBA9"/>
                                     </StackPanel>
 
-                                    <!-- Precio -->
-                                    <TextBlock Text="{Binding TotalCarrito, StringFormat=C}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2" Width="60"/>
+                                    <TextBlock Text="{Binding TotalCarrito, StringFormat=C}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2" Width="60" Foreground="#2E5E4E"/>
 
-                                    <!-- Contador de cantidad con botones -->
                                     <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1">
-                                        <Button Padding="2,2,2,2" Click="DecrementarCantidad" FontSize="20" Content="-" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10"/>
-                                        <Label Padding="0,0,0,0" Margin="2,0,0,0" Content="{Binding Cantidad}" Width="20" HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
-                                        <Button Padding="0,2,2,2" Click="IncrementarCantidad" IsEnabled="True" FontSize="20" Content="+" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="5,0,0,10"/>
+                                        <Button Padding="2,2,2,2" Click="DecrementarCantidad" FontSize="20" Content="-" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10" Background="#A01A7D" Foreground="White"/>
+                                        <Label Padding="0,0,0,0" Margin="2,0,0,0" Content="{Binding Cantidad}" Width="20" HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14" Foreground="#2E5E4E"/>
+                                        <Button Padding="0,2,2,2" Click="IncrementarCantidad" IsEnabled="True" FontSize="20" Content="+" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="5,0,0,10" Background="#A01A7D" Foreground="White"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-
 
                 <StackPanel Grid.Row="3" Margin="10,5,0,0">
                     <Grid>
@@ -381,44 +306,38 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Recibí -->
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Recibí: " FontSize="21" Foreground="Black" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Recibí: " FontSize="21" Foreground="#2E5E4E" VerticalAlignment="Center"/>
                         <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,10,5" FontSize="21" TextAlignment="Right"
-                 Foreground="Black" Background="White" Padding="5"
+                 Foreground="#2E5E4E" Background="White" Padding="5"
                  Text="{Binding MontoRecibido, UpdateSourceTrigger=PropertyChanged}"
                  HorizontalAlignment="Stretch"/>
 
-                        <!-- Subtotal -->
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Subtotal: " FontSize="21" Foreground="Black" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Subtotal: " FontSize="21" Foreground="#2E5E4E" VerticalAlignment="Center"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
                    Text="{Binding SubTotal, StringFormat=C2}" FontSize="26"
-                   Foreground="Black" VerticalAlignment="Center"/>
+                   Foreground="#2E5E4E" VerticalAlignment="Center"/>
 
-                        <!-- Total -->
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Total: " FontSize="33" Foreground="Black" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Total: " FontSize="33" Foreground="#2E5E4E" VerticalAlignment="Center"/>
                         <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
                    Text="{Binding Total, StringFormat=C2}" FontSize="44" FontWeight="Bold"
-                   Foreground="#8b8b8b" VerticalAlignment="Center"/>
+                   Foreground="#A01A7D" VerticalAlignment="Center"/>
 
-                        <!-- Cambio -->
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Cambio: " FontSize="24" Foreground="Black" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Cambio: " FontSize="24" Foreground="#2E5E4E" VerticalAlignment="Center"/>
                         <TextBlock x:Name="txtCambio" Grid.Row="3" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
                    Text="{Binding Cambio, StringFormat=C2}" FontSize="30" FontWeight="Bold"
-                   Foreground="Green" VerticalAlignment="Center"/>
+                   Foreground="#6B9D89" VerticalAlignment="Center"/>
                     </Grid>
                 </StackPanel>
 
-                <!-- Botón de cerrar venta -->
                 <Button Grid.Row="4" Content="CERRAR VENTA" 
         Margin="0,20,0,0" Padding="15"
         HorizontalAlignment="Stretch"
-        Background="#8b8b8b" Foreground="White"
+        Background="#A01A7D" Foreground="White"
         FontWeight="Bold" BorderThickness="0"
         MinWidth="217" Height="46" FontFamily="Arial"
         Click="CerrarVenta"/>
 
             </Grid>
         </Border>
-
     </Grid>
 </Page>
