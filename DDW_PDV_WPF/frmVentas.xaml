@@ -335,9 +335,9 @@
                                         Height="150"
                                         Margin="5"
                                         Background="LightGray"
-                                        Click="ClickProducto"
-                                        BorderBrush="#A01A7D" 
-                                        BorderThickness="1,1,1,1">
+                                        BorderBrush="#A01A7D"
+                                        BorderThickness="1,1,1,1"
+                                        Click="ClickProducto">
                                         <Button.Content>
                                             <StackPanel>
                                                 <Image
@@ -347,9 +347,9 @@
                                                     Stretch="UniformToFill" />
                                                 <TextBlock
                                                     HorizontalAlignment="Center"
+                                                    Foreground="White"
                                                     Text="{Binding Descripcion}"
-                                                    TextWrapping="Wrap"
-                                                    Foreground="White" />
+                                                    TextWrapping="Wrap" />
                                             </StackPanel>
                                         </Button.Content>
                                     </Button>
@@ -434,20 +434,82 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Image Source="{Binding Foto}" Width="60" Height="60" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
+                                    <Image
+                                        Grid.Column="0"
+                                        Width="60"
+                                        Height="60"
+                                        Margin="2,0,4,0"
+                                        VerticalAlignment="Top"
+                                        Source="{Binding Foto}" />
 
                                     <StackPanel Grid.Column="1" Margin="0,0,4,0">
-                                        <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" FontSize="12" FontWeight="Bold" Width="100" Foreground="#2E5E4E"/>
-                                        <TextBlock Text="{Binding PrecioVenta, StringFormat=C }" FontSize="10" Foreground="#6B9D89"/>
-                                        <TextBlock Text="{Binding IdCategoria}" FontSize="10" Foreground="#8FBBA9"/>
+                                        <TextBlock
+                                            Width="100"
+                                            FontSize="12"
+                                            FontWeight="Bold"
+                                            Foreground="#2E5E4E"
+                                            Text="{Binding Descripcion}"
+                                            TextWrapping="Wrap" />
+                                        <TextBlock
+                                            FontSize="10"
+                                            Foreground="#6B9D89"
+                                            Text="{Binding PrecioVenta, StringFormat=C}" />
+                                        <TextBlock
+                                            FontSize="10"
+                                            Foreground="#8FBBA9"
+                                            Text="{Binding IdCategoria}" />
                                     </StackPanel>
 
-                                    <TextBlock Text="{Binding TotalCarrito, StringFormat=C}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2" Width="60" Foreground="#2E5E4E"/>
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Width="60"
+                                        Margin="5,0,5,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="Bold"
+                                        Foreground="#2E5E4E"
+                                        Text="{Binding TotalCarrito, StringFormat=C}" />
 
-                                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1">
-                                        <Button Padding="2,2,2,2" Click="DecrementarCantidad" FontSize="20" Content="-" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10" Background="#A01A7D" Foreground="White"/>
-                                        <Label Padding="0,0,0,0" Margin="2,0,0,0" Content="{Binding Cantidad}" Width="20" HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14" Foreground="#2E5E4E"/>
-                                        <Button Padding="0,2,2,2" Click="IncrementarCantidad" IsEnabled="True" FontSize="20" Content="+" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="5,0,0,10" Background="#A01A7D" Foreground="White"/>
+                                    <StackPanel
+                                        Grid.Column="3"
+                                        Margin="1"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Width="Auto"
+                                            Height="Auto"
+                                            Margin="10,0,0,10"
+                                            Padding="2,2,2,2"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Background="#A01A7D"
+                                            Click="DecrementarCantidad"
+                                            Content="-"
+                                            FontSize="20"
+                                            Foreground="White" />
+                                        <Label
+                                            Width="20"
+                                            Margin="2,0,0,0"
+                                            Padding="0,0,0,0"
+                                            VerticalAlignment="Center"
+                                            HorizontalContentAlignment="Center"
+                                            Content="{Binding Cantidad}"
+                                            FontSize="14"
+                                            Foreground="#2E5E4E" />
+                                        <Button
+                                            Width="Auto"
+                                            Height="Auto"
+                                            Margin="5,0,0,10"
+                                            Padding="0,2,2,2"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Background="#A01A7D"
+                                            Click="IncrementarCantidad"
+                                            Content="+"
+                                            FontSize="20"
+                                            Foreground="White"
+                                            IsEnabled="True" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -468,36 +530,95 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Recibí: " FontSize="21" Foreground="#2E5E4E" VerticalAlignment="Center"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,10,5" FontSize="21" TextAlignment="Right"
-                 Foreground="#2E5E4E" Background="White" Padding="5"
-                 Text="{Binding MontoRecibido, UpdateSourceTrigger=PropertyChanged}"
-                 HorizontalAlignment="Stretch"/>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="21"
+                            Foreground="#2E5E4E"
+                            Text="Recibí: " />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,5,10,5"
+                            Padding="5"
+                            HorizontalAlignment="Stretch"
+                            Background="White"
+                            FontSize="21"
+                            Foreground="#2E5E4E"
+                            Text="{Binding MontoRecibido, UpdateSourceTrigger=PropertyChanged}"
+                            TextAlignment="Right" />
 
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Subtotal: " FontSize="21" Foreground="#2E5E4E" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
-                   Text="{Binding SubTotal, StringFormat=C2}" FontSize="26"
-                   Foreground="#2E5E4E" VerticalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="21"
+                            Foreground="#2E5E4E"
+                            Text="Subtotal: " />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,5,10,5"
+                            VerticalAlignment="Center"
+                            FontSize="26"
+                            Foreground="#2E5E4E"
+                            Text="{Binding SubTotal, StringFormat=C2}"
+                            TextAlignment="Right" />
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Total: " FontSize="33" Foreground="#2E5E4E" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
-                   Text="{Binding Total, StringFormat=C2}" FontSize="44" FontWeight="Bold"
-                   Foreground="#A01A7D" VerticalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="33"
+                            Foreground="#2E5E4E"
+                            Text="Total: " />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="0,5,10,5"
+                            VerticalAlignment="Center"
+                            FontSize="44"
+                            FontWeight="Bold"
+                            Foreground="#A01A7D"
+                            Text="{Binding Total, StringFormat=C2}"
+                            TextAlignment="Right" />
 
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Cambio: " FontSize="24" Foreground="#2E5E4E" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="txtCambio" Grid.Row="3" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
-                   Text="{Binding Cambio, StringFormat=C2}" FontSize="30" FontWeight="Bold"
-                   Foreground="#6B9D89" VerticalAlignment="Center"/>
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="24"
+                            Foreground="#2E5E4E"
+                            Text="Cambio: " />
+                        <TextBlock
+                            x:Name="txtCambio"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="0,5,10,5"
+                            VerticalAlignment="Center"
+                            FontSize="30"
+                            FontWeight="Bold"
+                            Foreground="#6B9D89"
+                            Text="{Binding Cambio, StringFormat=C2}"
+                            TextAlignment="Right" />
                     </Grid>
                 </StackPanel>
 
-                <Button Grid.Row="4" Content="CERRAR VENTA" 
-        Margin="0,20,0,0" Padding="15"
-        HorizontalAlignment="Stretch"
-        Background="#A01A7D" Foreground="White"
-        FontWeight="Bold" BorderThickness="0"
-        MinWidth="217" Height="46" FontFamily="Arial"
-        Click="CerrarVenta"/>
+                <Button
+                    Grid.Row="4"
+                    Height="46"
+                    MinWidth="217"
+                    Margin="0,20,0,0"
+                    Padding="15"
+                    HorizontalAlignment="Stretch"
+                    Background="#A01A7D"
+                    BorderThickness="0"
+                    Click="CerrarVenta"
+                    Content="CERRAR VENTA"
+                    FontFamily="Arial"
+                    FontWeight="Bold"
+                    Foreground="White" />
 
             </Grid>
         </Border>
