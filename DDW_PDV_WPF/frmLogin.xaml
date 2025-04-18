@@ -5,45 +5,101 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DDW_PDV_WPF"
         mc:Ignorable="d"
-        Icon="/flower.png"
-        Title="Iniciar Sesión" Height="450" Width="300"
-        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="White" WindowStyle="None">
-    <Grid Margin="20">
-        <Button Content="✖"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Background="Transparent"
-                BorderThickness="0"
-                FontSize="16"
-                Click="Cerrar_Click"/>
+        Icon="/Resources/omegasymbol.png"
+        Title="Iniciar Sesión" 
+        Height="450" Width="300"
+        MinWidth="280" MaxWidth="350"
+        WindowStartupLocation="CenterScreen" 
+        ResizeMode="NoResize" 
+        Background="#2E5E4E" 
+        WindowStyle="None">
 
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="220" >
-            <Ellipse Width="120" Height="120" Fill="LightGray" Margin="0,0,0,20">
-                <Ellipse.Stroke>
-                    <SolidColorBrush Color="Transparent"/>
-                </Ellipse.Stroke>
-                <Ellipse.OpacityMask>
-                    <VisualBrush>
-                        <VisualBrush.Visual>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="👤" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </VisualBrush.Visual>
-                    </VisualBrush>
-                </Ellipse.OpacityMask>
-            </Ellipse>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#ffff"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
 
-            <TextBlock Text="Usuario" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtUsuario" Text="" Background="LightGray" BorderThickness="0" Padding="5" />
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
 
-            <TextBlock Text="Contraseña" Margin="0,10,0,5"/>
-            <PasswordBox x:Name="txtContrasena" Password="" Background="LightGray" BorderThickness="0" Padding="5"/>
+        <Style TargetType="PasswordBox">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
 
-            <Button Content="Iniciar Sesión" Margin="0,20,0,0" Background="#D8D8D8" Padding="8"
-                    FontWeight="SemiBold" BorderBrush="Transparent" BorderThickness="0" 
-                    HorizontalAlignment="Center" Width="140" Height="40" Click="Button_Click"
-                    IsDefault="True"
-                    />
+        <Style TargetType="Button" x:Key="CloseButtonStyle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,5,5,0"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="LoginButtonStyle">
+            <Setter Property="Background" Value="#6B9D89"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Height" Value="40"/>
+
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Botón de cerrar -->
+        <Button Content="✖" 
+                Style="{StaticResource CloseButtonStyle}"
+                Click="Cerrar_Click"
+                Grid.Row="0"/>
+
+        <!-- Contenido principal -->
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center" 
+                    Width="220">
+
+            <!-- Avatar -->
+            <Grid HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Ellipse Width="120" Height="120" Fill="#ffff">
+                    <Ellipse.Stroke>
+                        <SolidColorBrush Color="#CCCCCC" Opacity="0.5"/>
+                    </Ellipse.Stroke>
+                </Ellipse>
+                <TextBlock Text="Ω" 
+                           FontSize="90" 
+                           HorizontalAlignment="Left" 
+                           VerticalAlignment="Top" Width="84" Margin="26,-10,0,0" Foreground="#878787"/>
+            </Grid>
+
+            <!-- Campos de formulario -->
+            <TextBlock Text="Usuario" Margin="0,0,0,5" FontSize="20"/>
+            <TextBox x:Name="txtUsuario" Text="" FontSize="20"/>
+
+            <TextBlock Text="Contraseña" Margin="0,10,0,5" FontSize="20"/>
+            <PasswordBox x:Name="txtContrasena" Password="" FontSize="20"/>
+
+            <!-- Botón de login -->
+            <Button Content="Iniciar Sesión" 
+                    Style="{StaticResource LoginButtonStyle}"
+                    Click="Button_Click"
+                    IsDefault="True"/>
         </StackPanel>
     </Grid>
 </Window>

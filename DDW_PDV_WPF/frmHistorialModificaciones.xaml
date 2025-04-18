@@ -4,84 +4,133 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DDW_PDV_WPF"
-      
-     
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       Title="frmHistorialModificaciones">
 
-    <Grid Background="#dedede">
+    <Page.Resources>
+        <!-- Estilos y recursos -->
+        <Style TargetType="TextBlock" x:Key="HeaderStyle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2E5E4E"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#F1E6D3"/>
+            <Setter Property="BorderBrush" Value="#6B9D89"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F8F8F8"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <!-- Valores fijos pero escalables -->
+        <sys:Double x:Key="FontSizeLarge">18</sys:Double>
+        <sys:Double x:Key="FontSizeNormal">14</sys:Double>
+        <sys:Double x:Key="FontSizeSmall">12</sys:Double>
+        <sys:Double x:Key="FontSizeHeader">22</sys:Double>
+
+        <Thickness x:Key="SmallMargin">5</Thickness>
+        <Thickness x:Key="StandardMargin">10</Thickness>
+        <Thickness x:Key="LargeMargin">15</Thickness>
+        <CornerRadius x:Key="StandardCornerRadius">5</CornerRadius>
+    </Page.Resources>
+
+    <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="7*" MinWidth="400"/>
+            <ColumnDefinition Width="3*" MinWidth="300"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Panel Izquierdo -->
-        <StackPanel Margin="20" Grid.Column="0">
-            <TextBlock Text="HISTORIAL DE MODIFICACIONES A INVENTARIO" FontSize="18" FontWeight="Bold"/>
-            <Border Grid.Row="0" BorderBrush="#FFABAdB3" BorderThickness="1" 
-        Background="White" CornerRadius="3" Margin="10,0,10,10">
+        <!-- Panel Izquierdo (70%) -->
+        <Grid Grid.Column="0" Margin="{StaticResource StandardMargin}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Título -->
+            <TextBlock Text="HISTORIAL DE MODIFICACIONES A INVENTARIO" 
+                       FontSize="{StaticResource FontSizeLarge}" 
+                       Style="{StaticResource HeaderStyle}"
+                       Grid.Row="0"
+                       Margin="0,0,0,10"/>
+
+            <!-- Barra de búsqueda -->
+            <Border Grid.Row="1" 
+                    BorderBrush="#6B9D89" 
+                    Background="White" 
+                    CornerRadius="{StaticResource StandardCornerRadius}" 
+                    Margin="0,0,0,10">
                 <Grid>
                     <TextBox x:Name="txtBusqueda"
-                 Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
-                 Background="Transparent"
-                 BorderThickness="0"
-                 Padding="10"
-                 FontSize="14"
-                 VerticalAlignment="Center"
-                 Foreground="Black"/>
+                             Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="10"
+                             FontSize="{StaticResource FontSizeNormal}"
+                             VerticalAlignment="Center"
+
+                             Foreground="#2E5E4E"/>
 
                     <Button x:Name="btnClearSearch"
-                Content="✕"
-                FontSize="12"
-                Foreground="Gray"
-                Background="Transparent"
-                BorderThickness="0"
-                Padding="0"
-                Width="20"
-                Height="20"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Margin="0,0,10,0"
-                />
+                            Content="✕"
+                            FontSize="{StaticResource FontSizeSmall}"
+                            Foreground="#A01A7D"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="0"
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,10,0"/>
                 </Grid>
             </Border>
 
-            <DataGrid AutoGenerateColumns="False" MinHeight="400" Background="#dedede" 
-          SelectionChanged="DataGrid_SelectionChanged"  IsReadOnly="True"               
-                SelectionMode="Single"
-                ItemsSource="{Binding ListaHistorial}">
+            <!-- DataGrid con altura flexible -->
+            <DataGrid Grid.Row="2"
+                      AutoGenerateColumns="False" 
+                      ItemsSource="{Binding ListaHistorial}"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                      SelectionChanged="DataGrid_SelectionChanged"
+                      Margin="0">
+                <!-- Columnas con proporciones -->
                 <DataGrid.Columns>
-                    <!-- Formatear la fecha para mejor visualización -->
-                    <DataGridTextColumn Header="FECHA Y HORA" Width="150">
+                    <DataGridTextColumn Header="FECHA Y HORA" Width="1.5*">
                         <DataGridTextColumn.Binding>
-                            <Binding Path="fechaHora" StringFormat="{}{0:}"/>
+                            <Binding Path="fechaHora" StringFormat="{}{0:yyyy-MM-dd HH:mm:ss}"/>
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="USUARIO" Binding="{Binding idUsuario}" Width="100"/>
+                    <DataGridTextColumn Header="USUARIO" Binding="{Binding idUsuario}" Width="*"/>
 
-                    <!-- Mostrar el tipo de acción (CREATE/UPDATE/DELETE) -->
-                    <DataGridTextColumn Header="ACCIÓN" Binding="{Binding accion}" Width="120">
+                    <DataGridTextColumn Header="ACCIÓN" Binding="{Binding accion}" Width="*">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="0,0,0,10"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding accion}" Value="CREATE">
-                                        <Setter Property="Foreground" Value="Green"/>
+                                    <DataTrigger Binding="{Binding accion}" Value="CREADO">
+                                        <Setter Property="Foreground" Value="#2E5E4E"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding accion}" Value="UPDATE">
-                                        <Setter Property="Foreground" Value="Blue"/>
+                                    <DataTrigger Binding="{Binding accion}" Value="ACT.">
+                                        <Setter Property="Foreground" Value="#6B9D89"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding accion}" Value="DELETE">
-                                        <Setter Property="Foreground" Value="Red"/>
+                                    <DataTrigger Binding="{Binding accion}" Value="ELIM.">
+                                        <Setter Property="Foreground" Value="#A01A7D"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!-- Mostrar resumen del estado anterior -->
-                    <DataGridTextColumn Header="ANTES" Width="120">
+                    <DataGridTextColumn Header="ANTES" Width="2*">
                         <DataGridTextColumn.Binding>
                             <Binding Path="antes">
                                 <Binding.Converter>
@@ -91,8 +140,7 @@
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
-                    <!-- Mostrar resumen del nuevo estado -->
-                    <DataGridTextColumn Header="DESPUÉS" Width="180">
+                    <DataGridTextColumn Header="DESPUÉS" Width="2*">
                         <DataGridTextColumn.Binding>
                             <Binding Path="despues">
                                 <Binding.Converter>
@@ -103,196 +151,301 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
+        </Grid>
 
-        <!-- Panel Derecho -->
-        <Grid Grid.Column="1" Background="#E5E5E5" Margin="10" >
+        <!-- Panel Derecho (30%) -->
+        <Grid Grid.Column="1" Background="#8FBBA9" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <!-- Encabezado -->
                 <RowDefinition Height="Auto"/>
-                <!-- Fecha y Hora -->
+                <!-- Fecha/Hora -->
                 <RowDefinition Height="Auto"/>
                 <!-- Usuario -->
                 <RowDefinition Height="Auto"/>
-                <!-- Tipo de Modificación -->
-                <RowDefinition Height="200"/>
-                <!-- Imagen del Producto -->
-                <RowDefinition Height="*"/>
-                <!-- Motivo -->
-                <RowDefinition Height="Auto"/>
-                <!-- Botones (si los hubiera) -->
+                <!-- Acción -->
+                <RowDefinition Height="2*"/>
+                <!-- Imágenes (20%) -->
+                <RowDefinition Height="3*"/>
+                <!-- Comparación (30%) -->
+                <RowDefinition Height="5*"/>
+                <!-- Detalles (50%) -->
             </Grid.RowDefinitions>
 
             <!-- Encabezado -->
-            <TextBlock Grid.Row="0" Text="DETALLES DE LA MODIFICACIÓN" 
-               FontSize="22" FontWeight="Bold" Foreground="#333333" 
-               HorizontalAlignment="Center" Margin="0,0,0,15"/>
+            <TextBlock Grid.Row="0" 
+                       Text="DETALLES DE LA MODIFICACIÓN" 
+                       FontSize="{StaticResource FontSizeHeader}" 
+                       Style="{StaticResource HeaderStyle}" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,0,0,15"
+                       Padding="10"/>
 
             <!-- Fecha y Hora -->
-            <Grid Grid.Row="1" Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MinWidth="120"/>
-                    <ColumnDefinition Width="*" MinWidth="200"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="FECHA Y HORA:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333" FontWeight="Bold"/>
-                <TextBlock Grid.Column="1" Name="txtFechaHora" 
-                   FontSize="14" Foreground="#333333" Margin="5"
-                   VerticalAlignment="Center"/>
-            </Grid>
+            <Border Grid.Row="1" 
+                    Background="#F1E6D3" 
+                    BorderBrush="#6B9D89" 
+                    Margin="10,0,10,10"
+                    CornerRadius="{StaticResource StandardCornerRadius}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="FECHA Y HORA:" 
+                               VerticalAlignment="Center" 
+                               Margin="10,5,5,5"
+                               Style="{StaticResource HeaderStyle}"/>
+                    <TextBlock Grid.Column="1" 
+                               Name="txtFechaHora" 
+                               Margin="5"
+                               VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
 
             <!-- Usuario -->
-            <Grid Grid.Row="2" Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MinWidth="120"/>
-                    <ColumnDefinition Width="*" MinWidth="200"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="USUARIO:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333" FontWeight="Bold"/>
-                <TextBlock Grid.Column="1" Name="txtUsuario" 
-                   FontSize="14" Foreground="#333333" Margin="5"
-                   VerticalAlignment="Center"/>
-            </Grid>
+            <Border Grid.Row="2" 
+                    Background="#F1E6D3" 
+                    BorderBrush="#6B9D89" 
+                     Margin="10,0,10,10"
+                    CornerRadius="{StaticResource StandardCornerRadius}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="USUARIO:" 
+                               VerticalAlignment="Center" 
+                               Margin="10,5,5,5"
+                               Style="{StaticResource HeaderStyle}"/>
+                    <TextBlock Grid.Column="1" 
+                               Name="txtUsuario" 
+                               Margin="5"
+                               VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
 
             <!-- Tipo de Modificación -->
-            <Grid Grid.Row="3" Margin="0,0,0,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MinWidth="120"/>
-                    <ColumnDefinition Width="*" MinWidth="200"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="ACCION:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333" FontWeight="Bold"/>
-                <TextBlock Grid.Column="1" Name="txtTipoModificacion" 
-                   FontSize="14" Foreground="#333333" Margin="5"
-                   VerticalAlignment="Center"/>
-            </Grid>
+            <Border Grid.Row="3" 
+                    Background="#F1E6D3" 
+                    BorderBrush="#6B9D89" 
+                    Margin="10,0,10,10"
+                    CornerRadius="{StaticResource StandardCornerRadius}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="ACCIÓN:" 
+                               VerticalAlignment="Center" 
+                               Margin="10,5,5,5"
+                               Style="{StaticResource HeaderStyle}"/>
+                    <TextBlock Grid.Column="1" 
+                               Name="txtTipoModificacion" 
+                               Margin="5"
+                               VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
 
-            <!-- Sección de imágenes -->
-            <Grid Grid.Row="4" Margin="10">
+            <!-- Sección de imágenes (20% del espacio vertical disponible) -->
+            <Grid Grid.Row="4" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Imagen ANTES -->
-                <Border Grid.Column="0" Background="White" CornerRadius="5" 
-            BorderBrush="#CCCCCC" BorderThickness="1" Margin="0,0,5,0">
-                    <StackPanel>
-                        <TextBlock Text="ANTES" FontWeight="Bold" HorizontalAlignment="Center" Margin="5"/>
-                        <Image x:Name="imgAntes" Stretch="Uniform" MaxHeight="150" Margin="10">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Source, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <TextBlock x:Name="txtNoImagenAntes" Text="Imagen no disponible" 
-                       HorizontalAlignment="Center" Foreground="Gray" FontStyle="Italic"/>
-                    </StackPanel>
+                <Border Grid.Column="0" 
+                        Background="White" 
+                        BorderBrush="#6B9D89" 
+                        Margin="10,0,5,0"
+                        CornerRadius="{StaticResource StandardCornerRadius}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="ANTES" 
+                                   Style="{StaticResource HeaderStyle}" 
+                                   HorizontalAlignment="Center" 
+                                   Margin="5"
+                                   Grid.Row="0"/>
+
+                        <Viewbox Grid.Row="1" Stretch="Uniform" MaxHeight="150">
+                            <Image x:Name="imgAntes" Stretch="None">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Source, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Viewbox>
+
+                        <TextBlock x:Name="txtNoImagenAntes" 
+                                   Text="Imagen no disponible" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#A01A7D" 
+                                   FontStyle="Italic"
+                                   Grid.Row="2"
+                                   Margin="5"/>
+                    </Grid>
                 </Border>
 
                 <!-- Imagen DESPUES -->
-                <Border Grid.Column="1" Background="White" CornerRadius="5" 
-            BorderBrush="#CCCCCC" BorderThickness="1" Margin="5,0,0,0">
-                    <StackPanel>
-                        <TextBlock Text="DESPUÉS" FontWeight="Bold" HorizontalAlignment="Center" Margin="5"/>
-                        <Image x:Name="imgDespues" Stretch="Uniform" MaxHeight="150" Margin="10">
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Source, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <TextBlock x:Name="txtNoImagenDespues" Text="Imagen no disponible" 
-                       HorizontalAlignment="Center" Foreground="Gray" FontStyle="Italic"/>
-                    </StackPanel>
+                <Border Grid.Column="1" 
+                        Background="White" 
+                        BorderBrush="#6B9D89" 
+                        Margin="5,0,10,0"
+                        CornerRadius="{StaticResource StandardCornerRadius}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="DESPUÉS" 
+                                   Style="{StaticResource HeaderStyle}" 
+                                   HorizontalAlignment="Center" 
+                                   Margin="5"
+                                   Grid.Row="0"/>
+
+                        <Viewbox Grid.Row="1" Stretch="Uniform" MaxHeight="150">
+                            <Image x:Name="imgDespues" Stretch="None">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Source, RelativeSource={RelativeSource Self}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Viewbox>
+
+                        <TextBlock x:Name="txtNoImagenDespues" 
+                                   Text="Imagen no disponible" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="#A01A7D" 
+                                   FontStyle="Italic"
+                                   Grid.Row="2"
+                                   Margin="5"/>
+                    </Grid>
                 </Border>
             </Grid>
 
-            <!-- Sección de Comparación -->
-            <Grid Grid.Row="5" Margin="0,0,0,10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <!-- Sección de Comparación (30% del espacio vertical) -->
+            <Border Grid.Row="5" 
+                    Background="#F1E6D3" 
+                    BorderBrush="#6B9D89" 
+                    Margin="10,0,10,10"
+                    CornerRadius="{StaticResource StandardCornerRadius}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <!-- Encabezado -->
-                <TextBlock Text="COMPARACIÓN DE CAMBIOS" 
-               FontSize="14" FontWeight="Bold" Foreground="#333333"
-               Margin="10,5,5,5" Grid.Row="0"/>
+                    <TextBlock Text="COMPARACIÓN DE CAMBIOS" 
+                               Style="{StaticResource HeaderStyle}"
+                               Margin="10,5,5,5"
+                               Grid.Row="0"/>
 
-                <!-- Contenedor principal de comparación -->
-                <Grid Grid.Row="1" Margin="10,0,10,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="5"/>
-                        <!-- Separador -->
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="1" Margin="10,0,10,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Columna ANTES -->
-                    <Border Grid.Column="0" Background="#FAFAFA" CornerRadius="5" 
-                BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
-                        <StackPanel>
-                            <TextBlock Text="ESTADO ANTERIOR" FontWeight="Bold" Margin="0,0,0,5"
-                           Foreground="#555555" HorizontalAlignment="Center"/>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBlock Name="txtAntes" TextWrapping="Wrap" FontSize="13"
-                               Foreground="#333333"/>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </Border>
+                        <!-- Columna ANTES -->
+                        <Border Grid.Column="0" 
+                                Background="White" 
+                                BorderBrush="#A01A7D"
+                                CornerRadius="{StaticResource StandardCornerRadius}">
+                            <DockPanel>
+                                <TextBlock Text="ESTADO ANTERIOR" 
+                                           Style="{StaticResource HeaderStyle}" 
+                                           DockPanel.Dock="Top"
+                                           Margin="5"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock Name="txtAntes" 
+                                               TextWrapping="Wrap" 
+                                               FontSize="{StaticResource FontSizeSmall}"
+                                               Foreground="#2E5E4E"
+                                               Margin="5"/>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </Border>
 
-                    <!-- Separador visual -->
-                    <Rectangle Grid.Column="1" Fill="#E0E0E0" Width="1" HorizontalAlignment="Center"/>
+                        <!-- Separador visual -->
+                        <Rectangle Grid.Column="1" 
+                                   Fill="#A01A7D" 
+                                   Width="2" 
+                                   HorizontalAlignment="Center"
+                                   Height="auto"
+                                   VerticalAlignment="Center"/>
 
-                    <!-- Columna DESPUÉS -->
-                    <Border Grid.Column="2" Background="#FAFAFA" CornerRadius="5" 
-                BorderBrush="#E0E0E0" BorderThickness="1" Padding="10">
-                        <StackPanel>
-                            <TextBlock Text="ESTADO ACTUAL" FontWeight="Bold" Margin="0,0,0,5"
-                           Foreground="#555555" HorizontalAlignment="Center"/>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBlock Name="txtDespues" TextWrapping="Wrap" FontSize="13"
-                               Foreground="#333333"/>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </Border>
+                        <!-- Columna DESPUÉS -->
+                        <Border Grid.Column="2" 
+                                Background="White" 
+                                BorderBrush="#A01A7D"
+                                CornerRadius="{StaticResource StandardCornerRadius}">
+                            <DockPanel>
+                                <TextBlock Text="ESTADO ACTUAL" 
+                                           Style="{StaticResource HeaderStyle}" 
+                                           DockPanel.Dock="Top"
+                                           Margin="5"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock Name="txtDespues" 
+                                               TextWrapping="Wrap" 
+                                               FontSize="{StaticResource FontSizeSmall}"
+                                               Foreground="#2E5E4E"
+                                               Margin="5"/>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </Border>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Border>
 
-            <!-- Sección de Motivo -->
-            <Grid Grid.Row="6" Margin="0,0,0,10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <!-- Sección de Motivo (50% del espacio vertical) -->
+            <Border Grid.Row="6" 
+                    Background="#F1E6D3" 
+                    BorderBrush="#6B9D89" 
+                    CornerRadius="{StaticResource StandardCornerRadius}"
+                     Margin="10,0,10,10">
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <TextBlock Text="DETALLE DE CAMBIOS" 
-               FontSize="14" FontWeight="Bold" Foreground="#333333"
-               Margin="10,5,5,5" Grid.Row="0"/>
+                    <TextBlock Text="DETALLE DE CAMBIOS" 
+                               Style="{StaticResource HeaderStyle}"
+                               Margin="10,5,5,5"
+                               Grid.Row="0"/>
 
-                <Border Grid.Row="1" Background="#FFF9F9F9" CornerRadius="5" 
-            BorderBrush="#E0E0E0" BorderThickness="1" Margin="10,0,10,0">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="150">
-                        <TextBlock Name="txtMotivo" TextWrapping="Wrap" FontSize="13"
-                       Margin="10" Foreground="#333333"/>
+                    <ScrollViewer Grid.Row="1" 
+                                 VerticalScrollBarVisibility="Auto" 
+                                 Margin="10,0,10,10">
+                        <TextBlock Name="txtMotivo" 
+                                   TextWrapping="Wrap" 
+                                   FontSize="{StaticResource FontSizeSmall}"
+                                   Foreground="#2E5E4E"/>
                     </ScrollViewer>
-                </Border>
-            </Grid>
-
-
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </Page>

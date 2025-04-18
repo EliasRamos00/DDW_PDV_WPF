@@ -5,7 +5,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:local="clr-namespace:DDW_PDV_WPF"
       mc:Ignorable="d"
-      Title="frmInventarios">
+      Title="frmInventarios"
+      Background="#F5F5F5">
+
     <Page.Resources>
         <Style TargetType="ListBoxItem">
             <Style.Triggers>
@@ -17,412 +19,398 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
         <Style x:Key="DetailTextBoxStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="MinHeight" Value="35"/>
-            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#333333"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="IsReadOnly" Value="False"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E5C1DC"/>
         </Style>
+
         <local:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
 
     <Grid>
-        <Grid Grid.Column="0" Background="#dedede" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="6*"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.4*" MinWidth="300"/>
+            <ColumnDefinition Width="0.6*" MinWidth="450"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Panel izquierdo - Lista de productos -->
+        <Grid Grid.Column="0" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <!-- Título INVENTARIO -->
                 <RowDefinition Height="*"/>
-                <!-- Lista de productos -->
                 <RowDefinition Height="Auto"/>
-                <!-- Botones Agregar/Quitar -->
             </Grid.RowDefinitions>
 
             <!-- Título INVENTARIO -->
-            <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
-                       Text="INVENTARIO"
-                       FontSize="33"
+            <TextBlock Grid.Row="0" Text="INVENTARIO"
+                       FontSize="28"
                        FontWeight="Bold"
-                       Foreground="Black"
+                       Foreground="#2E5E4E"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Margin="0,10"/>
+                       Margin="0,0,0,15"/>
 
-            <!-- Lista de productos -->
-            <Grid Grid.Row="1" Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Barra de búsqueda -->
-                <Border Grid.Row="0" BorderBrush="#FFABAdB3" BorderThickness="1" 
-                        Background="White" CornerRadius="3" Margin="10,0,10,10">
-                    <Grid>
-                        <TextBox x:Name="txtBusqueda"
-                                 Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Padding="10"
-                                 FontSize="14"
-                                 VerticalAlignment="Center"
-                                 Foreground="Black"/>
-
-                        <TextBlock Text="Buscar artículos..."
-                                   Foreground="Gray"
-                                   FontStyle="Italic"
-                                   FontSize="14"
-                                   Padding="15,0,0,0"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Left"
-                                   Visibility="{Binding TextoBusqueda, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=inverse}"/>
-
-                        <Button x:Name="btnClearSearch"
-                                Content="✕"
-                                FontSize="12"
-                                Foreground="Gray"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Padding="0"
-                                Width="20"
-                                Height="20"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Margin="0,0,10,0"
-                                Command="{Binding LimpiarBusquedaCommand}"
-                                Visibility="{Binding TextoBusqueda, Converter={StaticResource StringToVisibilityConverter}}"/>
-                    </Grid>
-                </Border>
-
-                <!-- Lista de productos -->
-                <ScrollViewer Grid.Row="1" Margin="10,0,10,0"
-                              VerticalScrollBarVisibility="Auto">
-                    <ListBox x:Name="lstProductos"
-                             ItemsSource="{Binding ListaArticulos}"
-                             SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}"
+            <!-- Barra de búsqueda -->
+            <Border Grid.Row="0" BorderBrush="#CCCCCC" BorderThickness="1" 
+                    Background="White" CornerRadius="3" Margin="0,0,0,10">
+                <Grid>
+                    <TextBox x:Name="txtBusqueda"
+                             Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
                              Background="Transparent"
                              BorderThickness="0"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border Margin="0,2" BorderBrush="#9E9E9E" BorderThickness="0,0,0,1" Padding="5">
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Descripcion}" FontWeight="Bold" FontSize="13" TextWrapping="Wrap"/>
-                                        <TextBlock Text="{Binding Color}" FontSize="12"/>
-                                        <TextBlock Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" FontSize="11"/>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </ScrollViewer>
-            </Grid>
+                             Padding="10"
+                             FontSize="14"
+                             VerticalAlignment="Center"
+                             Foreground="#333333"/>
 
-            <!-- Panel de detalles del producto -->
-            <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="10" DataContext="{Binding ArticuloSeleccionado}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <TextBlock Text="Buscar artículos..."
+                               Foreground="Gray"
+                               FontStyle="Italic"
+                               FontSize="14"
+                               Padding="15,0,0,0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
+                               Visibility="{Binding TextoBusqueda, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=inverse}"/>
+
+                    <Button x:Name="btnClearSearch"
+                            Content="✕"
+                            FontSize="12"
+                            Foreground="Gray"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="0"
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,10,0"
+                            Command="{Binding LimpiarBusquedaCommand}"
+                            Visibility="{Binding TextoBusqueda, Converter={StaticResource StringToVisibilityConverter}}"/>
+                </Grid>
+            </Border>
+
+            <!-- Lista de productos -->
+            <Border Grid.Row="1" Background="#E5C1DC" CornerRadius="5" BorderBrush="#E0E0E0" BorderThickness="1">
+                <ListBox x:Name="lstProductos"
+                         ItemsSource="{Binding ListaArticulos}"
+                         SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,2" BorderBrush="white" BorderThickness="0,0,0,1" Padding="5">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Descripcion}" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Color}" FontSize="12" Foreground="#666666"/>
+                                    <TextBlock Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" FontSize="12" Foreground="#666666"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+           <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15">
+    <!-- Estilo compartido para ambos botones-texto -->
+    <StackPanel.Resources>
+        <Style x:Key="TextButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#767676"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock x:Name="ContentText" 
+                                 Text="{TemplateBinding Content}"
+                                 Padding="8,4"
+                                >
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextDecorations" Value="None"/>
+                                    <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                                        <Setter Property="Foreground" Value="#A01A7D"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </StackPanel.Resources>
+
+    <!-- Botón Agregar -->
+    <Button x:Name="BotonAgregar1"
+            Content="+  Agregar"
+            Foreground="Green"
+            Style="{StaticResource TextButtonStyle}"
+            Margin="0,0,20,0"
+            Click="BotonAgregar"/>
+
+    <!-- Botón Quitar  -->
+    <Button x:Name="BotonQuitar1"
+            Content="−   Quitar"
+            Foreground="Red"
+            Style="{StaticResource TextButtonStyle}"
+            Click="EliminarArticulo"/>
+</StackPanel>
+        </Grid>
+
+        <!-- Panel derecho - Detalles del producto -->
+        <Border Grid.Column="1" Margin="10" Background="White" CornerRadius="5" BorderBrush="#E0E0E0" BorderThickness="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
+                <Grid DataContext="{Binding ArticuloSeleccionado}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="0.3*" MinHeight="200"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
                     <!-- Encabezado -->
-                    <RowDefinition Height="200"/>
-                    <!-- Imágenes -->
-                    <RowDefinition Height="Auto"/>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                        <TextBlock Text="{Binding idArticulo, StringFormat='ID: {0}'}" 
+                                   FontSize="14" Foreground="#555555" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Descripcion}" 
+                                   FontSize="22" FontWeight="Bold" Foreground="#2E5E4E" 
+                                   Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Imagen y QR -->
+                    <Grid Grid.Row="1" Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Imagen del producto -->
+                        <Border Grid.Column="0" Background="#E5C1DC" CornerRadius="5" Margin="0,0,10,0">
+                            <Grid>
+                                <Image Source="{Binding Foto, TargetNullValue={x:Null}}" 
+                                       Stretch="Uniform" 
+                                       MaxHeight="180"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+
+                                <TextBlock Text="Sin imagen" 
+                                           Visibility="{Binding Foto, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=inverse}"
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center"
+                                           Foreground="Gray"/>
+
+                                <Button x:Name="BtnCambiarImagen" 
+                                        Content="📷" 
+                                        ToolTip="Cambiar imagen"
+                                        Click="BtnSeleccionarImagen_Click"
+                                        Width="30" 
+                                        Height="30"
+                                        FontSize="14"
+                                        Padding="0"
+                                        HorizontalAlignment="Right" 
+                                        VerticalAlignment="Bottom"
+                                        Margin="10"
+                                        Background="White"
+                                        BorderBrush="#CCCCCC"
+                                        BorderThickness="1"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Código QR -->
+                        <Border Grid.Column="1" Background="#E5C1DC" CornerRadius="5">
+                            <Image x:Name="imgCodigoQR" 
+                                   Width="200"
+                                   Height="200"
+                                   Stretch="Uniform"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Campos del formulario -->
                     <!-- Descripción -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- Color -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- Tamaño -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- Categoría -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- Stock y Mínimo -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- Máximo y Código -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- Precios -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- Botones -->
-                </Grid.RowDefinitions>
+                    <Grid Grid.Row="2" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="0.8*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Descripción:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                   FontSize="14" Foreground="#555555"/>
+                        <TextBox Grid.Column="1" Text="{Binding Descripcion, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource DetailTextBoxStyle}"
+                                 MouseDoubleClick="txtDescripcion_MouseDoubleClick"/>
+                    </Grid>
 
-                <!-- Encabezado -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-                    <TextBlock Text="{Binding idArticulo, StringFormat='ID: {0}'}" 
-                   FontSize="14" Foreground="#555555" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding Descripcion}" 
-                   FontSize="22" FontWeight="Bold" Foreground="Black" 
-                   Margin="10,0,0,0" VerticalAlignment="Center"/>
-                </StackPanel>
+                    <!-- Color y Tamaño -->
+                    <Grid Grid.Row="3" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                        </Grid.ColumnDefinitions>
 
-                <!-- Imagen -->
-                <!-- Reemplaza el Grid.Row="1" (sección de imagen) con esto: -->
-                <Grid Grid.Row="1" Margin="0,0,0,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" MinWidth="200"/>
-                        <ColumnDefinition Width="*" MinWidth="200"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Contenedor de la imagen con botón flotante -->
-                    <Border Grid.Column="0" Background="White" CornerRadius="10" Margin="0,0,10,0">
-                        <Grid>
-                            <!-- Imagen del artículo -->
-                            <Image Source="{Binding Foto, TargetNullValue={x:Null}}" 
-                   Stretch="Uniform" 
-                   VerticalAlignment="Center" 
-                   HorizontalAlignment="Center"
-                   MaxHeight="180"/>
-
-                            <!-- Mensaje cuando no hay imagen -->
-                            <TextBlock Text="Sin imagen" 
-                       Visibility="{Binding Foto, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=inverse}"
-                       VerticalAlignment="Center" 
-                       HorizontalAlignment="Center"
-                       Foreground="Gray"/>
-
-                            <!-- Botón flotante para cambiar imagen -->
-                            <Button x:Name="BtnCambiarImagen" 
-                    Content="📷" 
-                    ToolTip="Cambiar imagen"
-                    Click="BtnSeleccionarImagen_Click"
-                    Width="30" 
-                    Height="30"
-                    FontSize="14"
-                    Padding="0"
-                    HorizontalAlignment="Right" 
-                    VerticalAlignment="Bottom"
-                    Margin="10"/>
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Color:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox Grid.Column="1" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource DetailTextBoxStyle}"/>
                         </Grid>
-                    </Border>
 
-                    <!-- Panel de información de la imagen  -->
-                    <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10,0,0,0">
-                        <Image x:Name="imgCodigoQR" 
-           Width="200"
-           Height="200"
-           Stretch="Uniform"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Tamaño:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox Grid.Column="1" Text="{Binding Tamanio, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource DetailTextBoxStyle}"/>
+                        </Grid>
+                    </Grid>
 
-                        
+                    <!-- Categoría -->
+                    <Grid Grid.Row="4" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="0.8*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Categoría:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                   FontSize="14" Foreground="#555555"/>
+                        <TextBox Grid.Column="1" Text="{Binding IdCategoria, UpdateSourceTrigger=PropertyChanged}" 
+                                 Style="{StaticResource DetailTextBoxStyle}"/>
+                    </Grid>
+
+                    <!-- Stock y Mínimo -->
+                    <Grid Grid.Row="5" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Stock:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox Grid.Column="1" Text="{Binding Stock, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource DetailTextBoxStyle}"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Mínimo:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox Grid.Column="1" Text="{Binding Min, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource DetailTextBoxStyle}"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Máximo y Código -->
+                    <Grid Grid.Row="6" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Máximo:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox Grid.Column="1" Text="{Binding Max, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource DetailTextBoxStyle}"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Código:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox x:Name="txtCodigo" Grid.Column="1" Text="{Binding CodigoBarras, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource DetailTextBoxStyle}" TextChanged="txtCodigo_TextChanged"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Precios -->
+                    <Grid Grid.Row="7" Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="P. Venta:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox x:Name="txtPrecioVenta" Grid.Column="1" 
+                                     Text="{Binding PrecioVenta, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" 
+                                     Style="{StaticResource DetailTextBoxStyle}"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="P. Compra:" VerticalAlignment="Center" Margin="10,5,5,5"
+                                       FontSize="14" Foreground="#555555"/>
+                            <TextBox x:Name="txtPrecioCompra" Grid.Column="1" 
+                                     Text="{Binding PrecioCompra, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" 
+                                     Style="{StaticResource DetailTextBoxStyle}"/>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Botones de acción -->
+                    <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0"
+                                Visibility="{Binding HasChanges, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button x:Name="btnCancelarCambios" Content="Cancelar" 
+                                Width="120" Height="35" 
+                                Margin="0,0,10,0"
+                                Background="White"
+                                BorderBrush="#CCCCCC"
+                                BorderThickness="1"
+                                Click="Cancelar_Click"/>
+                        <Button x:Name="btnGuardarCambios" Content="Guardar" 
+                                Width="120" Height="35"
+                                Margin="0,0,10,0"
+                                Background="#6B9D89"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Click="GuardarCambios"/>
                     </StackPanel>
                 </Grid>
-
-                <!-- Campos del formulario - Diseño responsivo -->
-                <Grid Grid.Row="2" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="120"/>
-                        <ColumnDefinition Width="117*" MinWidth="200"/>
-                        <ColumnDefinition Width="203*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Descripción:" VerticalAlignment="Center" Margin="10,0,5,0"
-                   FontSize="14" Foreground="#333333"/>
-                    <TextBox Grid.Column="1" Text="{Binding Descripcion, UpdateSourceTrigger=PropertyChanged}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="5,5,5,5"
-                 MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                 TextChanged="TextBox_TextChanged" Grid.ColumnSpan="2"/>
-                </Grid>
-
-                <Grid Grid.Row="3" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="120"/>
-                        <ColumnDefinition Width="*" MinWidth="200"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Color:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333"/>
-                    <TextBox Grid.Column="1" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                 MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                 TextChanged="TextBox_TextChanged"/>
-                </Grid>
-
-                <Grid Grid.Row="4" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="120"/>
-                        <ColumnDefinition Width="*" MinWidth="200"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Tamaño:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333"/>
-                    <TextBox Grid.Column="1" Text="{Binding Tamanio, UpdateSourceTrigger=PropertyChanged}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                 MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                 TextChanged="TextBox_TextChanged"/>
-                </Grid>
-
-                <Grid Grid.Row="5" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="120"/>
-                        <ColumnDefinition Width="*" MinWidth="200"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Categoría:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333"/>
-                    <TextBox Grid.Column="1" Text="{Binding IdCategoria, UpdateSourceTrigger=PropertyChanged}" 
-                 Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                 MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                 TextChanged="TextBox_TextChanged"/>
-                </Grid>
-
-                <!-- Stock y Mínimo -->
-                <Grid Grid.Row="6" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="120"/>
-                            <ColumnDefinition Width="*" MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Stock:" VerticalAlignment="Center" Margin="10,5,5,5"
-                       FontSize="14" Foreground="#333333"/>
-                        <TextBox Grid.Column="1" Text="{Binding Stock, UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                     MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                     TextChanged="TextBox_TextChanged"/>
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="120"/>
-                            <ColumnDefinition Width="*" MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Mínimo:" VerticalAlignment="Center" Margin="10,5,5,5"
-                       FontSize="14" Foreground="#333333"/>
-                        <TextBox Grid.Column="1" Text="{Binding Min, UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                     MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                     TextChanged="TextBox_TextChanged"/>
-                    </Grid>
-                </Grid>
-
-                <!-- Máximo y Código -->
-                <Grid Grid.Row="7" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="120"/>
-                            <ColumnDefinition Width="*" MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Máximo:" VerticalAlignment="Center" Margin="10,5,5,5"
-                       FontSize="14" Foreground="#333333"/>
-                        <TextBox Grid.Column="1" Text="{Binding Max, UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                     MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                     TextChanged="TextBox_TextChanged"/>
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="120"/>
-                            <ColumnDefinition Width="*" MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Código:" VerticalAlignment="Center" Margin="10,5,5,5"
-                       FontSize="14" Foreground="#333333"/>
-                        <TextBox x:Name="txtCodigo" Grid.Column="1" Text="{Binding CodigoBarras, UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource DetailTextBoxStyle}" Margin="5"
-                     MouseDoubleClick="txtDescripcion_MouseDoubleClick"
-                     TextChanged="txtCodigo_TextChanged"/>
-                    </Grid>
-                </Grid>
-
-                <!-- Precios -->
-                <Grid Grid.Row="8" Margin="0,0,0,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Precio Venta -->
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="120"/>
-                            <ColumnDefinition Width="*" MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="P. Venta:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333"/>
-                        <TextBox x:Name="txtPrecioVenta" Grid.Column="1" 
-                 Text="{Binding PrecioVenta, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" 
-                 Style="{StaticResource DetailTextBoxStyle}" 
-                 Margin="5"
-                 GotFocus="PrecioTextBox_GotFocus"
-                 LostFocus="PrecioTextBox_LostFocus"/>
-                    </Grid>
-
-                    <!-- Precio Compra -->
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="120"/>
-                            <ColumnDefinition Width="*" MinWidth="100"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="P. Compra:" VerticalAlignment="Center" Margin="10,5,5,5"
-                   FontSize="14" Foreground="#333333"/>
-                        <TextBox x:Name="txtPrecioCompra" Grid.Column="1" 
-                 Text="{Binding PrecioCompra, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" 
-                 Style="{StaticResource DetailTextBoxStyle}" 
-                 Margin="5"
-                 GotFocus="PrecioTextBox_GotFocus"
-                 LostFocus="PrecioTextBox_LostFocus"/>
-                    </Grid>
-                </Grid>
-
-                <!-- Botones -->
-                <StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0"
-                Visibility="{Binding HasChanges, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Button x:Name="btnCancelarCambios" Content="Cancelar" Width="120" Height="35" Margin="0,0,10,-10" 
-                MinWidth="100" Click="Cancelar_Click"/>
-                    <Button x:Name="btnGuardarCambios" Content="Guardar" Width="120" Height="35"  Margin="0,0,10,-10"
-                MinWidth="100" Click="GuardarCambios"/>
-                </StackPanel>
-            </Grid>
-
-            <!-- Botones Agregar/Quitar -->
-            <Grid Grid.Row="2" Grid.Column="0" Margin="0,10" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Botón Agregar -->
-                <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,20,0">
-                    <Button x:Name="BotonAgregar1"
-                            Content="+" 
-                            Width="63" Height="36"
-                            FontSize="20"
-                            Margin="0,0,0,4"
-                            BorderBrush="#767676"
-                            BorderThickness="1"
-                            Background="Transparent"
-                            Foreground="#767676"
-                            Click="BotonAgregar"/>
-                    <TextBlock Text="Agregar Producto"
-                               FontSize="13"
-                               Foreground="#767676"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-
-                <!-- Botón Quitar -->
-                <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
-                    <Button x:Name="BotonQuitar1"
-                            Content="−" 
-                            Width="64" Height="36"
-                            FontSize="14"
-                            Margin="0,0,0,4"
-                            BorderBrush="#767676"
-                            BorderThickness="1"
-                            Background="Transparent"
-                            Foreground="#767676"
-                            Click="EliminarArticulo"/>
-                    <TextBlock Text="ELIMINAR PRODUCTO"
-                               FontSize="13"
-                               Foreground="#767676"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Grid>
-        </Grid>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </Page>

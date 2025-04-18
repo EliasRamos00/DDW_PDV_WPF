@@ -27,7 +27,6 @@
                 SnapsToDevicePixels="true">
 
                 <Grid>
-
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
 
@@ -130,7 +129,6 @@
             <Setter Property="AllowDrop" Value="true" />
             <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
             <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
-
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -257,34 +255,6 @@
                             TextAlignment="Center" />
                     </StackPanel>
 
-
-                    <!--<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" PanningMode="HorizontalOnly">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
-                    -->
-                    <!--  Botón con ícono y texto  -->
-                    <!--
-                            <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="Imagenes\bag.png" Width="50" Height="50" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Categoria 1" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                    -->
-                    <!--  Repite para los demás botones  -->
-                    <!--
-                            <Button Height="157" Width="136" Margin="10,0,10,0" VerticalContentAlignment="Bottom" Background="White">
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image Source="Imagenes\flower-shop.png" Width="50" Height="50" Margin="0,0,0,10"/>
-                                    <TextBlock Text="Categoria 2" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </ScrollViewer>-->
-
-
-
-
                     <ScrollViewer
                         Grid.Row="1"
                         HorizontalScrollBarVisibility="Auto"
@@ -365,7 +335,9 @@
                                         Height="150"
                                         Margin="5"
                                         Background="LightGray"
-                                        Click="ClickProducto">
+                                        Click="ClickProducto"
+                                        BorderBrush="#A01A7D" 
+                                        BorderThickness="1,1,1,1">
                                         <Button.Content>
                                             <StackPanel>
                                                 <Image
@@ -376,7 +348,8 @@
                                                 <TextBlock
                                                     HorizontalAlignment="Center"
                                                     Text="{Binding Descripcion}"
-                                                    TextWrapping="Wrap" />
+                                                    TextWrapping="Wrap"
+                                                    Foreground="White" />
                                             </StackPanel>
                                         </Button.Content>
                                     </Button>
@@ -385,7 +358,6 @@
                         </ItemsControl>
                     </ScrollViewer>
                 </Grid>
-
             </Grid>
         </Border>
         <Border
@@ -417,7 +389,7 @@
                     HorizontalAlignment="Center"
                     FontSize="18"
                     FontWeight="Bold"
-                    Foreground="Black"
+                    Foreground="#2E5E4E"
                     Text="DETALLES DE LA VENTA" />
 
 
@@ -431,7 +403,7 @@
                     Margin="0,0,0,10"
                     FontSize="16"
                     FontWeight="Bold"
-                    Foreground="Black"
+                    Foreground="#2E5E4E"
                     Text="Carrito de artículos" />
 
 
@@ -452,7 +424,7 @@
                                 Height="70"
                                 Margin="0,0,0,5"
                                 Padding="5"
-                                Background="#FFFFFF"
+                                Background="#F5F5F5"
                                 CornerRadius="5">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -462,86 +434,26 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!--  Imagen del producto  -->
-                                    <Image
-                                        Grid.Column="0"
-                                        Width="60"
-                                        Height="60"
-                                        Margin="2,0,4,0"
-                                        VerticalAlignment="Top"
-                                        Source="{Binding Foto}" />
+                                    <Image Source="{Binding Foto}" Width="60" Height="60" Grid.Column="0" VerticalAlignment="Top" Margin="2,0,4,0"/>
 
-                                    <!--  Nombre, categoría y número adicional  -->
                                     <StackPanel Grid.Column="1" Margin="0,0,4,0">
-                                        <TextBlock
-                                            Width="100"
-                                            FontSize="12"
-                                            FontWeight="Bold"
-                                            Text="{Binding Descripcion}"
-                                            TextWrapping="Wrap" />
-                                        <TextBlock
-                                            FontSize="10"
-                                            Foreground="#666666"
-                                            Text="{Binding PrecioVenta, StringFormat=C}" />
-                                        <TextBlock
-                                            FontSize="10"
-                                            Foreground="#B0B0B0"
-                                            Text="{Binding IdCategoria}" />
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding Descripcion}" FontSize="12" FontWeight="Bold" Width="100" Foreground="#2E5E4E"/>
+                                        <TextBlock Text="{Binding PrecioVenta, StringFormat=C }" FontSize="10" Foreground="#6B9D89"/>
+                                        <TextBlock Text="{Binding IdCategoria}" FontSize="10" Foreground="#8FBBA9"/>
                                     </StackPanel>
 
-                                    <!--  Precio  -->
-                                    <TextBlock
-                                        Grid.Column="2"
-                                        Width="60"
-                                        Margin="5,0,5,0"
-                                        VerticalAlignment="Center"
-                                        FontSize="12"
-                                        FontWeight="Bold"
-                                        Text="{Binding TotalCarrito, StringFormat=C}" />
+                                    <TextBlock Text="{Binding TotalCarrito, StringFormat=C}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2" Width="60" Foreground="#2E5E4E"/>
 
-                                    <!--  Contador de cantidad con botones  -->
-                                    <StackPanel
-                                        Grid.Column="3"
-                                        Margin="1"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-                                        <Button
-                                            Width="Auto"
-                                            Height="Auto"
-                                            Margin="10,0,0,10"
-                                            Padding="2,2,2,2"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Click="DecrementarCantidad"
-                                            Content="-"
-                                            FontSize="20" />
-                                        <Label
-                                            Width="20"
-                                            Margin="2,0,0,0"
-                                            Padding="0,0,0,0"
-                                            VerticalAlignment="Center"
-                                            HorizontalContentAlignment="Center"
-                                            Content="{Binding Cantidad}"
-                                            FontSize="14" />
-                                        <Button
-                                            Width="Auto"
-                                            Height="Auto"
-                                            Margin="5,0,0,10"
-                                            Padding="0,2,2,2"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Click="IncrementarCantidad"
-                                            Content="+"
-                                            FontSize="20"
-                                            IsEnabled="True" />
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="1">
+                                        <Button Padding="2,2,2,2" Click="DecrementarCantidad" FontSize="20" Content="-" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="10,0,0,10" Background="#A01A7D" Foreground="White"/>
+                                        <Label Padding="0,0,0,0" Margin="2,0,0,0" Content="{Binding Cantidad}" Width="20" HorizontalContentAlignment="Center" VerticalAlignment="Center" FontSize="14" Foreground="#2E5E4E"/>
+                                        <Button Padding="0,2,2,2" Click="IncrementarCantidad" IsEnabled="True" FontSize="20" Content="+" VerticalAlignment="Center" HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="5,0,0,10" Background="#A01A7D" Foreground="White"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-
 
                 <StackPanel Grid.Row="3" Margin="10,5,0,0">
                     <Grid>
@@ -556,103 +468,38 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Recibí  -->
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            FontSize="21"
-                            Foreground="Black"
-                            Text="Recibí: " />
-                        <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="0,5,10,5"
-                            Padding="5"
-                            HorizontalAlignment="Stretch"
-                            Background="White"
-                            FontSize="21"
-                            Foreground="Black"
-                            Text="{Binding MontoRecibido, UpdateSourceTrigger=PropertyChanged}"
-                            TextAlignment="Right" />
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Recibí: " FontSize="21" Foreground="#2E5E4E" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Margin="0,5,10,5" FontSize="21" TextAlignment="Right"
+                 Foreground="#2E5E4E" Background="White" Padding="5"
+                 Text="{Binding MontoRecibido, UpdateSourceTrigger=PropertyChanged}"
+                 HorizontalAlignment="Stretch"/>
 
-                        <!--  Subtotal  -->
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            FontSize="21"
-                            Foreground="Black"
-                            Text="Subtotal: " />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,5,10,5"
-                            VerticalAlignment="Center"
-                            FontSize="26"
-                            Foreground="Black"
-                            Text="{Binding SubTotal, StringFormat=C2}"
-                            TextAlignment="Right" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Subtotal: " FontSize="21" Foreground="#2E5E4E" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
+                   Text="{Binding SubTotal, StringFormat=C2}" FontSize="26"
+                   Foreground="#2E5E4E" VerticalAlignment="Center"/>
 
-                        <!--  Total  -->
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            FontSize="33"
-                            Foreground="Black"
-                            Text="Total: " />
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="0,5,10,5"
-                            VerticalAlignment="Center"
-                            FontSize="44"
-                            FontWeight="Bold"
-                            Foreground="#8b8b8b"
-                            Text="{Binding Total, StringFormat=C2}"
-                            TextAlignment="Right" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Total: " FontSize="33" Foreground="#2E5E4E" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
+                   Text="{Binding Total, StringFormat=C2}" FontSize="44" FontWeight="Bold"
+                   Foreground="#A01A7D" VerticalAlignment="Center"/>
 
-                        <!--  Cambio  -->
-                        <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            FontSize="24"
-                            Foreground="Black"
-                            Text="Cambio: " />
-                        <TextBlock
-                            x:Name="txtCambio"
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            Margin="0,5,10,5"
-                            VerticalAlignment="Center"
-                            FontSize="30"
-                            FontWeight="Bold"
-                            Foreground="Green"
-                            Text="{Binding Cambio, StringFormat=C2}"
-                            TextAlignment="Right" />
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Cambio: " FontSize="24" Foreground="#2E5E4E" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtCambio" Grid.Row="3" Grid.Column="1" Margin="0,5,10,5" TextAlignment="Right"
+                   Text="{Binding Cambio, StringFormat=C2}" FontSize="30" FontWeight="Bold"
+                   Foreground="#6B9D89" VerticalAlignment="Center"/>
                     </Grid>
                 </StackPanel>
 
-                <!--  Botón de cerrar venta  -->
-                <Button
-                    Grid.Row="4"
-                    Height="46"
-                    MinWidth="217"
-                    Margin="0,20,0,0"
-                    Padding="15"
-                    HorizontalAlignment="Stretch"
-                    Background="#8b8b8b"
-                    BorderThickness="0"
-                    Click="CerrarVenta"
-                    Content="CERRAR VENTA"
-                    FontFamily="Arial"
-                    FontWeight="Bold"
-                    Foreground="White" />
+                <Button Grid.Row="4" Content="CERRAR VENTA" 
+        Margin="0,20,0,0" Padding="15"
+        HorizontalAlignment="Stretch"
+        Background="#A01A7D" Foreground="White"
+        FontWeight="Bold" BorderThickness="0"
+        MinWidth="217" Height="46" FontFamily="Arial"
+        Click="CerrarVenta"/>
 
             </Grid>
         </Border>
-
     </Grid>
 </Page>

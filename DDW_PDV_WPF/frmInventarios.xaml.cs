@@ -152,7 +152,6 @@ namespace DDW_PDV_WPF
         }
         public frmInventarios()
         {
-            DataContext = this;
             InitializeComponent();
 
             _apiService = new ApiService();
@@ -240,6 +239,7 @@ namespace DDW_PDV_WPF
             }
         }
 
+        
         private void FiltrarArticulos()
         {
             if (_todosLosArticulos == null) return;
@@ -306,45 +306,48 @@ namespace DDW_PDV_WPF
             }
         }
 
-       
+
+
         private async void GuardarCambios(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null) return;
 
             try
             {
-                bool success;
-                string accion = _isNewItem ? "CREATE" : "UPDATE";
+                bool exito;
+                string accion = _isNewItem ? "CREADO" : "ACT."; 
 
                 // Guardar el artículo
                 if (_isNewItem)
                 {
-                    success = await _apiService.PostAsync("/api/CArticulos", ArticuloSeleccionado);
+                    exito = await _apiService.PostAsync("/api/CArticulos", ArticuloSeleccionado);
                 }
                 else
                 {
-                    success = await _apiService.PutAsync($"/api/CArticulos/{ArticuloSeleccionado.idArticulo}", ArticuloSeleccionado);
+                    exito = await _apiService.PutAsync($"/api/CArticulos/{ArticuloSeleccionado.idArticulo}", ArticuloSeleccionado);
                 }
 
-                if (success)
+                if (exito)
                 {
+
+
                     var historial = new HistorialDTO
                     {
                         fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
                         idUsuario = "1",
-                        accion = accion,
+                        accion = accion, // Usa el valor en español ("CREADO" o "ACTUALIZADO")
                         clase = "ArticulosDTO",
-                        antes =  SerializarAXml(_articuloOriginal),
+                        antes = SerializarAXml(_articuloOriginal),
                         despues = SerializarAXml(ArticuloSeleccionado)
                     };
 
-                    bool historialSuccess = await _apiService.PostAsync("/api/CHistoriales", historial);
+                    bool historialExito = await _apiService.PostAsync("/api/CHistoriales", historial);
 
-                    string mensaje = historialSuccess
-                        ? "Operación completada con registro de historial"
-                        : "Operación completada pero falló registro de historial";
+                    string mensaje = historialExito
+                        ? "Operación completada con registro en el historial."
+                        : "Operación completada, pero falló el registro en el historial.";
 
-                    MessageBox.Show(mensaje);
+                    MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     _isNewItem = false;
                     CargarDatos();
@@ -355,21 +358,19 @@ namespace DDW_PDV_WPF
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-       
 
         private async void EliminarArticulo(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null) return;
 
             var confirmacion = MessageBox.Show(
-                $"¿Está seguro que desea eliminar el artículo {ArticuloSeleccionado.idArticulo}?",
+                $"¿Está seguro de eliminar el artículo {ArticuloSeleccionado.idArticulo}?",
                 "Confirmar eliminación",
                 MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+                MessageBoxImage.Warning);
 
             if (confirmacion != MessageBoxResult.Yes) return;
 
@@ -380,33 +381,32 @@ namespace DDW_PDV_WPF
                 {
                     fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
                     idUsuario = "1",
-                    accion = "DELETE",
+                    accion = "ELIM.", // Cambiado a español
                     clase = "ArticulosDTO",
                     antes = SerializarAXml(ArticuloSeleccionado),
                     despues = null
                 };
 
-                bool historialSuccess = await _apiService.PostAsync("/api/CHistoriales", historial);
+                bool historialExito = await _apiService.PostAsync("/api/CHistoriales", historial);
 
                 // Eliminar el artículo
-                bool success = await _apiService.DeleteAsync($"/api/CArticulos/{ArticuloSeleccionado.idArticulo}");
+                bool exito = await _apiService.DeleteAsync($"/api/CArticulos/{ArticuloSeleccionado.idArticulo}");
 
-                if (success)
+                if (exito)
                 {
-                    string mensaje = historialSuccess
-                        ? "Artículo eliminado con registro de historial"
-                        : "Artículo eliminado pero falló registro de historial";
+                    string mensaje = historialExito
+                        ? "Artículo eliminado con registro en el historial."
+                        : "Artículo eliminado, pero falló el registro en el historial.";
 
-                    MessageBox.Show(mensaje);
+                    MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                     CargarDatos();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al eliminar: {ex.Message}");
+                MessageBox.Show($"Error al eliminar: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
 
         private void PrecioTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
