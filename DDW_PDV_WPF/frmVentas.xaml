@@ -195,7 +195,7 @@
         <Border
             Grid.Column="0"
             HorizontalAlignment="Stretch"
-            Background="#DEDEDE">
+            Background="#ffff">
             <Grid Margin="0,0,-10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="49*" />
@@ -233,9 +233,9 @@
                             Height="41"
                             Margin="0,0,20,0"
                             md:HintAssist.Hint="Fecha"
-                            Background="#f7f7f7"
+                            Background="#F1E6D3"
                             FontWeight="Bold"
-                            Foreground="#767676"
+                            Foreground="#000"
                             IsEnabled="False"
                             Style="{DynamicResource txtFecha}"
                             TextAlignment="Center" />
@@ -247,9 +247,9 @@
                             Width="120"
                             Height="41"
                             md:HintAssist.Hint="Hora"
-                            Background="#f7f7f7"
+                            Background="#F1E6D3"
                             FontWeight="Bold"
-                            Foreground="#767676"
+                            Foreground="#000"
                             IsEnabled="False"
                             Style="{DynamicResource txtFecha}"
                             TextAlignment="Center" />
@@ -280,7 +280,8 @@
                                         Height="157"
                                         Margin="10,0,10,0"
                                         VerticalContentAlignment="Bottom"
-                                        Background="White">
+                                        Background="White"
+                                        BorderBrush="#2E5E4E">
                                         <StackPanel
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
@@ -334,8 +335,8 @@
                                         Width="150"
                                         Height="150"
                                         Margin="5"
-                                        Background="LightGray"
-                                        BorderBrush="#A01A7D"
+                                        Background="#F1E6D3"
+                                        BorderBrush="#2E5E4E"
                                         BorderThickness="1,1,1,1"
                                         Click="ClickProducto">
                                         <Button.Content>
@@ -347,7 +348,7 @@
                                                     Stretch="UniformToFill" />
                                                 <TextBlock
                                                     HorizontalAlignment="Center"
-                                                    Foreground="White"
+                                                    Foreground="#A01A7D"
                                                     Text="{Binding Descripcion}"
                                                     TextWrapping="Wrap" />
                                             </StackPanel>
@@ -383,8 +384,9 @@
                 </Grid.RowDefinitions>
 
                 <!--  Título  -->
-                <TextBlock
-                    Grid.Row="0"
+
+                <StackPanel Grid.Row="0">
+                    <TextBlock
                     Margin="0,20,0,20"
                     HorizontalAlignment="Center"
                     FontSize="18"
@@ -392,10 +394,8 @@
                     Foreground="#2E5E4E"
                     Text="DETALLES DE LA VENTA" />
 
-
-
-                <!--<ToggleButton Grid.Row="1" FontSize="10" HorizontalAlignment="Right" Content="Scan" Margin="0,0,0,0" Background="LightSlateGray" Grid.RowSpan="2" Width="80"></ToggleButton>-->
-
+                    <Image Source="/Resources/omegasymbol.png" Height="106" Width="214"></Image>
+                </StackPanel>
                 <!--  Subtítulo  -->
                 <TextBlock
                     Grid.Row="1"

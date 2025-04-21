@@ -29,8 +29,8 @@ namespace DDW_PDV_WPF.Modelo
         [XmlElement("CodigoBarras")]
         public string CodigoBarras { get; set; }
 
-        [XmlElement("IdCategoria")]
-        public int IdCategoria { get; set; }
+        [XmlElement("idCategoria")]
+        public int idCategoria { get; set; }
 
         // INVENTARIO
         [XmlElement("idInventario")]
@@ -92,6 +92,7 @@ namespace DDW_PDV_WPF.Modelo
         {
             // Inicializar propiedades que no aceptan null
             Descripcion = string.Empty;
+            idCategoria = 0;
             CodigoBarras = string.Empty;
             Color = string.Empty;
             Tamanio = string.Empty;

@@ -42,8 +42,28 @@ namespace DDW_PDV_WPF
         private string _textoBusqueda;
         private ArticuloDTO _articuloOriginal;
         private bool _isNewItem = false;
+        private ComboBox _cbCategorias= new ComboBox();
 
 
+        private ObservableCollection<MCategorias> _categorias;
+        public ObservableCollection<MCategorias> Categorias
+        {
+            get => _categorias;
+            set
+            {
+                _categorias = value;
+                OnPropertyChanged(nameof(Categorias));
+            }
+        }
+
+        public ComboBox CbCategorias
+        {
+            get => _cbCategorias;
+            set {
+                _cbCategorias = value;
+                OnPropertyChanged(nameof(cbCategorias));
+            }
+        }
 
         public ObservableCollection<ArticuloDTO> ListaArticulos
         {
@@ -51,7 +71,7 @@ namespace DDW_PDV_WPF
             set
             {
                 _listaArticulos = value;
-                OnPropertyChanged(nameof(ListaArticulos)); // Notificar cambios
+                OnPropertyChanged(nameof(ListaArticulos)); 
             }
         }
 
@@ -68,12 +88,13 @@ namespace DDW_PDV_WPF
                     _articuloOriginal = new ArticuloDTO
                     {
                         idArticulo = _articuloSeleccionado.idArticulo,
+                        
                         Foto = _articuloSeleccionado.Foto,
                         Color = _articuloSeleccionado.Color,
                         Descripcion = _articuloSeleccionado.Descripcion,
                         Tamanio = _articuloSeleccionado.Tamanio,
                         CodigoBarras = _articuloSeleccionado.CodigoBarras,
-                        IdCategoria = _articuloSeleccionado.IdCategoria,
+                        idCategoria = _articuloSeleccionado.idCategoria,
                         idInventario = _articuloSeleccionado.idInventario,
                         Stock = _articuloSeleccionado.Stock,
                         Min = _articuloSeleccionado.Min,
@@ -82,6 +103,7 @@ namespace DDW_PDV_WPF
                         PrecioCompra=_articuloSeleccionado.PrecioCompra
 
                     };
+                    _cbCategorias.SelectedIndex=_articuloSeleccionado.idCategoria;
                 }
 
                 
@@ -89,6 +111,7 @@ namespace DDW_PDV_WPF
                 btnGuardarCambios.Visibility = value != null ? Visibility.Visible : Visibility.Hidden;
 
                 OnPropertyChanged(nameof(ArticuloSeleccionado));
+                OnPropertyChanged(nameof(CbCategorias));
                 OnPropertyChanged(nameof(HasChanges));
             }
         }
@@ -118,7 +141,7 @@ namespace DDW_PDV_WPF
             {
                 _textoBusqueda = value;
                 OnPropertyChanged(nameof(TextoBusqueda));
-                FiltrarArticulos(); // Filtrado automático al escribir
+                FiltrarArticulos(); 
             }
         }
 
@@ -158,6 +181,7 @@ namespace DDW_PDV_WPF
             CargarDatos();
             DataContext = this;
 
+            CargarCategorias().ConfigureAwait(true);
             btnCancelarCambios.Visibility = Visibility.Hidden;
             btnGuardarCambios.Visibility = Visibility.Hidden;
 
@@ -230,6 +254,7 @@ namespace DDW_PDV_WPF
         }
         private async void CargarDatos()
         {
+            await CargarCategorias();
             var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("/api/CArticulos/productos/inventario");
 
             if (resultado != null)
@@ -239,7 +264,23 @@ namespace DDW_PDV_WPF
             }
         }
 
-        
+        private async Task CargarCategorias()
+        {
+            try
+            {
+                var resultado = await _apiService.GetAsync<List<MCategorias>>("/api/CCategorias");
+                if (resultado != null)
+                {
+                    Categorias = new ObservableCollection<MCategorias>(resultado);
+                    _cbCategorias.ItemsSource = Categorias;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar categorías: {ex.Message}", "Error",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void FiltrarArticulos()
         {
             if (_todosLosArticulos == null) return;
@@ -253,7 +294,7 @@ namespace DDW_PDV_WPF
                 var texto = TextoBusqueda.ToLower();
                 var resultados = _todosLosArticulos
                     .Where(a => (a.Descripcion != null && a.Descripcion.ToLower().Contains(texto)) ||
-                               (a.IdCategoria.ToString().Contains(texto)) ||
+                               (a.idCategoria.ToString().Contains(texto)) ||
                                (a.idArticulo.ToString().Contains(texto)) ||
                                (a.Color != null && a.Color.ToLower().Contains(texto)))
                     .ToList();
@@ -306,7 +347,12 @@ namespace DDW_PDV_WPF
             }
         }
 
-
+        private async Task<UsuarioDTO> ObtenerUsuarioActual()
+        {
+                string url = "/api/CUsuarios/";
+                var usuarios = await _apiService.GetAsync<List<UsuarioDTO>>(url);             
+                    return usuarios.FirstOrDefault();
+        }
 
         private async void GuardarCambios(object sender, RoutedEventArgs e)
         {
@@ -314,8 +360,13 @@ namespace DDW_PDV_WPF
 
             try
             {
+                // Obtener usuario actual completo
+                var usuarioActual = await ObtenerUsuarioActual();
+                var categoria = cbCategorias.Text;
+                if (usuarioActual == null) return;
+
                 bool exito;
-                string accion = _isNewItem ? "CREADO" : "ACT."; 
+                string accion = _isNewItem ? "CREADO" : "ACT.";
 
                 // Guardar el artículo
                 if (_isNewItem)
@@ -329,14 +380,12 @@ namespace DDW_PDV_WPF
 
                 if (exito)
                 {
-
-
                     var historial = new HistorialDTO
                     {
                         fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                        idUsuario = "1",
-                        accion = accion, // Usa el valor en español ("CREADO" o "ACTUALIZADO")
-                        clase = "ArticulosDTO",
+                        idUsuario = usuarioActual.Usuario, 
+                        accion = accion,
+                        clase = categoria,
                         antes = SerializarAXml(_articuloOriginal),
                         despues = SerializarAXml(ArticuloSeleccionado)
                     };
@@ -344,8 +393,8 @@ namespace DDW_PDV_WPF
                     bool historialExito = await _apiService.PostAsync("/api/CHistoriales", historial);
 
                     string mensaje = historialExito
-                        ? "Operación completada con registro en el historial."
-                        : "Operación completada, pero falló el registro en el historial.";
+                        ? $"Operación completada por {usuarioActual.Usuario} con registro en el historial."
+                        : $"Operación completada por {usuarioActual.Usuario}, pero falló el registro en el historial.";
 
                     MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -376,12 +425,16 @@ namespace DDW_PDV_WPF
 
             try
             {
+                // Obtener usuario actual completo
+                var usuarioActual = await ObtenerUsuarioActual();
+                if (usuarioActual == null) return;
+
                 // Registrar en historial antes de eliminar
                 var historial = new HistorialDTO
                 {
                     fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    idUsuario = "1",
-                    accion = "ELIM.", // Cambiado a español
+                    idUsuario = usuarioActual.Usuario,
+                    accion = "ELIM.",
                     clase = "ArticulosDTO",
                     antes = SerializarAXml(ArticuloSeleccionado),
                     despues = null
@@ -395,8 +448,8 @@ namespace DDW_PDV_WPF
                 if (exito)
                 {
                     string mensaje = historialExito
-                        ? "Artículo eliminado con registro en el historial."
-                        : "Artículo eliminado, pero falló el registro en el historial.";
+                        ? $"{usuarioActual.Usuario} eliminó el artículo con registro en el historial."
+                        : $"{usuarioActual.Usuario} eliminó el artículo, pero falló el registro en el historial.";
 
                     MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                     CargarDatos();

@@ -173,13 +173,17 @@
             </Grid.RowDefinitions>
 
             <!-- Encabezado -->
-            <TextBlock Grid.Row="0" 
-                       Text="DETALLES DE LA MODIFICACIÓN" 
-                       FontSize="{StaticResource FontSizeHeader}" 
-                       Style="{StaticResource HeaderStyle}" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,0,0,15"
-                       Padding="10"/>
+
+            <StackPanel Grid.Row="0" >
+                <TextBlock 
+           Text="DETALLES DE LA MODIFICACIÓN" 
+           FontSize="{StaticResource FontSizeHeader}" 
+           Style="{StaticResource HeaderStyle}" 
+           HorizontalAlignment="Center" 
+           Margin="0,0,0,15"
+           Padding="10"/>
+                <Image Source="/Resources/omegasymbol.png" Height="82" Width="184"></Image>
+            </StackPanel>
 
             <!-- Fecha y Hora -->
             <Border Grid.Row="1" 
@@ -424,7 +428,7 @@
                     BorderBrush="#6B9D89" 
                     CornerRadius="{StaticResource StandardCornerRadius}"
                      Margin="10,0,10,10">
-                
+
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

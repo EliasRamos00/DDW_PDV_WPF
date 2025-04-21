@@ -98,7 +98,7 @@ namespace DDW_PDV_WPF
         private void btnCerrarCaja(object sender, RoutedEventArgs e)
         {
                 CierrCaj paginaDestino = new CierrCaj(Usuario, Properties.Settings.Default.Caja);
-                paginaDestino.Show();            
+                paginaDestino.ShowDialog();            
         }
     }
 }
