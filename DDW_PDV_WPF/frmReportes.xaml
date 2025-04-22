@@ -1,182 +1,209 @@
-<Page x:Class="DDW_PDV_WPF.frmReportes"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DDW_PDV_WPF"
-      mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="1000"
-      Title="Reportes"
-      Background="#FFFFFF">
+<Page
+    x:Class="DDW_PDV_WPF.frmReportes"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DDW_PDV_WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Reportes"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    Background="#FFFFFF"
+    mc:Ignorable="d">
 
     <Page.Resources>
-        <!-- Paleta de colores -->
-        <SolidColorBrush x:Key="PrimaryColor" Color="#A01A7D"/>
-        <SolidColorBrush x:Key="SecondaryColor" Color="#F1E6D3"/>
-        <SolidColorBrush x:Key="TextColor" Color="#333333"/>
-        <SolidColorBrush x:Key="WhiteColor" Color="#FFFFFF"/>
+        <!--  Paleta de colores  -->
+        <SolidColorBrush x:Key="PrimaryColor" Color="#A01A7D" />
+        <SolidColorBrush x:Key="SecondaryColor" Color="#F1E6D3" />
+        <SolidColorBrush x:Key="TextColor" Color="#333333" />
+        <SolidColorBrush x:Key="WhiteColor" Color="#FFFFFF" />
 
-        <!-- Estilo para bordes de contenedores -->
+        <!--  Estilo para bordes de contenedores  -->
         <Style x:Key="InfoBorderStyle" TargetType="Border">
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Padding" Value="15"/>
-            <Setter Property="Background" Value="{StaticResource WhiteColor}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Padding" Value="15" />
+            <Setter Property="Background" Value="{StaticResource WhiteColor}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="8" />
         </Style>
 
-        <!-- Estilo para títulos de sección -->
+        <!--  Estilo para títulos de sección  -->
         <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="{StaticResource WhiteColor}"/>
-            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{StaticResource WhiteColor}" />
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <!-- Estilo para valores -->
+        <!--  Estilo para valores  -->
         <Style x:Key="ValueTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
-            <Setter Property="Margin" Value="0,15"/>
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource TextColor}" />
+            <Setter Property="Margin" Value="0,15" />
         </Style>
 
-        <!-- Estilo base para controles -->
+        <!--  Estilo base para controles  -->
         <Style x:Key="BaseControlStyle" TargetType="Control">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
-            <Setter Property="Background" Value="{StaticResource SecondaryColor}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}"/>
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{StaticResource TextColor}" />
+            <Setter Property="Background" Value="{StaticResource SecondaryColor}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SecondaryColor}" />
+            <Setter Property="Height" Value="35" />
+            <Setter Property="Margin" Value="10,5" />
         </Style>
 
-        <!-- Estilos específicos para controles -->
-        <Style TargetType="DatePicker" BasedOn="{StaticResource BaseControlStyle}">
-            <Setter Property="Width" Value="200"/>
+        <!--  Estilos específicos para controles  -->
+        <Style BasedOn="{StaticResource BaseControlStyle}" TargetType="DatePicker">
+            <Setter Property="Width" Value="200" />
         </Style>
 
-        <Style TargetType="ComboBox" BasedOn="{StaticResource BaseControlStyle}">
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Style BasedOn="{StaticResource BaseControlStyle}" TargetType="ComboBox">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
 
-        
-        <!-- Estilo para el botón -->
+
+        <!--  Estilo para el botón  -->
         <Style x:Key="GenerateButtonStyle" TargetType="Button">
-            <Setter Property="Content" Value="GENERAR PDF"/>
-            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
-            <Setter Property="Foreground" Value="{StaticResource WhiteColor}"/>
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="Height" Value="45"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,20"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Padding" Value="0,5"/>
+            <Setter Property="Content" Value="GENERAR PDF" />
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}" />
+            <Setter Property="Foreground" Value="{StaticResource WhiteColor}" />
+            <Setter Property="Width" Value="200" />
+            <Setter Property="Height" Value="45" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,20" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="0,5" />
         </Style>
-        
+
 
     </Page.Resources>
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Título principal -->
-        <TextBlock Grid.Row="0" 
-                   Text="RESUMEN DE INFORMACIÓN" 
-                   Style="{StaticResource SectionTitleStyle}"
-                   Background="{StaticResource PrimaryColor}"
-                   FontSize="18"
-                   Margin="0,0,0,20"/>
+        <!--  Título principal  -->
+        <TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,20"
+            Background="{StaticResource PrimaryColor}"
+            FontSize="18"
+            Style="{StaticResource SectionTitleStyle}"
+            Text="RESUMEN DE INFORMACIÓN" />
 
-        <!-- Filtros -->
-        <StackPanel Grid.Row="1" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Center" 
-                    Margin="0,10"
-                    Background="Transparent">
-            <DatePicker SelectedDate="{Binding FechaInicio}"/>
-            <DatePicker SelectedDate="{Binding FechaFin}"/>
+        <!--  Filtros  -->
+        <StackPanel
+            Grid.Row="1"
+            Margin="0,10"
+            HorizontalAlignment="Center"
+            Background="Transparent"
+            Orientation="Horizontal">
+            <DatePicker SelectedDate="{Binding FechaInicio}" />
+            <DatePicker SelectedDate="{Binding FechaFin}" />
             <ComboBox SelectedIndex="0">
-                <ComboBoxItem Content="Sucursal 1"/>
-                <ComboBoxItem Content="Sucursal 2"/>
-                <ComboBoxItem Content="Sucursal 3"/>
+                <ComboBoxItem Content="Sucursal 1" />
+                <ComboBoxItem Content="Sucursal 2" />
+                <ComboBoxItem Content="Sucursal 3" />
             </ComboBox>
         </StackPanel>
 
-        <!-- Contenedores de información (diseño porcentual) -->
+        <!--  Contenedores de información (diseño porcentual)  -->
         <Grid Grid.Row="2" Margin="0,15">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.33*"/>
-                <ColumnDefinition Width="0.34*"/>
-                <ColumnDefinition Width="0.33*"/>
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="0.34*" />
+                <ColumnDefinition Width="0.33*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.5*"/>
-                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="0.5*" />
             </Grid.RowDefinitions>
 
-            <!-- Ventas -->
-            <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource InfoBorderStyle}">
+            <!--  Ventas  -->
+            <Border
+                Grid.Row="0"
+                Grid.Column="0"
+                Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="VENTAS" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBlock Text="54" Style="{StaticResource ValueTextStyle}"/>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="VENTAS" />
+                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="54" />
                 </StackPanel>
             </Border>
 
-            <!-- Total Ventas -->
-            <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource InfoBorderStyle}">
+            <!--  Total Ventas  -->
+            <Border
+                Grid.Row="0"
+                Grid.Column="1"
+                Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="TOTAL DE VENTAS" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBlock Text="$ 5678.50 MXN" Style="{StaticResource ValueTextStyle}"/>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="TOTAL DE VENTAS" />
+                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="$ 5678.50 MXN" />
                 </StackPanel>
             </Border>
 
-            <!-- Ganancias -->
-            <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource InfoBorderStyle}">
+            <!--  Ganancias  -->
+            <Border
+                Grid.Row="0"
+                Grid.Column="2"
+                Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="GANANCIAS" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBlock Text="$ 2345.00 MXN" Style="{StaticResource ValueTextStyle}"/>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="GANANCIAS" />
+                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="$ 2345.00 MXN" />
                 </StackPanel>
             </Border>
 
-            <!-- Producto Más Vendido -->
-            <Border Grid.Column="0" Grid.Row="1" 
-            Style="{StaticResource InfoBorderStyle}"
-            VerticalAlignment="Stretch" 
-            HorizontalAlignment="Stretch">  
+            <!--  Producto Más Vendido  -->
+            <Border
+                Grid.Row="1"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="PRODUCTO MÁS VENDIDO" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBlock Text="RAMO ROSA #44" Style="{StaticResource ValueTextStyle}" Margin="0,5"/>
-                    <TextBlock Text="30 PZ." Style="{StaticResource ValueTextStyle}" Margin="0,5"/>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="PRODUCTO MÁS VENDIDO" />
+                    <TextBlock
+                        Margin="0,5"
+                        Style="{StaticResource ValueTextStyle}"
+                        Text="RAMO ROSA #44" />
+                    <TextBlock
+                        Margin="0,5"
+                        Style="{StaticResource ValueTextStyle}"
+                        Text="30 PZ." />
                 </StackPanel>
             </Border>
 
-            <!-- Usuario con Más Ventas -->
-            <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource InfoBorderStyle}">
+            <!--  Usuario con Más Ventas  -->
+            <Border
+                Grid.Row="1"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="USUARIO CON MÁS VENTAS" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBlock Text="JUAN PÉREZ" Style="{StaticResource ValueTextStyle}"/>
+                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="USUARIO CON MÁS VENTAS" />
+                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="JUAN PÉREZ" />
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!-- Botón Generar PDF -->
-        <Button Grid.Row="3" 
-                Style="{StaticResource GenerateButtonStyle}"
-                Command="{Binding GenerarReporteCommand}"/>
+        <!--  Botón Generar PDF  -->
+        <Button
+            Grid.Row="3"
+            Click="btnGenerarReporte"
+            Command="{Binding GenerarReporteCommand}"
+            Style="{StaticResource GenerateButtonStyle}" />
     </Grid>
 </Page>

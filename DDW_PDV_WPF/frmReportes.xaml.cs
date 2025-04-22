@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DDW_PDV_WPF.Controlador;
+using DDW_PDV_WPF.Modelo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +22,8 @@ namespace DDW_PDV_WPF
     /// </summary>
     public partial class frmReportes : Page
     {
+        private readonly ApiService _apiService;
+
         public frmReportes()
         {
             InitializeComponent();
@@ -27,6 +31,13 @@ namespace DDW_PDV_WPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+
+        }
+
+        private async void btnGenerarReporte(object sender, RoutedEventArgs e)
+        {
+            // Aquí puedes agregar la lógica para generar el reporte
+            var usuarios = await _apiService.GetAsync<List<UsuarioDTO>>("/api/CUsuarios/");
 
         }
     }
