@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="CierrCaj"
     Width="492"
-    Height="550"
+    MinHeight="571"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
@@ -33,6 +33,7 @@
                 FontSize="18"
                 FontWeight="SemiBold"
                 Text="Flores Artificiales y Artesanías Omega"
+                Background="#D9D9D9"
                 TextAlignment="Center" />
             <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
                 <!--  CAJA  -->
@@ -41,6 +42,7 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    Background="#D9D9D9"
                     FontSize="17"
                     Text="{Binding Caja}"
                     TextAlignment="Center" />
@@ -56,6 +58,7 @@
                     Margin="1,1,1,1"
                     VerticalAlignment="Center"
                     FontSize="17"
+                    Background="#D9D9D9"
                     Text="{Binding Sucursal}" />
 
 
@@ -91,7 +94,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
 
-
+                <Image Source="/Resources/omegasymbol.png" Height="33" Width="146" HorizontalAlignment="Right"></Image>
                 <!--  Panel contenedor con fondo y bordes redondeados  -->
                 <Border
                     Width="350"
@@ -114,8 +117,9 @@
                         <TextBox
                             Margin="0,5,0,15"
                             IsEnabled="False"
+                            Background="#D9D9D9"
                             Text="{Binding TotalSistema}"
-                            TextAlignment="Right" />
+                            TextAlignment="Right" TextChanged="TextBox_TextChanged" />
 
                         <TextBlock
                             Margin="5,0,0,0"
@@ -125,6 +129,7 @@
                         <TextBox
                             Margin="0,5,0,15"
                             FontWeight="Bold"
+                            Background="#D9D9D9"
                             Text="{Binding TotalFisico, UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Right" />
 
@@ -145,6 +150,7 @@
                         <TextBox
                             Margin="0,5,0,15"
                             IsEnabled="False"
+                            Background="#D9D9D9"
                             Text="{Binding Diferencia}"
                             TextAlignment="Right" />
 
@@ -153,21 +159,21 @@
 
                 <!--  Botones  -->
                 <StackPanel
-                    Margin="0,20,0,0"
+                    Margin="0,20,0,20"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
                     <Button
                         Width="auto"
                         Height="30"
                         Margin="15,0,30,0"
-                        BorderBrush="Black"
+                        BorderBrush="#6B9D89" Background="#6B9D89"
                         Click="CancelarCierre"
                         Content="Cancelar" />
                     <Button
                         Width="auto"
                         Height="30"
                         Margin="15,0,30,0"
-                        BorderBrush="Black"
+                        BorderBrush="#6B9D89" Background="#6B9D89"
                         Click="btnHacerCierre"
                         Content="Hacer Cierre" />
                 </StackPanel>

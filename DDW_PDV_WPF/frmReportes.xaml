@@ -96,32 +96,33 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--  Título principal  -->
-        <TextBlock
-            Grid.Row="0"
-            Margin="0,0,0,20"
-            Background="{StaticResource PrimaryColor}"
-            FontSize="18"
-            Style="{StaticResource SectionTitleStyle}"
-            Text="RESUMEN DE INFORMACIÓN" />
+        <!-- Título principal -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Image Source="/Resources/omegasymbol.png" Height="106" Width="214"></Image>
+            <TextBlock  
+           Text="RESUMEN DE INFORMACIÓN" 
+           FontWeight="Bold"
+           FontSize="45"
+           Margin="0,0,0,20" 
+                HorizontalAlignment="Center"/>
+        </StackPanel>
+        
 
-        <!--  Filtros  -->
-        <StackPanel
-            Grid.Row="1"
-            Margin="0,10"
-            HorizontalAlignment="Center"
-            Background="Transparent"
-            Orientation="Horizontal">
-            <DatePicker SelectedDate="{Binding FechaInicio}" />
-            <DatePicker SelectedDate="{Binding FechaFin}" />
-            <ComboBox SelectedIndex="0">
-                <ComboBoxItem Content="Sucursal 1" />
-                <ComboBoxItem Content="Sucursal 2" />
-                <ComboBoxItem Content="Sucursal 3" />
-            </ComboBox>
+        <!-- Filtros CORREGIDOS -->
+        <StackPanel Grid.Row="1" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Center" 
+                    Margin="0,10"
+                    Background="Transparent">
+            <DatePicker SelectedDate="{Binding FechaInicio}"/>
+            <DatePicker SelectedDate="{Binding FechaFin}"/>
+            <ComboBox ItemsSource="{Binding Sucursales}" 
+                      DisplayMemberPath="Nombre"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding IdSucursal}"/>
         </StackPanel>
 
-        <!--  Contenedores de información (diseño porcentual)  -->
+        <!-- Contenedores de información con binding CORREGIDO -->
         <Grid Grid.Row="2" Margin="0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.33*" />
@@ -139,8 +140,8 @@
                 Grid.Column="0"
                 Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="VENTAS" />
-                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="54" />
+                    <TextBlock Text="VENTAS" Style="{StaticResource SectionTitleStyle}"/>
+                    <TextBlock Text="{Binding Reporte.Ventas}" Style="{StaticResource ValueTextStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -150,8 +151,8 @@
                 Grid.Column="1"
                 Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="TOTAL DE VENTAS" />
-                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="$ 5678.50 MXN" />
+                    <TextBlock Text="TOTAL DE VENTAS" Style="{StaticResource SectionTitleStyle}"/>
+                    <TextBlock Text="{Binding Reporte.TotalVentas, StringFormat='C'}" Style="{StaticResource ValueTextStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -161,28 +162,17 @@
                 Grid.Column="2"
                 Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="GANANCIAS" />
-                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="$ 2345.00 MXN" />
+                    <TextBlock Text="GANANCIAS" Style="{StaticResource SectionTitleStyle}"/>
+                    <TextBlock Text="{Binding Reporte.Ganancia, StringFormat='C'}" Style="{StaticResource ValueTextStyle}"/>
                 </StackPanel>
             </Border>
 
-            <!--  Producto Más Vendido  -->
-            <Border
-                Grid.Row="1"
-                Grid.Column="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Style="{StaticResource InfoBorderStyle}">
+            <!-- Producto Más Vendido -->
+            <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="PRODUCTO MÁS VENDIDO" />
-                    <TextBlock
-                        Margin="0,5"
-                        Style="{StaticResource ValueTextStyle}"
-                        Text="RAMO ROSA #44" />
-                    <TextBlock
-                        Margin="0,5"
-                        Style="{StaticResource ValueTextStyle}"
-                        Text="30 PZ." />
+                    <TextBlock Text="PRODUCTO MÁS VENDIDO" Style="{StaticResource SectionTitleStyle}"/>
+                    <TextBlock Text="{Binding Reporte.ProductoMasVendido}" Style="{StaticResource ValueTextStyle}" Margin="0,5"/>
+                    <TextBlock Text="{Binding Reporte.CantidadProductoMasVendido, StringFormat='{}{0} PZ.'}" Style="{StaticResource ValueTextStyle}" Margin="0,5"/>
                 </StackPanel>
             </Border>
 
@@ -193,17 +183,12 @@
                 Grid.ColumnSpan="2"
                 Style="{StaticResource InfoBorderStyle}">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource SectionTitleStyle}" Text="USUARIO CON MÁS VENTAS" />
-                    <TextBlock Style="{StaticResource ValueTextStyle}" Text="JUAN PÉREZ" />
+                    <TextBlock Text="USUARIO CON MÁS VENTAS" Style="{StaticResource SectionTitleStyle}"/>
+                    <TextBlock Text="{Binding Reporte.UsuarioMasVentas}" Style="{StaticResource ValueTextStyle}"/>
                 </StackPanel>
             </Border>
         </Grid>
-
-        <!--  Botón Generar PDF  -->
-        <Button
-            Grid.Row="3"
-            Click="btnGenerarReporte"
-            Command="{Binding GenerarReporteCommand}"
-            Style="{StaticResource GenerateButtonStyle}" />
+        <Button Grid.Row="3" 
+                Style="{StaticResource GenerateButtonStyle}"/>
     </Grid>
 </Page>

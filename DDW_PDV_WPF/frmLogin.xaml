@@ -82,10 +82,7 @@
                         <SolidColorBrush Color="#CCCCCC" Opacity="0.5"/>
                     </Ellipse.Stroke>
                 </Ellipse>
-                <TextBlock Text="Ω" 
-                           FontSize="90" 
-                           HorizontalAlignment="Left" 
-                           VerticalAlignment="Top" Width="84" Margin="26,-10,0,0" Foreground="#878787"/>
+                <Image Source="/Resources/omegasymbol.png" Margin="62,33,62,34"/>
             </Grid>
 
             <!-- Campos de formulario -->

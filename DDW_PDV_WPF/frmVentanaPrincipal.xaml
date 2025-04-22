@@ -166,7 +166,21 @@
 
 
                 <StackPanel Grid.Row="2">
-
+                    <Button
+                Grid.Row="0"
+                Margin="10"
+                Padding="10,5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="BtnCerrarSesion_Click"
+                Content="⏻ CERRAR SESIÓN"
+                FontSize="13"
+                FontWeight="Bold"            
+                Foreground="#000" 
+                />
+                    <Image Source="/Resources/omegasymbol.png" Height="76" Width="182"></Image>
                     <Button
                         Margin="8"
                         HorizontalAlignment="Left"
@@ -210,19 +224,7 @@
                         FontSize="14"
                         Style="{StaticResource MenuButtonStyle}" />
 
-                    <Button
-                        Grid.Row="0"
-                        Margin="10"
-                        Padding="10,5"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Click="BtnCerrarSesion_Click"
-                        Content="CERRAR SESIÓN"
-                        FontSize="13"
-                        FontWeight="Bold"
-                        Foreground="#FFE74C3C" />
+                    
                 </StackPanel>
 
 

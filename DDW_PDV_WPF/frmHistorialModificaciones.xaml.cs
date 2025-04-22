@@ -252,7 +252,7 @@ namespace DDW_PDV_WPF
             if (articulo == null) return "N/A";
             return $@"ID: {articulo.idArticulo}
             Descripción: {articulo.Descripcion}
-            Categoría: {articulo.IdCategoria}
+            Categoría: {articulo.idCategoria}
             Color: {articulo.Color}
             Tamaño: {articulo.Tamanio}
             Stock: {articulo.Stock}
@@ -275,8 +275,8 @@ namespace DDW_PDV_WPF
             if (antes.Descripcion != despues.Descripcion)
                 cambios.AppendLine($"• Descripción: {antes.Descripcion} → {despues.Descripcion}");
 
-            if (antes.IdCategoria != despues.IdCategoria)
-                cambios.AppendLine($"• Categoría: {antes.IdCategoria} → {despues.IdCategoria}");
+            if (antes.idCategoria != despues.idCategoria)
+                cambios.AppendLine($"• Categoría: {antes.idCategoria} → {despues.idCategoria}");
 
             if (antes.Color != despues.Color)
                 cambios.AppendLine($"• Color: {antes.Color} → {despues.Color}");
