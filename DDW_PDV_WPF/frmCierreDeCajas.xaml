@@ -9,6 +9,7 @@
       Background="#ffff">
 
     <Page.Resources>
+        <local:LessThanZeroConverter x:Key="LessThanZeroConverter"/>
         <!-- Estilo para la barra de búsqueda -->
         <Style x:Key="SearchBoxStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
@@ -46,6 +47,7 @@
 
         <!-- Estilo para las etiquetas de detalles -->
         <Style x:Key="DetailLabelStyle" TargetType="TextBlock">
+            
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="0,0,5,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -63,6 +65,7 @@
             <Setter Property="BorderThickness" Value="0,1,0,0"/>
             <Setter Property="Margin" Value="10,15"/>
         </Style>
+        
     </Page.Resources>
 
     <Grid>
@@ -114,7 +117,7 @@
                 <DataGrid.Columns>
                     <!-- Fecha -->
                     <DataGridTextColumn Header="FECHA" 
-                                       Binding="{Binding Fecha}" 
+                                       Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}"
                                        Width="1*"
                                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
@@ -305,17 +308,25 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Diferencia:" Style="{StaticResource DetailLabelStyle}"/>
                         <TextBlock Grid.Column="1" 
-                                   Text="{Binding Diferencia, StringFormat='{}{0:C}'}" 
-                                   FontWeight="Bold">
+           Background="White"
+           Text="{Binding Diferencia, StringFormat='{}{0:C}'}" 
+           FontWeight="Bold">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource DetailValueStyle}">
-                                    <Setter Property="Foreground" Value="Green"/>
                                     <Style.Triggers>
+                                        <!-- Verde cuando es 0 -->
                                         <DataTrigger Binding="{Binding Diferencia}" Value="0">
-                                            <Setter Property="Foreground" Value="Green"/>
+                                            <Setter Property="Foreground" Value="Black"/>
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Diferencia}">
+
+                                        <!-- Rojo cuando es negativo -->
+                                        <DataTrigger Binding="{Binding Diferencia, Converter={StaticResource LessThanZeroConverter}}" Value="True">
                                             <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+
+                                        <!-- Opcional: Color por defecto para positivos -->
+                                        <DataTrigger Binding="{Binding Diferencia, Converter={StaticResource LessThanZeroConverter}}" Value="False">
+                                            <Setter Property="Foreground" Value="Green"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

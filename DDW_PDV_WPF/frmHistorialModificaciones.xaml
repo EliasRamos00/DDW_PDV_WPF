@@ -108,7 +108,7 @@
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="USUARIO" Binding="{Binding idUsuario}" Width="*"/>
+                    <DataGridTextColumn Header="USUARIO" Binding="{Binding Usuario}" Width="*"/>
 
                     <DataGridTextColumn Header="ACCIÓN" Binding="{Binding accion}" Width="*">
                         <DataGridTextColumn.ElementStyle>

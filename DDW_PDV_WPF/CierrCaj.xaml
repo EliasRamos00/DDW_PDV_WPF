@@ -42,7 +42,7 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Background="#D9D9D9"
+                    Background="#ffff"
                     FontSize="17"
                     Text="{Binding Caja}"
                     TextAlignment="Center" />
@@ -58,7 +58,7 @@
                     Margin="1,1,1,1"
                     VerticalAlignment="Center"
                     FontSize="17"
-                    Background="#D9D9D9"
+                    Background="#ffff"
                     Text="{Binding Sucursal}" />
 
 

@@ -31,6 +31,7 @@ namespace DDW_PDV_WPF
         public frmLogin()
         {
             InitializeComponent();
+            btnIniciarSesion.IsEnabled = true;
         }
 
         private void Cerrar_Click(object sender, RoutedEventArgs e)
@@ -40,6 +41,7 @@ namespace DDW_PDV_WPF
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            btnIniciarSesion.IsEnabled = false; 
             string usuario = txtUsuario.Text;
             string contrasena = ConvertirMD5(txtContrasena.Password); // Convertimos la contraseña ingresada a MD5
 
@@ -63,6 +65,7 @@ namespace DDW_PDV_WPF
                 else
                 {
                     MessageBox.Show("Usuario o contraseña incorrectos");
+                    btnIniciarSesion.IsEnabled = true;
                 }
             }
             catch (Exception ex)

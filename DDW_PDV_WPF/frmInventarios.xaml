@@ -37,13 +37,17 @@
     </Page.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="662*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.4*" MinWidth="300"/>
             <ColumnDefinition Width="0.6*" MinWidth="450"/>
         </Grid.ColumnDefinitions>
 
         <!-- Panel izquierdo - Lista de productos -->
-        <Grid Grid.Column="0" Margin="10">
+        <Grid Grid.Column="0" Margin="10,1,10,10" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -98,7 +102,7 @@
             </Border>
 
             <!-- Lista de productos -->
-            <Border Grid.Row="1" Background="#E5C1DC" CornerRadius="5" BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border Grid.Row="1" Background="#F1E6D3" CornerRadius="5" BorderBrush="#E0E0E0" BorderThickness="1">
                 <ListBox x:Name="lstProductos"
                          ItemsSource="{Binding ListaArticulos}"
                          SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}"
@@ -117,60 +121,60 @@
                 </ListBox>
             </Border>
 
-           <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15">
-    <!-- Estilo compartido para ambos botones-texto -->
-    <StackPanel.Resources>
-        <Style x:Key="TextButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="#767676"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <TextBlock x:Name="ContentText" 
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15">
+                <!-- Estilo compartido para ambos botones-texto -->
+                <StackPanel.Resources>
+                    <Style x:Key="TextButtonStyle" TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Foreground" Value="#767676"/>
+                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <TextBlock x:Name="ContentText" 
                                  Text="{TemplateBinding Content}"
                                  Padding="8,4"
                                 >
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="TextDecorations" Value="None"/>
-                                    <Style.Triggers>
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextDecorations" Value="None"/>
+                                                <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
                                                         <Setter Property="Foreground" Value="#A01A7D"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </StackPanel.Resources>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </StackPanel.Resources>
 
-    <!-- Botón Agregar -->
-    <Button x:Name="BotonAgregar1"
+                <!-- Botón Agregar -->
+                <Button x:Name="BotonAgregar1"
             Content="+  Agregar"
             Foreground="Green"
             Style="{StaticResource TextButtonStyle}"
             Margin="0,0,20,0"
             Click="BotonAgregar"/>
 
-    <!-- Botón Quitar  -->
-    <Button x:Name="BotonQuitar1"
+                <!-- Botón Quitar  -->
+                <Button x:Name="BotonQuitar1"
             Content="−   Quitar"
             Foreground="Red"
             Style="{StaticResource TextButtonStyle}"
             Click="EliminarArticulo"/>
-</StackPanel>
+            </StackPanel>
         </Grid>
 
         <!-- Panel derecho - Detalles del producto -->
-        <Border Grid.Column="1" Margin="10" Background="White" CornerRadius="5" BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Column="1" Margin="10,1,10,10" Background="White" CornerRadius="5" BorderBrush="#E0E0E0" BorderThickness="1" Grid.Row="1">
             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
                 <Grid DataContext="{Binding ArticuloSeleccionado}">
                     <Grid.RowDefinitions>
@@ -197,30 +201,30 @@
                     </StackPanel>
 
                     <!-- Imagen y QR compactos -->
-                   <!-- Imagen y QR responsivos -->
-<Grid Grid.Row="1" Margin="0,0,0,10" Height="160">
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" MinWidth="150"/>
-        <ColumnDefinition Width="*" MinWidth="150"/>
-    </Grid.ColumnDefinitions>
+                    <!-- Imagen y QR responsivos -->
+                    <Grid Grid.Row="1" Margin="0,0,0,10" Height="160">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="150"/>
+                            <ColumnDefinition Width="*" MinWidth="150"/>
+                        </Grid.ColumnDefinitions>
 
-    <!-- Imagen del producto - Versión responsiva -->
-    <Border Grid.Column="0" Background="#E5C1DC" CornerRadius="5" Margin="0,0,5,0">
-        <Grid>
-            <Viewbox Stretch="Uniform" MaxHeight="140">
-                <Image Source="{Binding Foto, TargetNullValue={x:Null}}" 
+                        <!-- Imagen del producto - Versión responsiva -->
+                        <Border Grid.Column="0" Background="#E5C1DC" CornerRadius="5" Margin="0,0,5,0">
+                            <Grid>
+                                <Viewbox Stretch="Uniform" MaxHeight="140">
+                                    <Image Source="{Binding Foto, TargetNullValue={x:Null}}" 
                        Stretch="None"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>
-            </Viewbox>
+                                </Viewbox>
 
-            <TextBlock Text="Sin imagen" 
+                                <TextBlock Text="Sin imagen" 
                        Visibility="{Binding Foto, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=inverse}"
                        VerticalAlignment="Center" 
                        HorizontalAlignment="Center"
                        Foreground="Gray"/>
 
-            <Button x:Name="BtnCambiarImagen" 
+                                <Button x:Name="BtnCambiarImagen" 
                     Content="📷" 
                     ToolTip="Cambiar imagen"
                     Click="BtnSeleccionarImagen_Click"
@@ -234,19 +238,19 @@
                     Background="White"
                     BorderBrush="#CCCCCC"
                     BorderThickness="1"/>
-        </Grid>
-    </Border>
+                            </Grid>
+                        </Border>
 
-    <!-- Código QR - Versión responsiva -->
-    <Border Grid.Column="1" Background="#E5C1DC" CornerRadius="5">
-        <Viewbox Stretch="Uniform" MaxHeight="140">
-            <Image x:Name="imgCodigoQR" 
+                        <!-- Código QR - Versión responsiva -->
+                        <Border Grid.Column="1" Background="#E5C1DC" CornerRadius="5">
+                            <Viewbox Stretch="Uniform" MaxHeight="140">
+                                <Image x:Name="imgCodigoQR" 
                    Stretch="None"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"/>
-        </Viewbox>
-    </Border>
-</Grid>
+                            </Viewbox>
+                        </Border>
+                    </Grid>
 
                     <!-- Grupo Descripción compacto -->
                     <GroupBox Grid.Row="2" Header="Descripción" Margin="0,0,0,5">

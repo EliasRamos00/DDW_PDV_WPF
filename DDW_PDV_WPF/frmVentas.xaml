@@ -187,6 +187,10 @@
     </Page.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="126*"/>
+            <RowDefinition Height="389*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100*" />
             <ColumnDefinition Width="390" />
@@ -194,8 +198,7 @@
 
         <Border
             Grid.Column="0"
-            HorizontalAlignment="Stretch"
-            Background="#ffff">
+            Background="#ffff" Grid.RowSpan="2">
             <Grid Margin="0,0,-10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="49*" />
@@ -256,51 +259,76 @@
                     </StackPanel>
 
                     <ScrollViewer
-                        Grid.Row="1"
-                        HorizontalScrollBarVisibility="Auto"
-                        PanningMode="HorizontalOnly"
-                        VerticalScrollBarVisibility="Disabled">
-                        <ListView
-                            Margin="0,10,0,10"
-                            HorizontalAlignment="Center"
-                            ItemsSource="{Binding Categorias}"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                            <!--  Establecer Orientation del ListView a Horizontal  -->
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
+    Grid.Row="1"
+    HorizontalScrollBarVisibility="Auto"
+    PanningMode="HorizontalOnly"
+    VerticalScrollBarVisibility="Disabled">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Botón TODOS - Fijo al inicio -->
+                            <Button
+            x:Name="btnTodos"
+            Width="136"
+            Height="157"
+            Margin="10,0,10,0"
+            VerticalContentAlignment="Bottom"
+            Background="White"
+            BorderBrush="#2E5E4E"
+            Click="FiltrarPorCategoria"
+            Tag="0">
+                                <StackPanel 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+                                    <Image 
+                    Margin="0,0,0,20"
+                    VerticalAlignment="Center"
+                     Source="/Resources/omegasymbol.png"
+                    Stretch="UniformToFill"/>
+                                    <TextBlock HorizontalAlignment="Center" Text="TODOS"/>
+                                </StackPanel>
+                            </Button>
 
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Button
-                                        Width="136"
-                                        Height="157"
-                                        Margin="10,0,10,0"
-                                        VerticalContentAlignment="Bottom"
-                                        Background="White"
-                                        BorderBrush="#2E5E4E">
-                                        <StackPanel
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            Orientation="Vertical">
-                                            <!--  Imagen de categoría  -->
-                                            <Image
-                                                Width="75"
-                                                Height="75"
-                                                Margin="0,0,0,20"
-                                                VerticalAlignment="Center"
-                                                Source="{Binding Foto}"
-                                                Stretch="UniformToFill" />
-                                            <!--  Nombre de la categoría  -->
-                                            <TextBlock HorizontalAlignment="Center" Text="{Binding Nombre}" />
-                                        </StackPanel>
-                                    </Button>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            <!-- ListView de categorías -->
+                            <ListView
+            Margin="0,10,0,10"
+            HorizontalAlignment="Center"
+            ItemsSource="{Binding Categorias}"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button
+                        Width="136"
+                        Height="157"
+                        Margin="10,0,10,0"
+                        VerticalContentAlignment="Bottom"
+                        Background="White"
+                        BorderBrush="#2E5E4E"
+                        Click="FiltrarPorCategoria"
+                        Tag="{Binding idCategoria}">
+                                            <StackPanel 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
+                                                <Image
+                                Width="75"
+                                Height="75"
+                                Margin="0,0,0,20"
+                                VerticalAlignment="Center"
+                                Source="{Binding Foto}"
+                                Stretch="UniformToFill"/>
+                                                <TextBlock HorizontalAlignment="Center" Text="{Binding Nombre}"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
                     </ScrollViewer>
 
                     <TextBox
@@ -310,7 +338,9 @@
                         Margin="0,10,0,10"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Background="White" />
+                        Background="White" 
+                        x:Name="txtBusqueda"
+                        Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
@@ -362,11 +392,10 @@
             </Grid>
         </Border>
         <Border
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
+            Grid.Column="1"
             Margin="10,0,0,0"
             Padding="15"
-            Background="#FFFFFF">
+            Background="#FFFFFF" Grid.RowSpan="2">
             <Grid>
                 <!--  Definir filas  -->
                 <Grid.RowDefinitions>
@@ -394,7 +423,7 @@
                     Foreground="#2E5E4E"
                     Text="DETALLES DE LA VENTA" />
 
-                    <Image Source="/Resources/omegasymbol.png" Height="106" Width="214"></Image>
+                   <Image Source="/Resources/omegasymbol.png" Height="106" Width="214"></Image>
                 </StackPanel>
                 <!--  Subtítulo  -->
                 <TextBlock
