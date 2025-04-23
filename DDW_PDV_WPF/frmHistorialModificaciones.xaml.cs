@@ -116,7 +116,7 @@ namespace DDW_PDV_WPF
                     {
                         // Filtros básicos (originales)
                         var coincideBasico =
-                            (h.idUsuario != null && h.idUsuario.ToLower().Contains(texto)) ||
+                            (h.Usuario != null && h.Usuario.ToLower().Contains(texto)) ||
                             (h.accion != null && h.accion.ToLower().Contains(texto)) ||
                             (h.fechaHora.ToString().Contains(texto)) ||
                             (h.clase != null && h.clase.ToLower().Contains(texto));
@@ -188,7 +188,7 @@ namespace DDW_PDV_WPF
             {
                 // Mostrar información básica
                 txtFechaHora.Text = historial.fechaHora.ToString();
-                txtUsuario.Text = historial.idUsuario;
+                txtUsuario.Text = historial.Usuario;
                 txtTipoModificacion.Text = historial.accion;
 
                 // Decodificar datos "antes"
@@ -356,7 +356,7 @@ namespace DDW_PDV_WPF
 
                     // 3. Mostrar información básica
                     txtFechaHora.Text = historial.fechaHora.ToString();
-                    txtUsuario.Text = historial.idUsuario;
+                    txtUsuario.Text = historial.Usuario;
                     txtTipoModificacion.Text = historial.accion;
 
                     // 4. Cargar imágenes

@@ -93,7 +93,8 @@
             <PasswordBox x:Name="txtContrasena" Password="" FontSize="20"/>
 
             <!-- Botón de login -->
-            <Button Content="Iniciar Sesión" 
+            <Button x:Name="btnIniciarSesion"
+                    Content="Iniciar Sesión" 
                     Style="{StaticResource LoginButtonStyle}"
                     Click="Button_Click"
                     IsDefault="True"/>

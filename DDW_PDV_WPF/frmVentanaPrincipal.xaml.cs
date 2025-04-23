@@ -31,34 +31,56 @@ namespace DDW_PDV_WPF
             MainFrame.UpdateLayout();
             this.Usuario = Usuario;
         }
-
+        private void ResetNavigationButtons()
+        {
+            buttonInventario.IsEnabled = true;
+            buttonCierreCajas.IsEnabled = true;
+            buttonVentas.IsEnabled = true;
+            buttonResumen.IsEnabled = true;
+            buttonHistorial.IsEnabled = true;
+           
+        }
         private void NavigateToInventarios(object sender, RoutedEventArgs e)
         {
+            ResetNavigationButtons();
             MainFrame.Navigate(new frmInventarios());
+            buttonInventario.IsEnabled = false;
         }
+
         private void NavigateToCierreDeCajas(object sender, RoutedEventArgs e)
         {
+            ResetNavigationButtons();
             MainFrame.Navigate(new frmCierreDeCajas());
+            buttonCierreCajas.IsEnabled = false;
         }
+
         private void NavigateToVentas(object sender, RoutedEventArgs e)
         {
+            ResetNavigationButtons();
             MainFrame.Navigate(new frmVentas(Usuario));
+            buttonVentas.IsEnabled = false;
         }
+
         private void NavigateToReportes(object sender, RoutedEventArgs e)
         {
+            ResetNavigationButtons();
             MainFrame.Navigate(new frmReportes());
+            buttonResumen.IsEnabled = false;
         }
 
         private void NavigateHistorial(object sender, RoutedEventArgs e)
         {
+            ResetNavigationButtons();
             MainFrame.Navigate(new frmHistorialModificaciones());
+            buttonHistorial.IsEnabled = false;
         }
 
         private void NavigateCierre(object sender, RoutedEventArgs e)
         {
+            ResetNavigationButtons();
             MainFrame.Navigate(new frmCierreDeCajas());
+            buttonCierreCajas.IsEnabled = false;
         }
-
 
 
         private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)

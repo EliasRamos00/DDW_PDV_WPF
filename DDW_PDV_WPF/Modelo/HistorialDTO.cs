@@ -13,6 +13,7 @@ namespace DDW_PDV_WPF.Modelo
         public int idHistorial { get; set; }
         public string fechaHora { get; set; }
         public string idUsuario { get; set; }
+        public string Usuario { get; set; }
         public string accion { get; set; }  
         public string clase { get; set; }   
         public string antes { get; set; }  

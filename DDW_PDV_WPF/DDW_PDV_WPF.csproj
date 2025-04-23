@@ -193,6 +193,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Controlador\DropboxHelper.cs" />
+    <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
     <Compile Include="Modelo\RepVentasDTO.cs" />
     <Compile Include="Reportes\VentasPDF.cs" />

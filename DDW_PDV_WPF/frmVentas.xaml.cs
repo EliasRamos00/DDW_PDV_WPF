@@ -43,10 +43,41 @@ namespace DDW_PDV_WPF
         private string qrLeido="";
         private decimal _montoRecibido;
         private decimal _cambio;
-
-
         private ObservableCollection<MCategorias> _categorias;
+        private string _textoBusqueda;
+        private MCategorias _categoriaSeleccionada;
+        private Button _botonCategoriaSeleccionado;
+        private Button _botonTodos;
 
+        public string TextoBusqueda
+        {
+            get => _textoBusqueda;
+            set
+            {
+                if (_textoBusqueda != value)
+                {
+                    _textoBusqueda = value;
+                    OnPropertyChanged(nameof(TextoBusqueda));
+                    FiltrarProductos();
+                }
+            }
+        }
+
+        public MCategorias CategoriaSeleccionada
+        {
+            get => _categoriaSeleccionada;
+            set
+            {
+                if (_categoriaSeleccionada != value)
+                {
+                    _categoriaSeleccionada = value;
+                    OnPropertyChanged(nameof(CategoriaSeleccionada));
+                    FiltrarProductos();
+                }
+            }
+        }
+
+        private ObservableCollection<ArticuloDTO> _productosOriginales; // Para guardar la lista completa
         public decimal Cambio
         {
             get => _montoRecibido-_total;
@@ -162,6 +193,14 @@ namespace DDW_PDV_WPF
             DataContext = this;
             _usuario = currentUser;
 
+            if (btnTodos != null)
+            {
+                _botonTodos = btnTodos;
+                _botonCategoriaSeleccionado = btnTodos;
+                btnTodos.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
+                btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+            }
+
         }
 
         private async void CargarCategorias()
@@ -170,7 +209,21 @@ namespace DDW_PDV_WPF
 
             if (resultado != null)
             {
-                Categorias = new ObservableCollection<MCategorias>(resultado); //  Asigna los datos a la propiedad
+                Categorias = new ObservableCollection<MCategorias>(resultado);
+
+ 
+                if (_botonCategoriaSeleccionado != null)
+                {
+                    _botonCategoriaSeleccionado.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
+                    _botonCategoriaSeleccionado.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+                }
+                else if (btnTodos != null)
+                {
+                   
+                    _botonCategoriaSeleccionado = btnTodos;
+                    btnTodos.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
+                    btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+                }
             }
         }
 
@@ -180,8 +233,6 @@ namespace DDW_PDV_WPF
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += Timer_Tick;
             _timer.Start();
-
-            // Actualizar la fecha y hora al iniciar
             UpdateDateTime();
         }
 
@@ -244,11 +295,35 @@ namespace DDW_PDV_WPF
 
             if (resultado != null)
             {
-                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado); //  Asigna los datos a la propiedad
+                _productosOriginales = new ObservableCollection<ArticuloDTO>(resultado);
+                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+
             }
         }
 
+        private void FiltrarProductos()
+        {
+            if (_productosOriginales == null) return;
 
+            var productosFiltrados = _productosOriginales.AsEnumerable();
+
+            // Filtro por categoría (usando la propiedad CategoriaSeleccionada)
+            if (CategoriaSeleccionada != null && CategoriaSeleccionada.idCategoria != 0)
+            {
+                productosFiltrados = productosFiltrados.Where(p => p.idCategoria == CategoriaSeleccionada.idCategoria);
+            }
+
+            // Filtro por texto de búsqueda
+            if (!string.IsNullOrWhiteSpace(TextoBusqueda))
+            {
+                string busqueda = TextoBusqueda.ToLower();
+                productosFiltrados = productosFiltrados.Where(p =>
+                    p.Descripcion.ToLower().Contains(busqueda) ||
+                    (p.CodigoBarras != null && p.CodigoBarras.ToLower().Contains(busqueda)));
+            }
+
+            ListaArticulos = new ObservableCollection<ArticuloDTO>(productosFiltrados);
+        }
         private void IncrementarCantidad(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
@@ -459,6 +534,33 @@ namespace DDW_PDV_WPF
                 OnPropertyChanged(nameof(MontoRecibido));
             }
         }
+        private void FiltrarPorCategoria(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag != null)
+            {
+                // Quitar el resaltado del botón anterior
+                if (_botonCategoriaSeleccionado != null)
+                {
+                    _botonCategoriaSeleccionado.Background = new SolidColorBrush(Colors.White);
+                    _botonCategoriaSeleccionado.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+                }
+
+                // Poner el resaltado al nuevo botón
+                button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
+                button.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+                _botonCategoriaSeleccionado = button;
+
+                int categoriaId = int.Parse(button.Tag.ToString());
+
+                // Buscar la categoría correspondiente
+                var categoria = categoriaId == 0
+                    ? new MCategorias { idCategoria = 0, Nombre = "TODOS" }
+                    : Categorias.FirstOrDefault(c => c.idCategoria == categoriaId);
+
+                CategoriaSeleccionada = categoria;
+            }
+        }
+
     }
 
 }
