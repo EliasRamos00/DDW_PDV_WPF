@@ -42,8 +42,7 @@ namespace DDW_PDV_WPF
         private string _textoBusqueda;
         private ArticuloDTO _articuloOriginal;
         private bool _isNewItem = false;
-        private ComboBox _cbCategorias= new ComboBox();
-
+        private List<MCategorias> cat;
 
         private ObservableCollection<MCategorias> _categorias;
         public ObservableCollection<MCategorias> Categorias
@@ -56,14 +55,7 @@ namespace DDW_PDV_WPF
             }
         }
 
-        public ComboBox CbCategorias
-        {
-            get => _cbCategorias;
-            set {
-                _cbCategorias = value;
-                OnPropertyChanged(nameof(cbCategorias));
-            }
-        }
+        
 
         public ObservableCollection<ArticuloDTO> ListaArticulos
         {
@@ -103,15 +95,23 @@ namespace DDW_PDV_WPF
                         PrecioCompra=_articuloSeleccionado.PrecioCompra
 
                     };
-                    _cbCategorias.SelectedIndex=_articuloSeleccionado.idCategoria;
+                    // Cargar la categoría seleccionada
+                    // Buscar el objeto original
+
+                    MCategorias itemEncontrado = cmbCategoria.ItemsSource.Cast<MCategorias>()
+                     .FirstOrDefault(c => c.idCategoria == _articuloSeleccionado.idCategoria);
+
+                    cmbCategoria.SelectedItem = itemEncontrado;
+
+
+
                 }
 
-                
+
                 btnCancelarCambios.Visibility = value != null ? Visibility.Visible : Visibility.Hidden;
                 btnGuardarCambios.Visibility = value != null ? Visibility.Visible : Visibility.Hidden;
 
                 OnPropertyChanged(nameof(ArticuloSeleccionado));
-                OnPropertyChanged(nameof(CbCategorias));
                 OnPropertyChanged(nameof(HasChanges));
             }
         }
@@ -181,7 +181,7 @@ namespace DDW_PDV_WPF
             CargarDatos();
             DataContext = this;
 
-            CargarCategorias().ConfigureAwait(true);
+            CargarCategorias();
             btnCancelarCambios.Visibility = Visibility.Hidden;
             btnGuardarCambios.Visibility = Visibility.Hidden;
 
@@ -268,11 +268,15 @@ namespace DDW_PDV_WPF
         {
             try
             {
-                var resultado = await _apiService.GetAsync<List<MCategorias>>("/api/CCategorias");
-                if (resultado != null)
+                cat = await _apiService.GetAsync<List<MCategorias>>("/api/CCategorias");
+                if (cat != null)
                 {
-                    Categorias = new ObservableCollection<MCategorias>(resultado);
-                    _cbCategorias.ItemsSource = Categorias;
+
+                    cmbCategoria.ItemsSource = cat; // Limpiar el ItemsSource antes de asignar
+                    cmbCategoria.DisplayMemberPath = "Nombre";     // Lo que se muestra
+                    cmbCategoria.SelectedValuePath = "Id";
+                    //Categorias = new ObservableCollection<MCategorias>(resultado);
+                    //_cbCategorias.ItemsSource = Categorias;
                 }
             }
             catch (Exception ex)
@@ -362,7 +366,8 @@ namespace DDW_PDV_WPF
             {
                 // Obtener usuario actual completo
                 var usuarioActual = await ObtenerUsuarioActual();
-                var categoria = cbCategorias.Text;
+                MCategorias aux = (MCategorias)cmbCategoria.SelectedItem;
+                ArticuloSeleccionado.idCategoria = aux.idCategoria;
                 if (usuarioActual == null) return;
 
                 bool exito;
@@ -383,9 +388,9 @@ namespace DDW_PDV_WPF
                     var historial = new HistorialDTO
                     {
                         fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                        idUsuario = usuarioActual.Usuario, 
+                        idUsuario = usuarioActual.idUsuario.ToString(), 
                         accion = accion,
-                        clase = categoria,
+                        clase = "Inventarios",
                         antes = SerializarAXml(_articuloOriginal),
                         despues = SerializarAXml(ArticuloSeleccionado)
                     };
@@ -623,6 +628,16 @@ namespace DDW_PDV_WPF
             HasChanges = true;
             btnCancelarCambios.Visibility = Visibility.Visible;
             btnGuardarCambios.Visibility = Visibility.Visible;
+        }
+
+        private void cmbCategoriaCambio(object sender, SelectionChangedEventArgs e)
+        {
+            if(cmbCategoria.SelectedValue != null)
+            {
+                MCategorias aux = (MCategorias)cmbCategoria.SelectedValue;
+                _articuloSeleccionado.idCategoria = aux.idCategoria;
+            }
+            
         }
     }
 }

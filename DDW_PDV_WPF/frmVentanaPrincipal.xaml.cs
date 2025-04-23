@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDW_PDV_WPF.Controlador;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Printing;
@@ -97,8 +98,25 @@ namespace DDW_PDV_WPF
         //CIERRE DE CAJA
         private void btnCerrarCaja(object sender, RoutedEventArgs e)
         {
-                CierrCaj paginaDestino = new CierrCaj(Usuario, Properties.Settings.Default.Caja);
-                paginaDestino.ShowDialog();            
+            //// DESCOMENTAR UNA VEZ TERMINADAS LAS PRUEBAS EN DROPBOX
+            //    CierrCaj paginaDestino = new CierrCaj(Usuario, Properties.Settings.Default.Caja);
+            //    paginaDestino.ShowDialog();
+
+            // Crea una nueva instancia de OpenFileDialog
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png;*.gif|Todos los archivos|*.*";
+            // Abre el cuadro de diálogo para seleccionar el archivo
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // Obtener la ruta local del archivo
+                string filePath = openFileDialog.FileName;
+
+                // Crear la instancia de DropboxHelper y llamar al método para subir el archivo
+                DropboxHelper dropboxHelper = new DropboxHelper();
+                dropboxHelper.UploadImageAndSaveUrl(filePath);
+
+            }
+
         }
     }
 }

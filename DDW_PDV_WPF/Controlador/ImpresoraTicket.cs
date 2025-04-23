@@ -160,8 +160,12 @@ namespace DDW_PDV_WPF.Controlador
                 TextAlignment = TextAlignment.Center, // Centrado del mensaje de agradecimiento
                 Margin = new Thickness(0)
             };
+
+            thankYouParagraph.Inlines.Add(new Run("\n\n"));
             thankYouParagraph.Inlines.Add(new Run("Gracias por su compra\n"));
             thankYouParagraph.Inlines.Add(new Run("********************************\n"));
+            thankYouParagraph.Inlines.Add(new Run("\n\n"));
+
             flowDoc.Blocks.Add(thankYouParagraph);
 
             // Configurar el FlowDocument con el tamaño de página (ancho 57.5mm = 220.472px aprox.)

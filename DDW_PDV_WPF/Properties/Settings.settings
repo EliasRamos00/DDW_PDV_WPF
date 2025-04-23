@@ -11,5 +11,14 @@
     <Setting Name="Usuario" Type="System.String" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="APP_KEY" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ig9575cemyxer8v</Value>
+    </Setting>
+    <Setting Name="APP_SECRET" Type="System.String" Scope="User">
+      <Value Profile="(Default)">s73iu35gj7yxbuo</Value>
+    </Setting>
+    <Setting Name="DROPBOX_TOKEN" Type="System.String" Scope="User">
+      <Value Profile="(Default)">4Qw31mlZeJkAAAAAAAAAFlTGGUevVFmyPp2rdaJjZG4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

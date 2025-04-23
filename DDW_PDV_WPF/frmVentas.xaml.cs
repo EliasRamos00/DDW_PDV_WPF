@@ -449,6 +449,16 @@ namespace DDW_PDV_WPF
             }
         }
 
+        private void txtEnter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                CerrarVenta(sender, e);
+                e.Handled = true; // Esto evita que el Enter haga otras acciones (como hacer un sonido)
+                MontoRecibido = 0;
+                OnPropertyChanged(nameof(MontoRecibido));
+            }
+        }
     }
 
 }

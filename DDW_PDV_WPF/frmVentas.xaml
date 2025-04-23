@@ -542,6 +542,7 @@
                             Grid.Column="1"
                             Margin="0,5,10,5"
                             Padding="5"
+                            KeyDown="txtEnter"
                             HorizontalAlignment="Stretch"
                             Background="White"
                             FontSize="21"

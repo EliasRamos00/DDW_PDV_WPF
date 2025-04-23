@@ -19,6 +19,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DDW_PDV_WPF.Controlador;
 using DDW_PDV_WPF.Modelo;
+using DDW_PDV_WPF.Reportes;
+using System.Windows.Forms;
 
 namespace DDW_PDV_WPF
 {
@@ -135,8 +137,8 @@ namespace DDW_PDV_WPF
             }
             catch (Exception ex)
             {
-              
-                MessageBox.Show($"Error al cargar sucursales: {ex.Message}", "Error",
+
+                System.Windows.MessageBox.Show($"Error al cargar sucursales: {ex.Message}", "Error",
                               MessageBoxButton.OK, MessageBoxImage.Error);
 
                 Sucursales = new ObservableCollection<SucursalDTO>
@@ -157,7 +159,7 @@ namespace DDW_PDV_WPF
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Error",
+                System.Windows.MessageBox.Show($"Error: {ex.Message}", "Error",
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -170,7 +172,37 @@ namespace DDW_PDV_WPF
         private async void btnGenerarReporte(object sender, RoutedEventArgs e)
         {
             // Aquí puedes agregar la lógica para generar el reporte
-            var usuarios = await _apiService.GetAsync<List<UsuarioDTO>>("/api/CUsuarios/");
+            DateTime fechaIni, fechaFin;
+            fechaIni = FechaInicio;
+            fechaFin = FechaFin;
+            int sucursal = IdSucursal;
+
+            // Formatea las fechas al formato yyyy-MM-dd para evitar problemas de interpretación
+            //string url = $"/reporte/r?fechaInicio={fechaIni:yyyy-MM-dd}&fechaFin={fechaFin:yyyy-MM-dd}&idSucursal={sucursal}";
+            string url = $"/api/CVentas/{fechaIni:yyyy-MM-dd 00:00:00},{fechaFin:yyyy-MM-dd 23:59:59},{sucursal}";
+
+            var reporte = await _apiService.GetAsync<List<RepVentasDTO>>(url);
+            string path;
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Title = "Guardar reporte";
+                saveFileDialog.Filter = "Archivo PDF (*.pdf)|*.pdf|Archivo Excel (*.xlsx)|*.xlsx|Todos los archivos (*.*)|*.*";
+                saveFileDialog.DefaultExt = "pdf"; // Puedes cambiarlo si el reporte no es PDF
+                saveFileDialog.FileName = "ReporteVentas"; // Nombre sugerido
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Retorna la ruta seleccionada por el usuario
+                    path = saveFileDialog.FileName;
+                }
+                else
+                {
+                    return; // Si canceló
+                }
+            }
+
+            VentasPDF.CrearPDF(reporte,path, fechaIni,FechaFin,sucursal );
 
         }
     }
