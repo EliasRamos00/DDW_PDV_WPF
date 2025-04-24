@@ -279,7 +279,7 @@
                                     <Image
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Source="{Binding Foto, TargetNullValue={x:Null}}"
+                                        Source="{Binding ImagenProducto, TargetNullValue={x:Null}}"
                                         Stretch="None" />
                                 </Viewbox>
 

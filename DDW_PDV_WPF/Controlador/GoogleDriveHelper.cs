@@ -171,6 +171,19 @@ namespace DDW_PDV_WPF.Controlador
             return bitmapImage;
         }
 
+        public static async Task MakeFilePublicAsync(string fileId)
+        {
+
+            var permission = new Google.Apis.Drive.v3.Data.Permission()
+            {
+                Role = "reader",
+                Type = "anyone"
+            };
+
+            await _service.Permissions.Create(permission, fileId).ExecuteAsync();
+        }
+
+
         // Método para descargar la imagen y guardarla en caché
         private async Task<BitmapImage> DownloadAndCacheImage(string imageLink, string cachedFilePath)
         {

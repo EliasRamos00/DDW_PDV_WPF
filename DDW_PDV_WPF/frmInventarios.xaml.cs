@@ -25,6 +25,8 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using QRCoder;
 using System.Xml.Serialization;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 
 namespace DDW_PDV_WPF
@@ -43,6 +45,7 @@ namespace DDW_PDV_WPF
         private ArticuloDTO _articuloOriginal;
         private bool _isNewItem = false;
         private List<MCategorias> cat;
+        private GoogleDriveHelper ds;
 
         private ObservableCollection<MCategorias> _categorias;
         public ObservableCollection<MCategorias> Categorias
@@ -92,7 +95,8 @@ namespace DDW_PDV_WPF
                         Min = _articuloSeleccionado.Min,
                         Max = _articuloSeleccionado.Max,
                         PrecioVenta = _articuloSeleccionado.PrecioVenta,
-                        PrecioCompra = _articuloSeleccionado.PrecioCompra
+                        PrecioCompra = _articuloSeleccionado.PrecioCompra,
+                        ImagenProducto = _articuloSeleccionado.ImagenProducto
 
                     };
                     // Cargar la categoría seleccionada
@@ -102,6 +106,11 @@ namespace DDW_PDV_WPF
                      .FirstOrDefault(c => c.idCategoria == _articuloSeleccionado.idCategoria);
 
                     cmbCategoria.SelectedItem = itemEncontrado;
+
+                    // Se muestra la foto que tenga.
+                    // Suponemos que cada artículo tiene un "ImageId" que corresponde al ID de Google Drive de la imagen
+
+                    CargarImagenDelArticulo(_articuloSeleccionado);
 
 
 
@@ -116,7 +125,30 @@ namespace DDW_PDV_WPF
             }
         }
 
+        private async void CargarImagenDelArticulo(ArticuloDTO articuloSeleccionado)
+        {
+            try
+            {
+                string fileId = articuloSeleccionado.Foto;
+                if (fileId == "")
+                {
+                    // Si no hay ID de archivo, no se puede cargar la imagen
+                    return;
+                }
 
+
+                string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+
+                var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+                articuloSeleccionado.ImagenProducto = imageSource;
+
+                OnPropertyChanged(nameof(ArticuloSeleccionado)); // Notificar cambio visual
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error cargando imagen: " + ex.Message);
+            }
+        }
 
         public bool HasChanges
         {
@@ -173,7 +205,7 @@ namespace DDW_PDV_WPF
                 remove => CommandManager.RequerySuggested -= value;
             }
         }
-        public frmInventarios()
+        public frmInventarios(GoogleDriveHelper ds)
         {
             InitializeComponent();
 
@@ -185,6 +217,7 @@ namespace DDW_PDV_WPF
             btnCancelarCambios.Visibility = Visibility.Hidden;
             btnGuardarCambios.Visibility = Visibility.Hidden;
 
+            this.ds = ds;
 
 
         }
@@ -265,6 +298,27 @@ namespace DDW_PDV_WPF
                 ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
             }
         }
+
+        public static ImageSource ConvertBitmapToImageSource(Bitmap bitmapTask)
+        {
+            Bitmap bitmap = bitmapTask;
+
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                memory.Position = 0;
+
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze(); // Para que se pueda usar en hilos distintos al UI
+
+                return bitmapImage;
+            }
+        }
+
 
         private async Task CargarCategorias()
         {
@@ -515,14 +569,19 @@ namespace DDW_PDV_WPF
                 string filePath = openFileDialog.FileName;
                 try
                 {
+                    btnGuardarCambios.IsEnabled = false;
                     // Obtener el servicio autenticado de Google Drive
-                    Controlador.GoogleDriveHelper.Initialize("neuralcat.json");
+                    Controlador.GoogleDriveHelper.Initialize("neuralcat.json"); // AQUI TENGO QUE INICIAR SESION PARA SUBIR.
 
                     // ID de la carpeta compartida en tu Google Drive
                     string folderId = "1mljTxnPYGefWWFBbWe2V_lKxX7oeugdA"; // ID fijo de la carpeta
 
                     // Sube el archivo y obtén el fileId
                     string fileId = await Controlador.GoogleDriveHelper.UploadFileAsync(filePath, folderId);
+
+                    // Hacerlo publico
+                    await GoogleDriveHelper.MakeFilePublicAsync(fileId);
+
 
                     // Obtener el enlace público (opcional)
                     string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
@@ -531,8 +590,6 @@ namespace DDW_PDV_WPF
                     ArticuloSeleccionado.Foto = fileId;
 
                     // Usar el helper para obtener la imagen desde la caché o descargarla
-                    GoogleDriveHelper ds = new GoogleDriveHelper();
-
                     var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
 
                     // Asignar la imagen al artículo (o directamente en el UI si tienes un control de imagen)
@@ -545,6 +602,15 @@ namespace DDW_PDV_WPF
                 {
                     MessageBox.Show("Error al subir archivo: " + ex.Message);
                     return;
+                }
+                finally
+                {
+                    btnGuardarCambios.IsEnabled = true;
+                    // Actualizar UI
+                    OnPropertyChanged(nameof(ArticuloSeleccionado));
+                    HasChanges = true;
+                    btnCancelarCambios.Visibility = Visibility.Visible;
+                    btnGuardarCambios.Visibility = Visibility.Visible;
                 }
             }
         }

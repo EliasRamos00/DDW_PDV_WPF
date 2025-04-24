@@ -48,6 +48,7 @@ namespace DDW_PDV_WPF
         private MCategorias _categoriaSeleccionada;
         private Button _botonCategoriaSeleccionado;
         private Button _botonTodos;
+        GoogleDriveHelper ds;
 
         public string TextoBusqueda
         {
@@ -186,7 +187,7 @@ namespace DDW_PDV_WPF
         /// CONSTRUCTOR DE LA CLASE FRMVENTAS
         /// </summary>
         /// <param name="currentUser"></param>
-        public frmVentas(string currentUser)
+        public frmVentas(string currentUser, GoogleDriveHelper ds)
         {
             InitializeComponent();
             time();
@@ -205,7 +206,7 @@ namespace DDW_PDV_WPF
                 btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
             }
             // se cargan las imagenes
-
+            this.ds = ds;
         }
 
         private async void CargarCategorias()
@@ -312,13 +313,11 @@ namespace DDW_PDV_WPF
                         continue;
                     }
 
+                    //COMO LAS IMAGENES SON PUBLICAS Y DE ACCESO LIBRE, LITERALMENTE NO SE NECESITA NINGUN SECETRO PARA CONSUMIRLAS.
                     // Suponemos que cada artículo tiene un "ImageId" que corresponde al ID de Google Drive de la imagen
                     string fileId = article.Foto;  // ID del archivo de Google Drive
                     string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
-
-                    GoogleDriveHelper ds = new GoogleDriveHelper();
-
-                    var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+                    var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId); // GUARDA EN CACHE SUPER IMPORTANTE
                     article.ImagenProducto = imageSource; // Asignamos aquí la imagen lista
 
 
@@ -432,7 +431,7 @@ namespace DDW_PDV_WPF
                     {
                         idArticulo = articuloEscaneado.idArticulo,
                         Descripcion = articuloEscaneado.Descripcion,
-                        Foto = articuloEscaneado.Foto,
+                        ImagenProducto = articuloEscaneado.ImagenProducto,
                         PrecioVenta = articuloEscaneado.PrecioVenta,
                         Cantidad = 1
                     };
@@ -475,7 +474,7 @@ namespace DDW_PDV_WPF
                     {
                         idArticulo = producto.idArticulo, // Asumiendo que el producto tiene un ID
                         Descripcion = producto.Descripcion,
-                        Foto = producto.Foto,
+                        ImagenProducto = producto.ImagenProducto,
                         PrecioVenta = producto.PrecioVenta, // precio
                         Cantidad = 1
                     };

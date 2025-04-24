@@ -474,7 +474,7 @@
                                         Height="60"
                                         Margin="2,0,4,0"
                                         VerticalAlignment="Top"
-                                        Source="{Binding Foto}" />
+                                        Source="{Binding ImagenProducto}" />
 
                                     <StackPanel Grid.Column="1" Margin="0,0,4,0">
                                         <TextBlock
