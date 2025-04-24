@@ -174,11 +174,38 @@
                         VerticalAlignment="Bottom"
                         Background="Transparent"
                         BorderThickness="0"
-                        Click="BtnCerrarSesion_Click"
-                        Content="⏻ CERRAR SESIÓN"
-                        FontSize="13"
-                        FontWeight="Bold"
-                        Foreground="#000" />
+                        Click="BtnCerrarSesion_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                        <Image
+                                            Width="24"
+                                            Height="24"
+                                            VerticalAlignment="Center"
+                                            Source="/Resources/PowerSymbol1.png" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            FontSize="13"
+                                            FontWeight="Bold"
+                                            Foreground="#000"
+                                            Text="CERRAR SESIÓN" />
+                                    </StackPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.7" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
                     <Image
                         Width="182"
                         Height="76"

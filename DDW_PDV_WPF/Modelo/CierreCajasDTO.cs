@@ -14,6 +14,7 @@ namespace DDW_PDV_WPF.Modelo
         // public string Fecha { get; set; }
         // public string Hora { get; set; }
         public int idUsuario { get; set; }
+        public string Usuario { get; set; }
         public decimal TotalSistema { get; set; }
         public decimal TotalFisico { get; set; }
         public int idCaja { get; set; }

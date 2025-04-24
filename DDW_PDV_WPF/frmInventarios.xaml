@@ -6,10 +6,10 @@
     xmlns:local="clr-namespace:DDW_PDV_WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="frmInventarios"
-    Background="#F5F5F5"
     mc:Ignorable="d">
 
     <Page.Resources>
+        <!--  Estilos compartidos  -->
         <Style TargetType="ListBoxItem">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -33,11 +33,51 @@
             <Setter Property="BorderBrush" Value="#E5C1DC" />
         </Style>
 
+        <!--  Estilo base para GroupBox  -->
+        <Style x:Key="CustomGroupBoxStyle" TargetType="GroupBox">
+            <Setter Property="BorderBrush" Value="#6B9D89" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="white" />
+            <Setter Property="Margin" Value="0,0,0,5" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border
+                            Background="White"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <!--  Header con fondo y margen  -->
+                                <Border
+                                    Grid.Row="0"
+                                    Margin="10,0,10,0"
+                                    Padding="5,0,5,0"
+                                    Background="#6B9D89">
+                                    <ContentPresenter
+                                        ContentSource="Header"
+                                        RecognizesAccessKey="True"
+                                        TextBlock.FontWeight="Bold" />
+                                </Border>
+                                <!--  Contenido  -->
+                                <ContentPresenter Grid.Row="1" Margin="{TemplateBinding Padding}" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <local:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="9*" />
             <RowDefinition Height="662*" />
@@ -118,22 +158,42 @@
             <!--  Lista de productos  -->
             <Border
                 Grid.Row="1"
-                Background="#E5C1DC"
+                Background="#F1E6D3"
                 BorderBrush="#E0E0E0"
                 BorderThickness="1"
                 CornerRadius="5">
                 <ListBox
                     x:Name="lstProductos"
+                    HorizontalContentAlignment="Stretch"
                     ItemsSource="{Binding ListaArticulos}"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}">
+                    <!--  Asegura que el contenido se estire  -->
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <!--  Estira cada item  -->
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#f0f0f0" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#d0d0d0" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border
                                 Margin="0,2"
                                 Padding="5"
+                                Background="white"
                                 BorderBrush="white"
                                 BorderThickness="0,0,0,1">
+                                <!--  Fondo transparente para heredar el color  -->
                                 <StackPanel>
                                     <TextBlock
                                         FontSize="14"
@@ -257,12 +317,7 @@
                             TextTrimming="CharacterEllipsis" />
                     </StackPanel>
 
-                    <!--  Imagen y QR compactos  -->
-                    <!--  Imagen y QR responsivos  -->
-                    <Grid
-                        Grid.Row="1"
-                        Height="160"
-                        Margin="0,0,0,10">
+                    <Grid Grid.Row="1" Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" MinWidth="150" />
                             <ColumnDefinition Width="*" MinWidth="150" />
@@ -308,18 +363,36 @@
                             </Grid>
                         </Border>
 
-                        <!--  Código QR - Versión responsiva  -->
+
+
                         <Border
                             Grid.Column="1"
-                            Background="#E5C1DC"
+                            Background="white"
                             CornerRadius="5">
-                            <Viewbox MaxHeight="140" Stretch="Uniform">
-                                <Image
-                                    x:Name="imgCodigoQR"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Stretch="None" />
-                            </Viewbox>
+                            <Grid>
+                                <!--  Código QR  -->
+                                <Viewbox Stretch="Uniform">
+                                    <Image
+                                        x:Name="imgCodigoQR"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Stretch="None" />
+                                </Viewbox>
+
+                                <!--  Botón de exportación  -->
+                                <Button
+                                    x:Name="btnExportarQR"
+                                    Margin="5"
+                                    Padding="8,4"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background="#6B9D89"
+                                    BorderThickness="0"
+                                    Click="BtnExportarQR_Click"
+                                    Content="Exportar QR"
+                                    Foreground="White"
+                                    ToolTip="Exportar código QR como imagen" />
+                            </Grid>
                         </Border>
                     </Grid>
 
@@ -327,7 +400,10 @@
                     <GroupBox
                         Grid.Row="2"
                         Margin="0,0,0,5"
-                        Header="Descripción">
+                        Header="Descripción"
+                        Style="{StaticResource CustomGroupBoxStyle}">
+
+
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.2*" />
@@ -353,7 +429,8 @@
                         <GroupBox
                             Grid.Column="0"
                             Margin="0,0,5,0"
-                            Header="Características">
+                            Header="Características"
+                            Style="{StaticResource CustomGroupBoxStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.5*" />
@@ -402,7 +479,8 @@
                         <GroupBox
                             Grid.Column="1"
                             Margin="5,0,0,0"
-                            Header="Categoría">
+                            Header="Categoría"
+                            Style="{StaticResource CustomGroupBoxStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.2*" />
@@ -424,7 +502,8 @@
                     <GroupBox
                         Grid.Row="4"
                         Margin="0,0,0,5"
-                        Header="Inventario">
+                        Header="Inventario"
+                        Style="{StaticResource CustomGroupBoxStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.33*" />
@@ -500,7 +579,8 @@
                         <GroupBox
                             Grid.Column="0"
                             Margin="0,0,5,0"
-                            Header="Código de Barras">
+                            Header="Código de Barras"
+                            Style="{StaticResource CustomGroupBoxStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.2*" />
@@ -526,7 +606,8 @@
                         <GroupBox
                             Grid.Column="1"
                             Margin="5,0,0,0"
-                            Header="Precios">
+                            Header="Precios"
+                            Style="{StaticResource CustomGroupBoxStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.5*" />
@@ -585,7 +666,7 @@
                             x:Name="btnCancelarCambios"
                             Width="110"
                             Height="30"
-                            Margin="0,0,8,0"
+                            Margin="0,0,8,10"
                             Background="White"
                             BorderBrush="#CCCCCC"
                             BorderThickness="1"
@@ -595,6 +676,7 @@
                             x:Name="btnGuardarCambios"
                             Width="110"
                             Height="30"
+                            Margin="0,0,8,10"
                             Background="#6B9D89"
                             BorderThickness="0"
                             Click="GuardarCambios"

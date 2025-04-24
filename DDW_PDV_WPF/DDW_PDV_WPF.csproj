@@ -394,6 +394,7 @@
     <Content Include="Resources\omegasymbol.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\PowerSymbol1.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\art_20250331220338.jpg">

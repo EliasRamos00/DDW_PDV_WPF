@@ -89,8 +89,8 @@ namespace DDW_PDV_WPF
 
                 if (resultado != null)
                 {
-                    _todosLosHistoriales = new ObservableCollection<HistorialDTO>(resultado);
-                    ListaHistorial = new ObservableCollection<HistorialDTO>(resultado);
+                    _todosLosHistoriales = new ObservableCollection<HistorialDTO>(resultado.OrderByDescending(h => h.fechaHora));
+                    ListaHistorial = new ObservableCollection<HistorialDTO>(resultado.OrderByDescending(h => h.fechaHora));
                 }
             }
             catch (Exception ex)
@@ -187,7 +187,8 @@ namespace DDW_PDV_WPF
             try
             {
                 // Mostrar información básica
-                txtFechaHora.Text = historial.fechaHora.ToString();
+                 txtFechaHora.Text = historial.fechaHora.ToString();
+
                 txtUsuario.Text = historial.Usuario;
                 txtTipoModificacion.Text = historial.accion;
 
