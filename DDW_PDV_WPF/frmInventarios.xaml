@@ -302,11 +302,7 @@
                         Grid.Row="0"
                         Margin="0,0,0,10"
                         Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="13"
-                            Foreground="#555555"
-                            Text="{Binding idArticulo, StringFormat='ID: {0}'}" />
+
                         <TextBlock
                             Margin="8,0,0,0"
                             VerticalAlignment="Center"
@@ -337,13 +333,6 @@
                                         Source="{Binding ImagenProducto, TargetNullValue={x:Null}}"
                                         Stretch="None" />
                                 </Viewbox>
-
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Foreground="Gray"
-                                    Text="Sin imagen"
-                                    Visibility="{Binding ImagenProducto, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=inverse}" />
 
                                 <Button
                                     x:Name="BtnCambiarImagen"
@@ -479,8 +468,7 @@
                         <GroupBox
                             Grid.Column="1"
                             Margin="5,0,0,0"
-                            Header="Categoría"
-                            Style="{StaticResource CustomGroupBoxStyle}">
+                            Header="Categoría">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.2*" />
@@ -524,6 +512,7 @@
                                     Foreground="#555555"
                                     Text="Stock:" />
                                 <TextBox
+                                    x:Name="txtStock"
                                     Grid.Column="1"
                                     MinHeight="28"
                                     Style="{StaticResource DetailTextBoxStyle}"
@@ -542,6 +531,7 @@
                                     FontSize="12"
                                     Foreground="#555555"><Run Text="Mín" /><Run Language="es-mx" Text="." /></TextBlock>
                                 <TextBox
+                                    x:Name="txtMin"
                                     Grid.Column="1"
                                     MinHeight="28"
                                     Style="{StaticResource DetailTextBoxStyle}"
@@ -560,6 +550,7 @@
                                     FontSize="12"
                                     Foreground="#555555"><Run Text="Máx" /><Run Language="es-mx" Text="." /></TextBlock>
                                 <TextBox
+                                    x:Name="txtMax"
                                     Grid.Column="1"
                                     MinHeight="28"
                                     Style="{StaticResource DetailTextBoxStyle}"

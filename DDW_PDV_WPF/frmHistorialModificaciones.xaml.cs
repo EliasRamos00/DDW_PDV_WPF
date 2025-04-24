@@ -35,7 +35,30 @@ namespace DDW_PDV_WPF
         private ObservableCollection<HistorialDTO> _listaHistorial;
         private HistorialDTO _historialSeleccionado;
         private string _textoBusqueda;
+        private GoogleDriveHelper ds;
         private ObservableCollection<HistorialDTO> _todosLosHistoriales;
+        private ImageSource _imagenAntes;
+        private ImageSource _imagenDespues;
+
+        public ImageSource ImagenAntes
+        {
+            get => _imagenAntes;
+            set
+            {
+                _imagenAntes = value;
+                OnPropertyChanged(nameof(ImagenAntes));
+            }
+        }
+
+        public ImageSource ImagenDespues
+        {
+            get => _imagenDespues;
+            set
+            {
+                _imagenDespues = value;
+                OnPropertyChanged(nameof(ImagenDespues));
+            }
+        }
 
         public ObservableCollection<HistorialDTO> ListaHistorial
         {
@@ -46,7 +69,10 @@ namespace DDW_PDV_WPF
                 OnPropertyChanged();
             }
         }
-
+     
+      
+       
+   
         public   HistorialDTO HistorialSeleccionado
         {
             get => _historialSeleccionado;
@@ -73,12 +99,13 @@ namespace DDW_PDV_WPF
                 FiltrarHistorial();
             }
         }
-        public frmHistorialModificaciones()
+        public frmHistorialModificaciones(GoogleDriveHelper ds)
         {
             InitializeComponent();
             DataContext = this;
             _apiService = new ApiService();
             CargarDatos();
+            this.ds = ds;
         }
 
         private async void CargarDatos()
@@ -182,13 +209,12 @@ namespace DDW_PDV_WPF
             }
         }
 
-        private void DecodificarDatosHistorial(HistorialDTO historial)
+        private async void DecodificarDatosHistorial(HistorialDTO historial)
         {
             try
             {
                 // Mostrar información básica
-                 txtFechaHora.Text = historial.fechaHora.ToString();
-
+                txtFechaHora.Text = historial.fechaHora.ToString();
                 txtUsuario.Text = historial.Usuario;
                 txtTipoModificacion.Text = historial.accion;
 
@@ -199,10 +225,19 @@ namespace DDW_PDV_WPF
                     articuloAntes = DeserializarDeXml<ArticuloDTO>(historial.antes);
                     if (articuloAntes != null)
                     {
-                        // Cargar imagen ANTES
-                        imgAntes.Source = CargarImagen(articuloAntes.Foto);
+                        var imageSource = await CargarImagenAsync(articuloAntes.Foto);
+                        articuloAntes.ImagenProducto = imageSource;
                         txtAntes.Text = FormatearDatosArticulo(articuloAntes);
+                        ImagenAntes = articuloAntes.ImagenProducto;
                     }
+                    else
+                    {
+                        ImagenAntes = null;
+                    }
+                }
+                else
+                {
+                    ImagenAntes = null;
                 }
 
                 // Decodificar datos "después"
@@ -212,13 +247,29 @@ namespace DDW_PDV_WPF
                     articuloDespues = DeserializarDeXml<ArticuloDTO>(historial.despues);
                     if (articuloDespues != null)
                     {
-                        // Cargar imagen DESPUÉS
-                        imgDespues.Source = CargarImagen(articuloDespues.Foto);
+
+                        var imageSource = await CargarImagenAsync(articuloDespues.Foto);
+                        articuloDespues.ImagenProducto = imageSource;
                         txtDespues.Text = FormatearDatosArticulo(articuloDespues);
+                        ImagenDespues = articuloDespues.ImagenProducto;
+                    }
+                    else
+                    {
+                      ImagenDespues = null;
+                    }
+                }
+                else
+                {
+                    if (articuloDespues != null)
+                    {
+                        ImagenDespues = null;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Advertencia: articuloDespues es null. No se puede asignar ImagenProducto.");
                     }
                 }
 
-                // Mostrar comparación de cambios
                 txtMotivo.Text = CompararCambios(articuloAntes, articuloDespues);
             }
             catch (Exception ex)
@@ -228,25 +279,23 @@ namespace DDW_PDV_WPF
             }
         }
 
-        private BitmapImage CargarImagen(string rutaImagen)
+        private async Task<ImageSource> CargarImagenAsync(string fileId)
         {
-            if (string.IsNullOrEmpty(rutaImagen)) return null;
+            if (string.IsNullOrEmpty(fileId)) return null;
 
             try
             {
-                var image = new BitmapImage();
-                image.BeginInit();
-                image.UriSource = new Uri(rutaImagen, UriKind.RelativeOrAbsolute);
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.EndInit();
-                return image;
+                string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+                return await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Error cargando imagen: {ex.Message}");
                 return null;
             }
         }
 
+     
 
         private string FormatearDatosArticulo(ArticuloDTO articulo)
         {
@@ -302,6 +351,18 @@ namespace DDW_PDV_WPF
 
             if (antes.CodigoBarras != despues.CodigoBarras)
                 cambios.AppendLine($"• Código: {antes.CodigoBarras} → {despues.CodigoBarras}");
+
+            // Comparar imágenes
+            if (antes.Foto != despues.Foto)
+            {
+                if (string.IsNullOrEmpty(antes.Foto))
+                    cambios.AppendLine("• Imagen: [Sin imagen] → [Nueva imagen añadida]");
+                else if (string.IsNullOrEmpty(despues.Foto))
+                    cambios.AppendLine("• Imagen: [Imagen eliminada]");
+                else
+                    cambios.AppendLine("• Imagen: [Imagen cambiada]");
+            }
+
 
             // Si no hay cambios pero es una actualización
             if (cambios.Length == "CAMBIOS REALIZADOS:\n".Length)
@@ -360,14 +421,7 @@ namespace DDW_PDV_WPF
                     txtUsuario.Text = historial.Usuario;
                     txtTipoModificacion.Text = historial.accion;
 
-                    // 4. Cargar imágenes
-                    imgAntes.Source = articuloAntes?.Foto != null
-                        ? new BitmapImage(new Uri(articuloAntes.Foto, UriKind.RelativeOrAbsolute))
-                        : null;
 
-                    imgDespues.Source = articuloDespues?.Foto != null
-                        ? new BitmapImage(new Uri(articuloDespues.Foto, UriKind.RelativeOrAbsolute))
-                        : null;
 
                     // 5. Mostrar datos textuales
                     txtAntes.Text = articuloAntes != null
@@ -386,8 +440,7 @@ namespace DDW_PDV_WPF
                     Debug.WriteLine($"Error al cargar detalles: {ex.Message}");
                     txtMotivo.Text = "Error al cargar los detalles del historial";
                 }
-                txtNoImagenAntes.Visibility = imgAntes.Source == null ? Visibility.Visible : Visibility.Collapsed;
-                txtNoImagenDespues.Visibility = imgDespues.Source == null ? Visibility.Visible : Visibility.Collapsed;
+
             }
         }
 

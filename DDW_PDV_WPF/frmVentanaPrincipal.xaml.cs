@@ -93,7 +93,7 @@ namespace DDW_PDV_WPF
         private void NavigateHistorial(object sender, RoutedEventArgs e)
         {
             ResetNavigationButtons();
-            MainFrame.Navigate(new frmHistorialModificaciones());
+            MainFrame.Navigate(new frmHistorialModificaciones(ds));
             buttonHistorial.IsEnabled = false;
         }
 

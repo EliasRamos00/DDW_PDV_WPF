@@ -328,6 +328,9 @@
     </EmbeddedResource>
     <None Include="DDW_PDV_WPF_1_TemporaryKey.pfx" />
     <None Include="DDW_PDV_WPF_TemporaryKey.pfx" />
+    <None Include="neuralcat.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
