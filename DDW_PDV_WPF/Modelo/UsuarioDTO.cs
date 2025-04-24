@@ -14,6 +14,7 @@ namespace DDW_PDV_WPF.Modelo
 
         public string Contra { get; set; }
         public DateTime FechaRegistro { get; set; }
+        public string Rol { get; set; }
 
     }
 }

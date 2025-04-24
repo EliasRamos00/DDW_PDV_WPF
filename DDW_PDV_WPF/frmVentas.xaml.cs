@@ -19,6 +19,10 @@ using DDW_PDV_WPF.Modelo;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading;
+using Dropbox.Api.TeamCommon;
+using HandyControl.Data;
+using HandyControl.Controls;
+
 
 namespace DDW_PDV_WPF
 {
@@ -446,7 +450,7 @@ namespace DDW_PDV_WPF
             }
             else
             {
-                MessageBox.Show("Artículo no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show("Artículo no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -496,7 +500,14 @@ namespace DDW_PDV_WPF
 
             if (_carritoVenta == null)
             {
-                MessageBox.Show("El carrito está vacío.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                //MessageBox.Show("El carrito está vacío.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Growl.Info(new GrowlInfo
+                {
+                    Message = "Proceso completado correctamente.",
+                    WaitTime = 3,  // Tiempo en segundos
+                    Type = InfoType.Success // Acceso correcto: estático
+                });
+
                 return;
             }
 
@@ -528,7 +539,7 @@ namespace DDW_PDV_WPF
 
                 if (resultado)
                 {
-                    MessageBox.Show("Venta registrada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show("Venta registrada con éxito.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                     ImpresoraTicket.ImprimeTicket(_carritoVenta, _total);
                     _carritoVenta.Clear(); // Limpiar el carrito después de la venta
                     _total = 0;
@@ -540,12 +551,12 @@ namespace DDW_PDV_WPF
                 }
                 else
                 {
-                    MessageBox.Show("Error al registrar la venta.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //MessageBox.Show("Error al registrar la venta.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error en la conexión con la API: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show($"Error en la conexión con la API: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

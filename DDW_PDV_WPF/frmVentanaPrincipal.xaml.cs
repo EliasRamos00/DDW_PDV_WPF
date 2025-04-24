@@ -25,13 +25,34 @@ namespace DDW_PDV_WPF
         private string Usuario { get; set; }
         GoogleDriveHelper ds = new GoogleDriveHelper();
 
-        public frmVentanaPrincipal(string Usuario)
+        public frmVentanaPrincipal(string Usuario, string Rol)
         {
             InitializeComponent();
             MainFrame.Navigate(new frmVentas(Usuario, ds));
             MainFrame.UpdateLayout();
+            Permisos(Rol);
             this.Usuario = Usuario;
         }
+
+        private void Permisos(string rol)
+        {
+            if (rol.Equals("admin"))
+            {
+                buttonInventario.Visibility = Visibility.Visible;
+                buttonResumen.Visibility = Visibility.Visible; ;
+                buttonHistorial.Visibility = Visibility.Visible;
+                buttonCierreCajas.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                buttonInventario.Visibility = Visibility.Collapsed;
+                buttonResumen.Visibility = Visibility.Collapsed;
+                buttonHistorial.Visibility = Visibility.Collapsed;
+                buttonCierreCajas.Visibility = Visibility.Collapsed;
+            } 
+          
+        }
+
         private void ResetNavigationButtons()
         {
             buttonInventario.IsEnabled = true;
