@@ -50,11 +50,11 @@ namespace DDW_PDV_WPF.Controlador
             Image logoImage = new Image
             {
                 Source = new BitmapImage(imagenUri),
-                Height = 150, // Ajusta la altura de la imagen según necesidad
-                Width = 150,
+                Height = 100, // Ajusta la altura de la imagen según necesidad
+                Width = 100,
                 Margin = new Thickness(0),
-                MaxHeight = 150,
-                MaxWidth = 150
+                MaxHeight = 100,
+                MaxWidth = 100
 
             };
 
