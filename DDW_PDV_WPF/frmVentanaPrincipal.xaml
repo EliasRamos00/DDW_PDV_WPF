@@ -167,21 +167,51 @@
 
                 <StackPanel Grid.Row="2">
                     <Button
-                Grid.Row="0"
-                Margin="10"
-                Padding="10,5"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Background="Transparent"
-                BorderThickness="0"
-                Click="BtnCerrarSesion_Click"
-                Content="⏻ CERRAR SESIÓN"
-                FontSize="13"
-                FontWeight="Bold"            
-                Foreground="#000" 
-                />
-                    <Image Source="/Resources/omegasymbol.png" Height="76" Width="182"></Image>
-                    <Button x:Name="buttonCerrarCaja"
+                        Grid.Row="0"
+                        Margin="10"
+                        Padding="10,5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="BtnCerrarSesion_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent">
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                        <Image
+                                            Width="24"
+                                            Height="24"
+                                            VerticalAlignment="Center"
+                                            Source="/Resources/PowerSymbol1.png" />
+                                        <TextBlock
+                                            Margin="8,0,0,0"
+                                            FontSize="13"
+                                            FontWeight="Bold"
+                                            Foreground="#000"
+                                            Text="CERRAR SESIÓN" />
+                                    </StackPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.7" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Image
+                        Width="182"
+                        Height="76"
+                        Source="/Resources/omegasymbol.png" />
+                    <Button
+                        x:Name="buttonCerrarCaja"
                         Margin="8"
                         HorizontalAlignment="Left"
                         Click="btnCerrarCaja"
@@ -189,42 +219,47 @@
                         FontSize="18"
                         Style="{StaticResource MenuButtonStyle}" />
 
-                    <Button x:Name="buttonVentas"
+                    <Button
+                        x:Name="buttonVentas"
                         Margin="8"
                         Click="NavigateToVentas"
                         Content="Ventas"
                         FontSize="18"
                         Style="{StaticResource MenuButtonStyle}" />
 
-                    <Button x:Name="buttonInventario"
+                    <Button
+                        x:Name="buttonInventario"
                         Margin="8"
                         Click="NavigateToInventarios"
                         Content="Inventario"
                         FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
 
-                    <Button x:Name="buttonResumen"
+                    <Button
+                        x:Name="buttonResumen"
                         Margin="8"
                         Click="NavigateToReportes"
                         Content="Resumen"
                         FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
 
-                    <Button x:Name="buttonHistorial"
+                    <Button
+                        x:Name="buttonHistorial"
                         Margin="8"
                         Click="NavigateHistorial"
                         Content="Historial"
                         FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
 
-                    <Button x:Name="buttonCierreCajas"
+                    <Button
+                        x:Name="buttonCierreCajas"
                         Margin="8"
                         Click="NavigateCierre"
                         Content="Cierre de cajas"
                         FontSize="14"
                         Style="{StaticResource MenuButtonStyle}" />
 
-                    
+
                 </StackPanel>
 
 

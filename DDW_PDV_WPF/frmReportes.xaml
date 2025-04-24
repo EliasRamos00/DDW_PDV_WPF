@@ -121,8 +121,17 @@
             HorizontalAlignment="Center"
             Background="Transparent"
             Orientation="Horizontal">
-            <DatePicker SelectedDate="{Binding FechaInicio}" />
-            <DatePicker SelectedDate="{Binding FechaFin}" />
+            <DatePicker
+                Language="es-ES"
+                SelectedDate="{Binding FechaInicio}"
+                SelectedDateFormat="Short"
+                Text="{Binding FechaInicio, StringFormat='dd-MMM-yyyy', ConverterCulture='es-ES'}" />
+
+            <DatePicker
+                Language="es-ES"
+                SelectedDate="{Binding FechaFin}"
+                SelectedDateFormat="Short"
+                Text="{Binding FechaFin, StringFormat='dd-MMM-yyyy', ConverterCulture='es-ES'}" />
             <ComboBox
                 DisplayMemberPath="Nombre"
                 ItemsSource="{Binding Sucursales}"

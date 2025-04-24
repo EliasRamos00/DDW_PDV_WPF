@@ -1,208 +1,220 @@
-﻿<Page x:Class="DDW_PDV_WPF.frmCierreDeCajas"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DDW_PDV_WPF"
-      mc:Ignorable="d" 
-      Title="Cierre de Cajas"
-      Background="#ffff">
+﻿<Page
+    x:Class="DDW_PDV_WPF.frmCierreDeCajas"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DDW_PDV_WPF"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Cierre de Cajas"
+    Background="#ffff"
+    mc:Ignorable="d">
 
     <Page.Resources>
-        <local:LessThanZeroConverter x:Key="LessThanZeroConverter"/>
-        <!-- Estilo para la barra de búsqueda -->
+        <local:LessThanZeroConverter x:Key="LessThanZeroConverter" />
+        <!--  Estilo para la barra de búsqueda  -->
         <Style x:Key="SearchBoxStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Background" Value="#F1E6D3"/>
-            <Setter Property="CornerRadius" Value="3"/>
-            <Setter Property="Margin" Value="10,0,10,10"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#F1E6D3" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Margin" Value="10,0,10,10" />
         </Style>
 
-        <!-- Estilo para el DataGrid -->
+        <!--  Estilo para el DataGrid  -->
         <Style x:Key="CierresDataGridStyle" TargetType="DataGrid">
-            <Setter Property="AutoGenerateColumns" Value="False"/>
-            <Setter Property="MinHeight" Value="400"/>
-            <Setter Property="Background" Value="#F1E6D3"/>
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="SelectionMode" Value="Single"/>
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="Margin" Value="10,0,10,0"/>
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="MinHeight" Value="400" />
+            <Setter Property="Background" Value="#F1E6D3" />
+            <Setter Property="BorderBrush" Value="#CCCCCC" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="Margin" Value="10,0,10,0" />
         </Style>
 
-        <!-- Estilo para las columnas del DataGrid -->
+        <!--  Estilo para las columnas del DataGrid  -->
         <Style x:Key="DataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#A01A7D"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#A01A7D" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
 
-        <!-- Estilo para los detalles del cierre -->
+        <!--  Estilo para los detalles del cierre  -->
         <Style x:Key="DetailSectionStyle" TargetType="Grid">
-            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="Margin" Value="10,5" />
         </Style>
 
-        <!-- Estilo para las etiquetas de detalles -->
+        <!--  Estilo para las etiquetas de detalles  -->
         <Style x:Key="DetailLabelStyle" TargetType="TextBlock">
-            
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Margin" Value="0,0,5,0"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Width" Value="120"/>
+
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,5,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width" Value="120" />
         </Style>
 
-        <!-- Estilo para los valores de detalles -->
+        <!--  Estilo para los valores de detalles  -->
         <Style x:Key="DetailValueStyle" TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <!-- Estilo para el separador -->
+        <!--  Estilo para el separador  -->
         <Style x:Key="SeparatorStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="#000000"/>
-            <Setter Property="BorderThickness" Value="0,1,0,0"/>
-            <Setter Property="Margin" Value="10,15"/>
+            <Setter Property="BorderBrush" Value="#000000" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Margin" Value="10,15" />
         </Style>
-        
+
     </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.7*" MinWidth="400"/>
-            <ColumnDefinition Width="0.3*" MinWidth="300"/>
+            <ColumnDefinition Width="0.7*" MinWidth="400" />
+            <ColumnDefinition Width="0.3*" MinWidth="300" />
         </Grid.ColumnDefinitions>
 
-        <!-- Panel Izquierdo -->
+        <!--  Panel Izquierdo  -->
         <StackPanel Grid.Column="0" Margin="10">
-            <TextBlock Text="CIERRE DE CAJAS" 
-                       FontSize="18" 
-                       FontWeight="Bold"
-                       Foreground="#2E5E4E"
-                       Margin="0,0,0,10"/>
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="18"
+                FontWeight="Bold"
+                Foreground="#2E5E4E"
+                Text="CIERRE DE CAJAS" />
 
-            <!-- Barra de búsqueda -->
+            <!--  Barra de búsqueda  -->
             <Border Style="{StaticResource SearchBoxStyle}">
                 <Grid>
-                    <TextBox x:Name="txtBusqueda"
-                             Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}"
-                             Background="Transparent"
-                             BorderThickness="0"
-                             Padding="10"
-                             FontSize="14"
-                             VerticalAlignment="Center"
-                             Foreground="#333333"/>
+                    <TextBox
+                        x:Name="txtBusqueda"
+                        Padding="10"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="14"
+                        Foreground="#333333"
+                        Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <Button x:Name="btnClearSearch"
-                            Content="✕"
-                            FontSize="12"
-                            Foreground="Gray"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Padding="0"
-                            Width="20"
-                            Height="20"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Margin="0,0,10,0"
-                            Click="btnClearSearch_Click"/>
+                    <Button
+                        x:Name="btnClearSearch"
+                        Width="20"
+                        Height="20"
+                        Margin="0,0,10,0"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="btnClearSearch_Click"
+                        Content="✕"
+                        FontSize="12"
+                        Foreground="Gray" />
                 </Grid>
             </Border>
 
-            <!-- DataGrid -->
-            <DataGrid Style="{StaticResource CierresDataGridStyle}"
-                      SelectionChanged="DataGrid_SelectionChanged"
-                      ItemsSource="{Binding ListaCierres}">
+            <!--  DataGrid  -->
+            <DataGrid
+                ItemsSource="{Binding ListaCierres}"
+                SelectionChanged="DataGrid_SelectionChanged"
+                Style="{StaticResource CierresDataGridStyle}">
                 <DataGrid.Columns>
-                    <!-- Fecha -->
-                    <DataGridTextColumn Header="FECHA" 
-                                       Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}"
-                                       Width="1*"
-                                       HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <!--  Fecha  -->
+                    <DataGridTextColumn
+                        Width="1*"
+                        Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}"
+                        Header="FECHA"
+                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!-- Hora -->
-                    <DataGridTextColumn Header="HORA" 
-                                       Binding="{Binding Hora}" 
-                                       Width="0.8*"
-                                       HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <!--  Hora  -->
+                    <DataGridTextColumn
+                        Width="0.8*"
+                        Binding="{Binding Hora}"
+                        Header="HORA"
+                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!-- ID Usuario -->
-                    <DataGridTextColumn Header="USUARIO" 
-                                       Binding="{Binding idUsuario}" 
-                                       Width="0.8*"
-                                       HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <!--  ID Usuario  -->
+                    <DataGridTextColumn
+                        Width="0.8*"
+                        Binding="{Binding Usuario}"
+                        Header="USUARIO"
+                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!-- ID Caja -->
-                    <DataGridTextColumn Header="CAJA" 
-                                       Binding="{Binding idCaja}" 
-                                       Width="0.8*"
-                                       HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <!--  ID Caja  -->
+                    <DataGridTextColumn
+                        Width="0.8*"
+                        Binding="{Binding idCaja}"
+                        Header="CAJA"
+                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="HorizontalAlignment" Value="Center" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!-- Total Sistema -->
-                    <DataGridTextColumn Header="T. SISTEMA" 
-                                       Binding="{Binding TotalSistema, StringFormat='{}{0:C}'}" 
-                                       Width="1.2*"
-                                       HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <!--  Total Sistema  -->
+                    <DataGridTextColumn
+                        Width="1.2*"
+                        Binding="{Binding TotalSistema, StringFormat='{}{0:C}'}"
+                        Header="T. SISTEMA"
+                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="HorizontalAlignment" Value="Right" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!-- Total Físico -->
-                    <DataGridTextColumn Header="T. FÍSICO" 
-                                       Binding="{Binding TotalFisico, StringFormat='{}{0:C}'}" 
-                                       Width="1.2*"
-                                       HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <!--  Total Físico  -->
+                    <DataGridTextColumn
+                        Width="1.2*"
+                        Binding="{Binding TotalFisico, StringFormat='{}{0:C}'}"
+                        Header="T. FÍSICO"
+                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="HorizontalAlignment" Value="Right" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!-- Diferencia -->
-                    <DataGridTextColumn Header="DIFERENCIA" 
-                                       Binding="{Binding Diferencia, StringFormat='{}{0:C}'}" 
-                                       Width="1.2*"
-                                       HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                    <!--  Diferencia  -->
+                    <DataGridTextColumn
+                        Width="1.2*"
+                        Binding="{Binding Diferencia, StringFormat='{}{0:C}'}"
+                        Header="DIFERENCIA"
+                        HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="HorizontalAlignment" Value="Right" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Diferencia}" Value="0">
-                                        <Setter Property="Foreground" Value="Green"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="Foreground" Value="Green" />
+                                        <Setter Property="FontWeight" Value="Bold" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Diferencia}">
-                                        <Setter Property="Foreground" Value="Red"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="Foreground" Value="Red" />
+                                        <Setter Property="FontWeight" Value="Bold" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -212,121 +224,141 @@
             </DataGrid>
         </StackPanel>
 
-        <!-- Panel Derecho - Detalles de Cierre -->
-        <Border Grid.Column="1" 
-                Background="#8FBBA9" 
-                Margin="10" 
-                BorderBrush="#CCCCCC" 
-                BorderThickness="1"
-                CornerRadius="5">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+        <!--  Panel Derecho - Detalles de Cierre  -->
+        <Border
+            Grid.Column="1"
+            Margin="10"
+            Background="#8FBBA9"
+            BorderBrush="#CCCCCC"
+            BorderThickness="1"
+            CornerRadius="5">
+            <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
                 <StackPanel DataContext="{Binding CierreSeleccionado}">
 
-                    <!-- Encabezado -->
-                    <TextBlock Text="DETALLES DEL CIERRE" 
-                               FontSize="18" 
-                               FontWeight="Bold" 
-                               Foreground="#2E5E4E" 
-                               HorizontalAlignment="Center" 
-                               Margin="0,0,0,15"/>
-                    <Image Source="/Resources/omegasymbol.png" Height="76" Width="182"></Image>
+                    <!--  Encabezado  -->
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        HorizontalAlignment="Center"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="#2E5E4E"
+                        Text="DETALLES DEL CIERRE" />
+                    <Image
+                        Width="182"
+                        Height="76"
+                        Source="/Resources/omegasymbol.png" />
 
-                    <!-- Fecha -->
+                    <!--  Fecha  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Fecha:" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding Fecha}" Style="{StaticResource DetailValueStyle}"/>
+                        <TextBlock Style="{StaticResource DetailLabelStyle}" Text="Fecha:" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource DetailValueStyle}"
+                            Text="{Binding Fecha}" />
                     </Grid>
 
-                    <!-- Hora -->
+                    <!--  Hora  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Hora:" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding Hora}" Style="{StaticResource DetailValueStyle}"/>
+                        <TextBlock Style="{StaticResource DetailLabelStyle}" Text="Hora:" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource DetailValueStyle}"
+                            Text="{Binding Hora}" />
                     </Grid>
 
-                    <!-- ID Usuario -->
+                    <!--  ID Usuario  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="ID Usuario:" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding idUsuario}" Style="{StaticResource DetailValueStyle}"/>
+                        <TextBlock Style="{StaticResource DetailLabelStyle}" Text="ID Usuario:" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource DetailValueStyle}"
+                            Text="{Binding idUsuario}" />
                     </Grid>
 
-                    <!-- ID Caja -->
+                    <!--  ID Caja  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="ID Caja:" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding idCaja}" Style="{StaticResource DetailValueStyle}"/>
+                        <TextBlock Style="{StaticResource DetailLabelStyle}" Text="ID Caja:" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource DetailValueStyle}"
+                            Text="{Binding idCaja}" />
                     </Grid>
 
-                    <!-- Línea divisoria -->
-                    <Border Style="{StaticResource SeparatorStyle}"/>
+                    <!--  Línea divisoria  -->
+                    <Border Style="{StaticResource SeparatorStyle}" />
 
-                    <!-- Total Sistema -->
+                    <!--  Total Sistema  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Total Sistema:" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBlock Grid.Column="1" 
-                                   Text="{Binding TotalSistema, StringFormat='{}{0:C}'}" 
-                                   Style="{StaticResource DetailValueStyle}"
-                                   FontWeight="Bold"/>
+                        <TextBlock Style="{StaticResource DetailLabelStyle}" Text="Total Sistema:" />
+                        <TextBlock
+                            Grid.Column="1"
+                            FontWeight="Bold"
+                            Style="{StaticResource DetailValueStyle}"
+                            Text="{Binding TotalSistema, StringFormat='{}{0:C}'}" />
                     </Grid>
 
-                    <!-- Total Físico -->
+                    <!--  Total Físico  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Total Físico:" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBlock Grid.Column="1" 
-                                   Text="{Binding TotalFisico, StringFormat='{}{0:C}'}" 
-                                   Style="{StaticResource DetailValueStyle}"
-                                   FontWeight="Bold"/>
+                        <TextBlock Style="{StaticResource DetailLabelStyle}" Text="Total Físico:" />
+                        <TextBlock
+                            Grid.Column="1"
+                            FontWeight="Bold"
+                            Style="{StaticResource DetailValueStyle}"
+                            Text="{Binding TotalFisico, StringFormat='{}{0:C}'}" />
                     </Grid>
 
-                    <!-- Diferencia -->
+                    <!--  Diferencia  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Diferencia:" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBlock Grid.Column="1" 
-           Background="White"
-           Text="{Binding Diferencia, StringFormat='{}{0:C}'}" 
-           FontWeight="Bold">
+                        <TextBlock Style="{StaticResource DetailLabelStyle}" Text="Diferencia:" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Background="White"
+                            FontWeight="Bold"
+                            Text="{Binding Diferencia, StringFormat='{}{0:C}'}">
                             <TextBlock.Style>
-                                <Style TargetType="TextBlock" BasedOn="{StaticResource DetailValueStyle}">
+                                <Style BasedOn="{StaticResource DetailValueStyle}" TargetType="TextBlock">
                                     <Style.Triggers>
-                                        <!-- Verde cuando es 0 -->
+                                        <!--  Verde cuando es 0  -->
                                         <DataTrigger Binding="{Binding Diferencia}" Value="0">
-                                            <Setter Property="Foreground" Value="Black"/>
+                                            <Setter Property="Foreground" Value="Black" />
                                         </DataTrigger>
 
-                                        <!-- Rojo cuando es negativo -->
+                                        <!--  Rojo cuando es negativo  -->
                                         <DataTrigger Binding="{Binding Diferencia, Converter={StaticResource LessThanZeroConverter}}" Value="True">
-                                            <Setter Property="Foreground" Value="Red"/>
+                                            <Setter Property="Foreground" Value="Red" />
                                         </DataTrigger>
 
-                                        <!-- Opcional: Color por defecto para positivos -->
+                                        <!--  Opcional: Color por defecto para positivos  -->
                                         <DataTrigger Binding="{Binding Diferencia, Converter={StaticResource LessThanZeroConverter}}" Value="False">
-                                            <Setter Property="Foreground" Value="Green"/>
+                                            <Setter Property="Foreground" Value="Green" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

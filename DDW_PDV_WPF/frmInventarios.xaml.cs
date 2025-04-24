@@ -623,6 +623,61 @@ namespace DDW_PDV_WPF
             }
         }
 
+        private void BtnExportarQR_Click(object sender, RoutedEventArgs e)
+        {
+            if (imgCodigoQR.Source == null)
+            {
+                MessageBox.Show("No hay código QR generado para exportar.", "Advertencia",
+                               MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Generar nombre de archivo seguro
+            string nombreBase = "QR_generado";
+            if (ArticuloSeleccionado != null && ArticuloSeleccionado.idArticulo > 0)
+            {
+                nombreBase = $"QR_{ArticuloSeleccionado.idArticulo}";
+            }
+
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Imagen PNG|*.png|Imagen JPEG|*.jpg|Todos los archivos|*.*",
+                Title = "Exportar código QR",
+                FileName = $"{nombreBase}_{DateTime.Now:yyyyMMddHHmmss}",
+                DefaultExt = ".png"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    BitmapEncoder encoder;
+                    if (saveFileDialog.FileName.EndsWith(".jpg"))
+                    {
+                        encoder = new JpegBitmapEncoder();
+                    }
+                    else
+                    {
+                        encoder = new PngBitmapEncoder();
+                    }
+
+                    encoder.Frames.Add(BitmapFrame.Create((BitmapSource)imgCodigoQR.Source));
+
+                    using (var fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                    {
+                        encoder.Save(fileStream);
+                    }
+
+                    MessageBox.Show("Código QR exportado correctamente.", "Éxito",
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al exportar el código QR: {ex.Message}", "Error",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
         private void txtDescripcion_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             HasChanges = true;

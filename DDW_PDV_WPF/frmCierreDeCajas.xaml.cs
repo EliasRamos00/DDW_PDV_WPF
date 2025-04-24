@@ -113,7 +113,7 @@ namespace DDW_PDV_WPF
                 .Where(c =>
                     (c.Fecha.ToString()?.ToLower().Contains(texto) ?? false) ||
                     (c.Hora.ToString()?.ToLower().Contains(texto) ?? false) ||
-                    (c.idUsuario.ToString().Contains(texto)) ||
+                    (c.Usuario.ToString().Contains(texto)) ||
                     (c.idCaja.ToString().Contains(texto)) ||
                     (c.TotalSistema.ToString("C").ToLower().Contains(texto)) ||
                     (c.TotalFisico.ToString("C").ToLower().Contains(texto)) ||
@@ -125,6 +125,8 @@ namespace DDW_PDV_WPF
 
         CierreSeleccionado = ListaCierres.FirstOrDefault();
     }
+
+
 
     private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
