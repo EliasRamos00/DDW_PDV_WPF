@@ -40,7 +40,7 @@ namespace DDW_PDV_WPF
         private decimal _subTotal;
         private decimal _total;
         private string _usuario;
-        private string qrLeido="";
+        private string qrLeido = "";
         private decimal _montoRecibido;
         private decimal _cambio;
         private ObservableCollection<MCategorias> _categorias;
@@ -80,7 +80,7 @@ namespace DDW_PDV_WPF
         private ObservableCollection<ArticuloDTO> _productosOriginales; // Para guardar la lista completa
         public decimal Cambio
         {
-            get => _montoRecibido-_total;
+            get => _montoRecibido - _total;
 
         }
 
@@ -104,7 +104,7 @@ namespace DDW_PDV_WPF
 
         private void CambiarColorCambio()
         {
-            if(Cambio > 0)
+            if (Cambio > 0)
             {
                 txtCambio.Foreground = new SolidColorBrush(Colors.Green);
             }
@@ -121,12 +121,12 @@ namespace DDW_PDV_WPF
         public decimal SubTotal
         {
             get => _subTotal;
-           
+
         }
 
         public decimal Total
         {
-            get => _total;           
+            get => _total;
         }
 
 
@@ -182,6 +182,10 @@ namespace DDW_PDV_WPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// CONSTRUCTOR DE LA CLASE FRMVENTAS
+        /// </summary>
+        /// <param name="currentUser"></param>
         public frmVentas(string currentUser)
         {
             InitializeComponent();
@@ -200,6 +204,7 @@ namespace DDW_PDV_WPF
                 btnTodos.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
                 btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
             }
+            // se cargan las imagenes
 
         }
 
@@ -211,7 +216,7 @@ namespace DDW_PDV_WPF
             {
                 Categorias = new ObservableCollection<MCategorias>(resultado);
 
- 
+
                 if (_botonCategoriaSeleccionado != null)
                 {
                     _botonCategoriaSeleccionado.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
@@ -219,7 +224,7 @@ namespace DDW_PDV_WPF
                 }
                 else if (btnTodos != null)
                 {
-                   
+
                     _botonCategoriaSeleccionado = btnTodos;
                     btnTodos.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
                     btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
@@ -227,7 +232,7 @@ namespace DDW_PDV_WPF
             }
         }
 
-        public void time ()
+        public void time()
         {
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(1);
@@ -244,7 +249,7 @@ namespace DDW_PDV_WPF
 
         private void Window_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
-           
+
             if (e.Text == "\r") // Si detecta Enter, significa que el código está completo
             {
 
@@ -268,7 +273,7 @@ namespace DDW_PDV_WPF
                 aux = aux + (dto.PrecioVenta * dto.Cantidad);
             }
             _total = aux;
-            _subTotal = aux;            
+            _subTotal = aux;
             CambiarColorCambio();
             OnPropertyChanged(nameof(Total));
             OnPropertyChanged(nameof(SubTotal));
@@ -297,6 +302,27 @@ namespace DDW_PDV_WPF
             {
                 _productosOriginales = new ObservableCollection<ArticuloDTO>(resultado);
                 ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+
+
+                // Asignar imágenes a los artículos
+                foreach (var article in ListaArticulos)
+                {
+                    if (article.Foto == "" || article.Foto.Equals(DBNull.Value))
+                    {
+                        continue;
+                    }
+
+                    // Suponemos que cada artículo tiene un "ImageId" que corresponde al ID de Google Drive de la imagen
+                    string fileId = article.Foto;  // ID del archivo de Google Drive
+                    string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+
+                    GoogleDriveHelper ds = new GoogleDriveHelper();
+
+                    var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+                    article.ImagenProducto = imageSource; // Asignamos aquí la imagen lista
+
+
+                }
 
             }
         }
@@ -468,34 +494,34 @@ namespace DDW_PDV_WPF
         private async void CerrarVenta(object sender, RoutedEventArgs e)
         {
             await Task.Delay(200); // Espera que termine la animación
-            
-                if (_carritoVenta == null)
-                {
-                    MessageBox.Show("El carrito está vacío.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
 
-                // Construimos el objeto para la API
-                var ventaDTO = new
+            if (_carritoVenta == null)
+            {
+                MessageBox.Show("El carrito está vacío.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Construimos el objeto para la API
+            var ventaDTO = new
+            {
+                venta = new
                 {
-                    venta = new
-                    {
-                        idVenta = 0,  // Será generado en la BD
-                        total = _total ,
-                        fechahora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                        vendedor = Properties.Settings.Default.Usuario, // Aquí puedes usar un ID real del vendedor
-                        tieneFactura = 0, // O puedes hacer que el usuario lo seleccione
-                        idSucursal = 1, // Modifica según la sucursal correspondiente
-                        idCaja = Properties.Settings.Default.Caja
-                    },
-                    detalle = _carritoVenta.Select(a => new
-                    {
-                        idArticulo = a.idArticulo,
-                        idVenta = 0, // Se actualizará en la BD
-                        precioVenta = a.PrecioVenta,
-                        cantidad = a.Cantidad
-                    }).ToList()
-                };            
+                    idVenta = 0,  // Será generado en la BD
+                    total = _total,
+                    fechahora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    vendedor = Properties.Settings.Default.Usuario, // Aquí puedes usar un ID real del vendedor
+                    tieneFactura = 0, // O puedes hacer que el usuario lo seleccione
+                    idSucursal = 1, // Modifica según la sucursal correspondiente
+                    idCaja = Properties.Settings.Default.Caja
+                },
+                detalle = _carritoVenta.Select(a => new
+                {
+                    idArticulo = a.idArticulo,
+                    idVenta = 0, // Se actualizará en la BD
+                    precioVenta = a.PrecioVenta,
+                    cantidad = a.Cantidad
+                }).ToList()
+            };
 
             try
             {

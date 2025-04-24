@@ -38,7 +38,7 @@ namespace DDW_PDV_WPF
             buttonVentas.IsEnabled = true;
             buttonResumen.IsEnabled = true;
             buttonHistorial.IsEnabled = true;
-           
+
         }
         private void NavigateToInventarios(object sender, RoutedEventArgs e)
         {
@@ -118,7 +118,7 @@ namespace DDW_PDV_WPF
         }
 
         //CIERRE DE CAJA
-        private void btnCerrarCaja(object sender, RoutedEventArgs e)
+        private async void btnCerrarCaja(object sender, RoutedEventArgs e)
         {
             //// DESCOMENTAR UNA VEZ TERMINADAS LAS PRUEBAS EN DROPBOX
             //    CierrCaj paginaDestino = new CierrCaj(Usuario, Properties.Settings.Default.Caja);
@@ -127,18 +127,53 @@ namespace DDW_PDV_WPF
             // Crea una nueva instancia de OpenFileDialog
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png;*.gif|Todos los archivos|*.*";
+
             // Abre el cuadro de diálogo para seleccionar el archivo
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) // true para WPF
             {
-                // Obtener la ruta local del archivo
                 string filePath = openFileDialog.FileName;
 
-                // Crear la instancia de DropboxHelper y llamar al método para subir el archivo
-                DropboxHelper dropboxHelper = new DropboxHelper();
-                dropboxHelper.UploadImageAndSaveUrl(filePath);
+                try
+                {
+                    // Obtener el servicio autenticado de Google Drive
+                    Controlador.GoogleDriveHelper.Initialize("neuralcat.json");
 
+                    // ID de la carpeta compartida en tu Google Drive
+                    string folderId = "1mljTxnPYGefWWFBbWe2V_lKxX7oeugdA";
+
+                    // Sube el archivo y obtén el ID
+                    string fileId = await Controlador.GoogleDriveHelper.UploadFileAsync(filePath, folderId);
+
+                    // Obtén el link público (opcional)
+                    string publicLink = await GoogleDriveHelper.GetPublicLinkAsync(fileId);
+
+                    System.Windows.Forms.MessageBox.Show("Archivo subido con éxito. Enlace:\n" + fileId);
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error al subir archivo: " + ex.Message);
+                }
             }
 
+        }
+
+        private void clickBorrarCache(object sender, RoutedEventArgs e)
+        {
+            string cacheDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DriveCache");
+
+            if (!Directory.Exists(cacheDirectory))
+                return;
+
+            try
+            {
+                Directory.Delete(cacheDirectory, true); // Elimina todo, incluyendo subdirectorios y archivos
+                Directory.CreateDirectory(cacheDirectory); // La volvemos a crear vacía por si se sigue usando
+                System.Windows.MessageBox.Show("¡Caché borrada correctamente!", "Información", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Error al borrar la caché: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

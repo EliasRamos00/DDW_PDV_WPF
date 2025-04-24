@@ -19,6 +19,7 @@ namespace DDW_PDV_WPF
 
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
@@ -32,6 +33,24 @@ namespace DDW_PDV_WPF
         {
             InitializeComponent();
             btnIniciarSesion.IsEnabled = true;
+
+            //string cacheDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DriveCache");
+
+            //if (!Directory.Exists(cacheDirectory))
+            //    return;
+
+            //try
+            //{
+            //    Directory.Delete(cacheDirectory, true); // Elimina todo, incluyendo subdirectorios y archivos
+            //    Directory.CreateDirectory(cacheDirectory); // La volvemos a crear vacía por si se sigue usando
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"Error al borrar la caché: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
+
+            // Inicializa el servicio de Google Drive
+
         }
 
         private void Cerrar_Click(object sender, RoutedEventArgs e)
@@ -41,7 +60,7 @@ namespace DDW_PDV_WPF
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            btnIniciarSesion.IsEnabled = false; 
+            btnIniciarSesion.IsEnabled = false;
             string usuario = txtUsuario.Text;
             string contrasena = ConvertirMD5(txtContrasena.Password); // Convertimos la contraseña ingresada a MD5
 
@@ -96,7 +115,7 @@ namespace DDW_PDV_WPF
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < hashBytes.Length; i++)
                 {
-                    sb.Append(hashBytes[i].ToString("x2")); 
+                    sb.Append(hashBytes[i].ToString("x2"));
                 }
                 return sb.ToString();
             }
