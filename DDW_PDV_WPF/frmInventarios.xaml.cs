@@ -46,6 +46,7 @@ namespace DDW_PDV_WPF
         private bool _isNewItem = false;
         private List<MCategorias> cat;
         private GoogleDriveHelper ds;
+       
 
         private ObservableCollection<MCategorias> _categorias;
         public ObservableCollection<MCategorias> Categorias
@@ -208,12 +209,13 @@ namespace DDW_PDV_WPF
         public frmInventarios(GoogleDriveHelper ds)
         {
             InitializeComponent();
-
+           
             _apiService = new ApiService();
             CargarDatos();
             DataContext = this;
 
             CargarCategorias();
+
             btnCancelarCambios.Visibility = Visibility.Hidden;
             btnGuardarCambios.Visibility = Visibility.Hidden;
 
@@ -245,6 +247,8 @@ namespace DDW_PDV_WPF
             {
                 ArticuloSeleccionado = null;
                 _isNewItem = false;
+                CargarDatos();
+                OnPropertyChanged(nameof(ArticuloSeleccionado));
             }
             else if (ArticuloSeleccionado != null)
             {
@@ -296,6 +300,7 @@ namespace DDW_PDV_WPF
             {
                 _todosLosArticulos = new ObservableCollection<ArticuloDTO>(resultado);
                 ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+                ArticuloSeleccionado = _todosLosArticulos.FirstOrDefault();
             }
         }
 
@@ -367,6 +372,8 @@ namespace DDW_PDV_WPF
 
         private void BotonAgregar(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("Se va esta por crear un nuevo articulo, introduzca la informacion en el lado derecho", "Creacion de nuevo articulo", MessageBoxButton.OK, MessageBoxImage.Information);
+          
             // Crear nuevo artículo
             ArticuloSeleccionado = new ArticuloDTO();
             _isNewItem = true;
@@ -414,22 +421,102 @@ namespace DDW_PDV_WPF
             return usuarios.FirstOrDefault();
         }
 
+        public string LimpiarPrecio(string precioFormateado)
+        {
+            // Quita todo lo que no sea número o separador decimal
+            var limpio = new string(precioFormateado
+                .Where(c => char.IsDigit(c) || c == '.' || c == ',')
+                .ToArray());
+
+            // Normaliza la coma a punto si la coma es usada como decimal
+            if (limpio.Count(c => c == ',') == 1 && !limpio.Contains('.'))
+                limpio = limpio.Replace(',', '.');
+            else
+                limpio = limpio.Replace(",", ""); // Quita comas de miles
+
+            return limpio;
+        }
+
+     
         private async void GuardarCambios(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null) return;
 
+            // Validaciones de campos vacíos
+            if (string.IsNullOrWhiteSpace(ArticuloSeleccionado.Descripcion))
+            {
+                MessageBox.Show("La descripción no puede estar vacía.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ArticuloSeleccionado.Color))
+            {
+                MessageBox.Show("El color no puede estar vacío.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ArticuloSeleccionado.Tamanio))
+            {
+                MessageBox.Show("El tamaño no puede estar vacío.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (cmbCategoria.SelectedItem == null)
+            {
+                MessageBox.Show("Debes seleccionar una categoría.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Obtener los valores directamente de los TextBox
+            if (!int.TryParse(txtStock.Text, out int stock) ||
+                !int.TryParse(txtMin.Text, out int min) ||
+                !int.TryParse(txtMax.Text, out int max))
+            {
+                MessageBox.Show("Stock, mínimo y máximo deben ser números enteros válidos.",
+                               "Validación",
+                               MessageBoxButton.OK,
+                               MessageBoxImage.Warning);
+                return;
+            }
+
+            // Solo asignar los valores si pasan la validación
+            ArticuloSeleccionado.Stock = stock;
+            ArticuloSeleccionado.Min = min;
+            ArticuloSeleccionado.Max = max;
+
+            // Validar precios, limpiando primero
+            string precioVenta = LimpiarPrecio(txtPrecioVenta.Text);
+            string precioCompra = LimpiarPrecio(txtPrecioCompra.Text);
+
+            if (!decimal.TryParse(precioVenta, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precioV) ||
+                !decimal.TryParse(precioCompra, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precioC))
+            {
+                MessageBox.Show("Los precios deben ser valores numéricos válidos.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Asignar valores numéricos ya validados al artículo
+            ArticuloSeleccionado.PrecioVenta = precioV;
+            ArticuloSeleccionado.PrecioCompra = precioC;
+
+            if (string.IsNullOrWhiteSpace(txtCodigo.Text))
+            {
+                MessageBox.Show("El código de barras no puede estar vacío.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
-                // Obtener usuario actual completo
                 var usuarioActual = await ObtenerUsuarioActual();
+                if (usuarioActual == null) return;
+
+                // Asignar categoría
                 MCategorias aux = (MCategorias)cmbCategoria.SelectedItem;
                 ArticuloSeleccionado.idCategoria = aux.idCategoria;
-                if (usuarioActual == null) return;
 
                 bool exito;
                 string accion = _isNewItem ? "CREADO" : "ACT.";
 
-                // Guardar el artículo
                 if (_isNewItem)
                 {
                     exito = await _apiService.PostAsync("/api/CArticulos", ArticuloSeleccionado);
@@ -472,6 +559,19 @@ namespace DDW_PDV_WPF
             }
         }
 
+
+        private void NumericTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            // Permite solo números, punto decimal y un solo signo negativo al inicio
+            var textBox = sender as TextBox;
+            string newText = textBox.Text.Insert(textBox.SelectionStart, e.Text);
+
+            e.Handled = !double.TryParse(newText, NumberStyles.AllowDecimalPoint |
+                                                NumberStyles.AllowLeadingSign,
+                                                CultureInfo.CurrentCulture, out _);
+
+           
+        }
         private async void EliminarArticulo(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null) return;
@@ -515,6 +615,7 @@ namespace DDW_PDV_WPF
                     MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                     CargarDatos();
                 }
+               
             }
             catch (Exception ex)
             {
@@ -556,13 +657,13 @@ namespace DDW_PDV_WPF
                 MessageBox.Show("Seleccione o cree un artículo primero.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
+            
             var openFileDialog = new OpenFileDialog
             {
                 Filter = "Imágenes|*.jpg;*.jpeg;*.png;*.bmp;*.gif",
                 Title = "Seleccionar imagen del artículo"
             };
-
+            var copiaImageSource = new BitmapImage();
             // Si se selecciona una imagen, se sube a Google Drive
             if (openFileDialog.ShowDialog() == true)
             {
@@ -594,6 +695,7 @@ namespace DDW_PDV_WPF
 
                     // Asignar la imagen al artículo (o directamente en el UI si tienes un control de imagen)
                     ArticuloSeleccionado.ImagenProducto = imageSource;
+                    copiaImageSource = imageSource;
 
                     // Mostrar mensaje de éxito
                     MessageBox.Show("Archivo subido con éxito. Enlace:\n" + fileId);
