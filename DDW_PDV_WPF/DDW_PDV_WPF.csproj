@@ -207,7 +207,6 @@
     </Page>
     <Compile Include="Controlador\DropboxHelper.cs" />
     <Compile Include="Controlador\GoogleDriveHelper.cs" />
-    <Compile Include="ImageService.cs" />
     <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
     <Compile Include="Modelo\RepVentasDTO.cs" />
