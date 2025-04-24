@@ -72,6 +72,18 @@
     <Reference Include="Dropbox.Api, Version=7.0.0.0, Culture=neutral, PublicKeyToken=310f0e82fbb45d01, processorArchitecture=MSIL">
       <HintPath>..\packages\Dropbox.Api.7.0.0\lib\netstandard2.0\Dropbox.Api.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.69.0\lib\net462\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.69.0\lib\net462\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.69.0\lib\net462\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Drive.v3, Version=1.69.0.3740, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Drive.v3.1.69.0.3740\lib\net462\Google.Apis.Drive.v3.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=5.2.1.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.5.2.1\lib\net462\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -147,6 +159,7 @@
       <HintPath>..\packages\PDFsharp-MigraDoc-GDI.6.1.1\lib\net472\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc-GDI.6.1.1\lib\net472\System.Memory.dll</HintPath>
     </Reference>
@@ -193,6 +206,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Compile Include="Controlador\DropboxHelper.cs" />
+    <Compile Include="Controlador\GoogleDriveHelper.cs" />
     <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
     <Compile Include="Modelo\RepVentasDTO.cs" />

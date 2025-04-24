@@ -25,6 +25,8 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using QRCoder;
 using System.Xml.Serialization;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 
 namespace DDW_PDV_WPF
@@ -43,6 +45,7 @@ namespace DDW_PDV_WPF
         private ArticuloDTO _articuloOriginal;
         private bool _isNewItem = false;
         private List<MCategorias> cat;
+        private GoogleDriveHelper ds;
 
         private ObservableCollection<MCategorias> _categorias;
         public ObservableCollection<MCategorias> Categorias
@@ -55,7 +58,7 @@ namespace DDW_PDV_WPF
             }
         }
 
-        
+
 
         public ObservableCollection<ArticuloDTO> ListaArticulos
         {
@@ -63,7 +66,7 @@ namespace DDW_PDV_WPF
             set
             {
                 _listaArticulos = value;
-                OnPropertyChanged(nameof(ListaArticulos)); 
+                OnPropertyChanged(nameof(ListaArticulos));
             }
         }
 
@@ -73,14 +76,14 @@ namespace DDW_PDV_WPF
             set
             {
                 _articuloSeleccionado = value;
-               
+
 
                 if (_articuloSeleccionado != null && !_isNewItem && value != null)
                 {
                     _articuloOriginal = new ArticuloDTO
                     {
                         idArticulo = _articuloSeleccionado.idArticulo,
-                        
+
                         Foto = _articuloSeleccionado.Foto,
                         Color = _articuloSeleccionado.Color,
                         Descripcion = _articuloSeleccionado.Descripcion,
@@ -91,8 +94,9 @@ namespace DDW_PDV_WPF
                         Stock = _articuloSeleccionado.Stock,
                         Min = _articuloSeleccionado.Min,
                         Max = _articuloSeleccionado.Max,
-                        PrecioVenta=_articuloSeleccionado.PrecioVenta,
-                        PrecioCompra=_articuloSeleccionado.PrecioCompra
+                        PrecioVenta = _articuloSeleccionado.PrecioVenta,
+                        PrecioCompra = _articuloSeleccionado.PrecioCompra,
+                        ImagenProducto = _articuloSeleccionado.ImagenProducto
 
                     };
                     // Cargar la categoría seleccionada
@@ -102,6 +106,11 @@ namespace DDW_PDV_WPF
                      .FirstOrDefault(c => c.idCategoria == _articuloSeleccionado.idCategoria);
 
                     cmbCategoria.SelectedItem = itemEncontrado;
+
+                    // Se muestra la foto que tenga.
+                    // Suponemos que cada artículo tiene un "ImageId" que corresponde al ID de Google Drive de la imagen
+
+                    CargarImagenDelArticulo(_articuloSeleccionado);
 
 
 
@@ -116,7 +125,30 @@ namespace DDW_PDV_WPF
             }
         }
 
+        private async void CargarImagenDelArticulo(ArticuloDTO articuloSeleccionado)
+        {
+            try
+            {
+                string fileId = articuloSeleccionado.Foto;
+                if (fileId == "")
+                {
+                    // Si no hay ID de archivo, no se puede cargar la imagen
+                    return;
+                }
 
+
+                string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+
+                var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+                articuloSeleccionado.ImagenProducto = imageSource;
+
+                OnPropertyChanged(nameof(ArticuloSeleccionado)); // Notificar cambio visual
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error cargando imagen: " + ex.Message);
+            }
+        }
 
         public bool HasChanges
         {
@@ -141,7 +173,7 @@ namespace DDW_PDV_WPF
             {
                 _textoBusqueda = value;
                 OnPropertyChanged(nameof(TextoBusqueda));
-                FiltrarArticulos(); 
+                FiltrarArticulos();
             }
         }
 
@@ -173,7 +205,7 @@ namespace DDW_PDV_WPF
                 remove => CommandManager.RequerySuggested -= value;
             }
         }
-        public frmInventarios()
+        public frmInventarios(GoogleDriveHelper ds)
         {
             InitializeComponent();
 
@@ -185,11 +217,14 @@ namespace DDW_PDV_WPF
             btnCancelarCambios.Visibility = Visibility.Hidden;
             btnGuardarCambios.Visibility = Visibility.Hidden;
 
+            this.ds = ds;
+
+
         }
 
         private void txtCodigo_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string textoQR = txtCodigo.Text; 
+            string textoQR = txtCodigo.Text;
             BitmapImage qrImage = GenerarCodigoQR(textoQR);
 
             if (qrImage != null)
@@ -213,7 +248,7 @@ namespace DDW_PDV_WPF
             }
             else if (ArticuloSeleccionado != null)
             {
-            
+
                 int idSeleccionado = ArticuloSeleccionado.idArticulo;
                 CargarDatos();
                 ArticuloSeleccionado = _todosLosArticulos.FirstOrDefault(a => a.idArticulo == idSeleccionado);
@@ -263,6 +298,27 @@ namespace DDW_PDV_WPF
                 ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
             }
         }
+
+        public static ImageSource ConvertBitmapToImageSource(Bitmap bitmapTask)
+        {
+            Bitmap bitmap = bitmapTask;
+
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                memory.Position = 0;
+
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze(); // Para que se pueda usar en hilos distintos al UI
+
+                return bitmapImage;
+            }
+        }
+
 
         private async Task CargarCategorias()
         {
@@ -353,9 +409,9 @@ namespace DDW_PDV_WPF
 
         private async Task<UsuarioDTO> ObtenerUsuarioActual()
         {
-                string url = "/api/CUsuarios/";
-                var usuarios = await _apiService.GetAsync<List<UsuarioDTO>>(url);             
-                    return usuarios.FirstOrDefault();
+            string url = "/api/CUsuarios/";
+            var usuarios = await _apiService.GetAsync<List<UsuarioDTO>>(url);
+            return usuarios.FirstOrDefault();
         }
 
         private async void GuardarCambios(object sender, RoutedEventArgs e)
@@ -388,7 +444,7 @@ namespace DDW_PDV_WPF
                     var historial = new HistorialDTO
                     {
                         fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                        idUsuario = usuarioActual.idUsuario.ToString(), 
+                        idUsuario = usuarioActual.idUsuario.ToString(),
                         accion = accion,
                         clase = "Inventarios",
                         antes = SerializarAXml(_articuloOriginal),
@@ -493,12 +549,11 @@ namespace DDW_PDV_WPF
                 }
             }
         }
-        private void BtnSeleccionarImagen_Click(object sender, RoutedEventArgs e)
+        private async void BtnSeleccionarImagen_Click(object sender, RoutedEventArgs e)
         {
             if (ArticuloSeleccionado == null)
             {
-                MessageBox.Show("Seleccione o cree un artículo primero.", "Advertencia",
-                               MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Seleccione o cree un artículo primero.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -508,44 +563,54 @@ namespace DDW_PDV_WPF
                 Title = "Seleccionar imagen del artículo"
             };
 
+            // Si se selecciona una imagen, se sube a Google Drive
             if (openFileDialog.ShowDialog() == true)
             {
+                string filePath = openFileDialog.FileName;
                 try
                 {
-                    // 1. Ruta de destino (carpeta Resources del proyecto)
-                    string projectRoot = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-                    string resourcesPath = System.IO.Path.Combine(projectRoot, "Resources");
+                    btnGuardarCambios.IsEnabled = false;
+                    // Obtener el servicio autenticado de Google Drive
+                    Controlador.GoogleDriveHelper.Initialize("neuralcat.json"); // AQUI TENGO QUE INICIAR SESION PARA SUBIR.
 
-                    // 2. Crear directorio si no existe
-                    if (!Directory.Exists(resourcesPath))
-                        Directory.CreateDirectory(resourcesPath);
+                    // ID de la carpeta compartida en tu Google Drive
+                    string folderId = "1mljTxnPYGefWWFBbWe2V_lKxX7oeugdA"; // ID fijo de la carpeta
 
-                    // 3. Generar nombre único para evitar colisiones
-                    string fileName = $"art_{DateTime.Now:yyyyMMddHHmmss}{System.IO.Path.GetExtension(openFileDialog.FileName)}";
-                    string finalPath = System.IO.Path.Combine(resourcesPath, fileName);
+                    // Sube el archivo y obtén el fileId
+                    string fileId = await Controlador.GoogleDriveHelper.UploadFileAsync(filePath, folderId);
 
-                    // 4. Copiar el archivo
-                    File.Copy(openFileDialog.FileName, finalPath, overwrite: true);
+                    // Hacerlo publico
+                    await GoogleDriveHelper.MakeFilePublicAsync(fileId);
 
-                    // 5. Guardar ruta relativa en el modelo
-                    ArticuloSeleccionado.Foto = $"Resources/{fileName}";
 
-                    // 6. Actualizar UI
+                    // Obtener el enlace público (opcional)
+                    string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+
+                    // Asignar el fileId al artículo seleccionado para guardarlo en la base de datos
+                    ArticuloSeleccionado.Foto = fileId;
+
+                    // Usar el helper para obtener la imagen desde la caché o descargarla
+                    var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+
+                    // Asignar la imagen al artículo (o directamente en el UI si tienes un control de imagen)
+                    ArticuloSeleccionado.ImagenProducto = imageSource;
+
+                    // Mostrar mensaje de éxito
+                    MessageBox.Show("Archivo subido con éxito. Enlace:\n" + fileId);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al subir archivo: " + ex.Message);
+                    return;
+                }
+                finally
+                {
+                    btnGuardarCambios.IsEnabled = true;
+                    // Actualizar UI
                     OnPropertyChanged(nameof(ArticuloSeleccionado));
                     HasChanges = true;
                     btnCancelarCambios.Visibility = Visibility.Visible;
                     btnGuardarCambios.Visibility = Visibility.Visible;
-
-                    // 7. Añadir el archivo al .csproj
-                    AddFileToProject(System.IO.Path.Combine("Resources", fileName));
-
-                    MessageBox.Show("Imagen guardada correctamente", "Éxito",
-                                  MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error al guardar la imagen: {ex.Message}", "Error",
-                                  MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -632,12 +697,12 @@ namespace DDW_PDV_WPF
 
         private void cmbCategoriaCambio(object sender, SelectionChangedEventArgs e)
         {
-            if(cmbCategoria.SelectedValue != null)
+            if (cmbCategoria.SelectedValue != null)
             {
                 MCategorias aux = (MCategorias)cmbCategoria.SelectedValue;
                 _articuloSeleccionado.idCategoria = aux.idCategoria;
             }
-            
+
         }
     }
 }

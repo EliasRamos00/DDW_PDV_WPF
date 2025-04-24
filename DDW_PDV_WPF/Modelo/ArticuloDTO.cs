@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
+using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace DDW_PDV_WPF.Modelo
@@ -55,13 +57,18 @@ namespace DDW_PDV_WPF.Modelo
         public decimal Precio { get; set; }
 
         [XmlIgnore] // No serializar esta propiedad para el historial
+        [JsonIgnore] // Si usas Newtonsoft.Json para evitar que esta se serialice
+        public ImageSource ImagenProducto { get; set; } // Esta se usará en el binding
+
+
+        [XmlIgnore] // No serializar esta propiedad para el historial
         public decimal TotalCarrito
         {
             get => _totalCarrito;
             set
-            {              
-                    _totalCarrito = PrecioVenta * _cantidad;
-                    OnPropertyChanged(nameof(TotalCarrito));                
+            {
+                _totalCarrito = PrecioVenta * _cantidad;
+                OnPropertyChanged(nameof(TotalCarrito));
             }
         }
 
