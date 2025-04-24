@@ -77,94 +77,6 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-
-
-                <!--  Botones de navegación  -->
-                <!--
-                <StackPanel Grid.Row="2" Margin="0,20,0,0">
-                    <StackPanel.Resources>
-                        <Style x:Key="MenuButtonStyle" TargetType="Button">
-                            <Setter Property="Foreground" Value="#8B8B8B" />
-                            <Setter Property="Background" Value="Transparent" />
-                            <Setter Property="BorderBrush" Value="Transparent" />
-                            <Setter Property="FontSize" Value="14" />
-                            <Setter Property="HorizontalAlignment" Value="Stretch" />
-                            <Setter Property="Margin" Value="0,0,0,8" />
-                            <Setter Property="Cursor" Value="Hand" />
-                            <Style.Triggers>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="Background" Value="#E0E0E0" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Resources>
-
-                    <Button
-                        Margin="10"
-                        HorizontalAlignment="Left"
-                        Click="btnCerrarCaja"
-                        Content="Cerrar caja"
-                        FontSize="20"
-                        Style="{StaticResource MenuButtonStyle}" />
-
-                    <Button
-                        Margin="10"
-                        HorizontalAlignment="Left"
-                        Click="NavigateToVentas"
-                        Content="Ventas"
-                        FontSize="23"
-                        FontWeight="Bold"
-                        Style="{StaticResource MenuButtonStyle}" />
-
-                    <Button
-                        Margin="10"
-                        HorizontalAlignment="Left"
-                        Click="NavigateToInventarios"
-                        Content="Inventario"
-                        FontSize="20"
-                        Style="{StaticResource MenuButtonStyle}" />
-                    <Button
-                        Margin="10"
-                        HorizontalAlignment="Left"
-                        Click="NavigateToReportes"
-                        Content="Resumen"
-                        FontSize="20"
-                        Style="{StaticResource MenuButtonStyle}" />
-                    <Button
-                        Margin="10"
-                        HorizontalAlignment="Left"
-                        Click="NavigateHistorial"
-                        Content="Historial"
-                        FontSize="20"
-                        Style="{StaticResource MenuButtonStyle}" />
-                    <Button
-                        Margin="10"
-                        HorizontalAlignment="Left"
-                        Click="NavigateCierre"
-                        Content="Cierre de cajas "
-                        FontSize="15"
-                        Style="{StaticResource MenuButtonStyle}" />
-                -->
-                <!--  Botón cerrar sesión  -->
-                <!--
-                    <Button
-                        Grid.Row="0"
-                        Margin="0,10,0,10"
-                        Padding="10,5"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Click="BtnCerrarSesion_Click"
-                        Content="CERRAR SESIÓN"
-                        FontSize="13"
-                        FontWeight="Bold"
-                        Foreground="#FFE74C3C" />
-                </StackPanel>-->
-
-
-
                 <StackPanel Grid.Row="2">
                     <Button
                         Grid.Row="0"
@@ -207,9 +119,19 @@
                     </Button>
 
                     <Image
-                        Width="182"
+                        Width="150"
                         Height="76"
                         Source="/Resources/omegasymbol.png" />
+
+
+                    <Button
+                        x:Name="buttonVentas"
+                        Margin="8"
+                        Click="NavigateToVentas"
+                        Content="Ventas"
+                        FontSize="27"
+                        Style="{StaticResource MenuButtonStyle}" />
+
                     <Button
                         x:Name="buttonCerrarCaja"
                         Margin="8"
@@ -220,26 +142,18 @@
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
-                        x:Name="buttonVentas"
-                        Margin="8"
-                        Click="NavigateToVentas"
-                        Content="Ventas"
-                        FontSize="18"
-                        Style="{StaticResource MenuButtonStyle}" />
-
-                    <Button
                         x:Name="buttonInventario"
                         Margin="8"
                         Click="NavigateToInventarios"
                         Content="Inventario"
-                        FontSize="16"
+                        FontSize="20"
                         Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
                         x:Name="buttonResumen"
                         Margin="8"
                         Click="NavigateToReportes"
-                        Content="Resumen"
+                        Content="Rep. Ventas"
                         FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
 
@@ -247,7 +161,7 @@
                         x:Name="buttonHistorial"
                         Margin="8"
                         Click="NavigateHistorial"
-                        Content="Historial"
+                        Content="Historial Invent."
                         FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
 
@@ -255,19 +169,52 @@
                         x:Name="buttonCierreCajas"
                         Margin="8"
                         Click="NavigateCierre"
-                        Content="Cierre de cajas"
-                        FontSize="14"
+                        Content="Historial C. Cajas"
+                        FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
+
                     <Button
                         x:Name="btnBorrarCache"
                         Margin="8"
                         Click="clickBorrarCache"
                         Content="Borrar Cache"
                         FontSize="14"
-                        Style="{StaticResource MenuButtonStyle}" />
+                        Style="{StaticResource MenuButtonStyle}"
+                        Visibility="Hidden" />
 
                 </StackPanel>
+                <StackPanel Grid.Row="3" Margin="0,0,0,0">
 
+                    <Button
+                        Width="142"
+                        Height="48"
+                        Margin="0"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="ConfigClick">
+                        <Image
+                            Width="142"
+                            Height="48"
+                            Margin="0"
+                            Source="/Resources/ddwlogoblanco.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        FontSize="9"
+                        Foreground="White"
+                        Text="Powered By:   Digital DreamWeaver" />
+                    <TextBlock
+                        Margin="0"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        FontSize="9"
+                        Foreground="White"
+                        Text="Versión 1. 0. 0 " />
+
+                </StackPanel>
 
             </Grid>
         </Border>

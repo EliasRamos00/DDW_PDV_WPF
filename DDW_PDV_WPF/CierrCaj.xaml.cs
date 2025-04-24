@@ -157,7 +157,8 @@ namespace DDW_PDV_WPF
 
         private async void setTotalSistema()
         {
-            string url = $"api/CCierresCajas/totalsistema/{1}/{1}/{DateTime.Now.ToString("yyyy-MM-dd")}";
+            // se envia la caja y la sucursal
+            string url = $"api/CCierresCajas/totalsistema/{Properties.Settings.Default.Caja}/{Properties.Settings.Default.Sucursal}/{DateTime.Now.ToString("yyyy-MM-dd")}";
             var aux = await _apiService.GetAsync<GenericMessageDTO>(url);
 
             // Esto esta mal y hay que cambiarse desde la API

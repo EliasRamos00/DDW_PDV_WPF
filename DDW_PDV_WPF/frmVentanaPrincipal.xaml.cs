@@ -123,38 +123,7 @@ namespace DDW_PDV_WPF
         {
             // DESCOMENTAR UNA VEZ TERMINADAS LAS PRUEBAS EN DROPBOX
             CierrCaj paginaDestino = new CierrCaj(Usuario, Properties.Settings.Default.Caja);
-            paginaDestino.ShowDialog();
-
-            //// Crea una nueva instancia de OpenFileDialog
-            //OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png;*.gif|Todos los archivos|*.*";
-
-            // Abre el cuadro de diálogo para seleccionar el archivo
-            //if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK) // true para WPF
-            //{
-            //    string filePath = openFileDialog.FileName;
-
-            //    try
-            //    {
-            //        // Obtener el servicio autenticado de Google Drive
-            //        Controlador.GoogleDriveHelper.Initialize("neuralcat.json");
-
-            //        // ID de la carpeta compartida en tu Google Drive
-            //        string folderId = "1mljTxnPYGefWWFBbWe2V_lKxX7oeugdA";
-
-            //        // Sube el archivo y obtén el ID
-            //        string fileId = await Controlador.GoogleDriveHelper.UploadFileAsync(filePath, folderId);
-
-            //        // Obtén el link público (opcional)
-            //        string publicLink = await GoogleDriveHelper.GetPublicLinkAsync(fileId);
-
-            //        System.Windows.Forms.MessageBox.Show("Archivo subido con éxito. Enlace:\n" + fileId);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        System.Windows.Forms.MessageBox.Show("Error al subir archivo: " + ex.Message);
-            //    }
-            //}
+            paginaDestino.ShowDialog();           
 
         }
 
@@ -175,6 +144,12 @@ namespace DDW_PDV_WPF
             {
                 System.Windows.MessageBox.Show($"Error al borrar la caché: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void ConfigClick(object sender, RoutedEventArgs e)
+        {
+            ConfigCajaSucursal configWindow = new ConfigCajaSucursal();
+            configWindow.ShowDialog();
         }
     }
 }

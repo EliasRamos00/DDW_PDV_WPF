@@ -201,10 +201,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ConfigCajaSucursal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="frmCierreCajaEmergente.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="ConfigCajaSucursal.xaml.cs">
+      <DependentUpon>ConfigCajaSucursal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controlador\DropboxHelper.cs" />
     <Compile Include="Controlador\GoogleDriveHelper.cs" />
     <Compile Include="LessThanZeroConverter.cs" />
@@ -391,6 +398,9 @@
     <Content Include="Resources\art_20250331220233.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\ddwlogoblanco.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Resources\omegasymbol.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

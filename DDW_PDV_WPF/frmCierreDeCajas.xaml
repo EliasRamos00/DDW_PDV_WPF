@@ -82,7 +82,7 @@
                 FontSize="18"
                 FontWeight="Bold"
                 Foreground="#2E5E4E"
-                Text="CIERRE DE CAJAS" />
+                Text="   HISTORIAL DE CIERRE DE CAJAS" />
 
             <!--  Barra de búsqueda  -->
             <Border Style="{StaticResource SearchBoxStyle}">

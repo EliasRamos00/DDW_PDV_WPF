@@ -110,7 +110,7 @@
                 HorizontalAlignment="Center"
                 FontSize="45"
                 FontWeight="Bold"
-                Text="RESUMEN DE INFORMACIÓN" />
+                Text="    RESUMEN DE VENTAS    " />
         </StackPanel>
 
 
