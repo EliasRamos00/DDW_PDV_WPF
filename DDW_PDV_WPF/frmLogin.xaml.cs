@@ -78,6 +78,7 @@ namespace DDW_PDV_WPF
                 {
                     //MessageBox.Show($"Bienvenido {usuarioAutenticado.Usuario}"); SE REQUIERE AGREGAR ALGUNA LIBRERIA SENCILLA DE POPUPS PARA MOSTRAR MENSAJES
                     var VentanaPrincipal = new frmVentanaPrincipal(usuarioAutenticado.idUsuario.ToString(), usuarioAutenticado.Rol);
+                    Properties.Settings.Default.idUsuario = usuarioAutenticado.idUsuario.ToString();
                     VentanaPrincipal.Show();
                     this.Close();
                 }

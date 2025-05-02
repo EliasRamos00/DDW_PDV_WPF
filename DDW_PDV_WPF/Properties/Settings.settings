@@ -20,5 +20,8 @@
     <Setting Name="DROPBOX_TOKEN" Type="System.String" Scope="User">
       <Value Profile="(Default)">4Qw31mlZeJkAAAAAAAAAFlTGGUevVFmyPp2rdaJjZG4</Value>
     </Setting>
+    <Setting Name="idUsuario" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

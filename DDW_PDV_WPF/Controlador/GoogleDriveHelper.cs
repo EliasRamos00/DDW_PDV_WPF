@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows;
 using File = Google.Apis.Drive.v3.Data.File;
 using System.Windows.Media.Imaging;
+using System.Drawing;
+using System.Linq;
 
 
 
@@ -58,14 +60,16 @@ namespace DDW_PDV_WPF.Controlador
             };
 
             FilesResource.CreateMediaUpload request;
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+
+            string resizedPath = ResizeAndCompressImage(filePath, 800, 800); 
+
+            using (var stream = new FileStream(resizedPath, FileMode.Open, FileAccess.Read))
             {
-                string mimeType = GetMimeType(filePath);
+                string mimeType = GetMimeType(resizedPath);
                 request = _service.Files.Create(fileMetadata, stream, mimeType);
                 request.Fields = "id";
                 await request.UploadAsync();
             }
-
             return request.ResponseBody.Id;
         }
 
@@ -170,6 +174,46 @@ namespace DDW_PDV_WPF.Controlador
             bitmapImage.EndInit();
             return bitmapImage;
         }
+
+        private static string ResizeAndCompressImage(string inputPath, int maxWidth = 800, int maxHeight = 800, long quality = 80)
+        {
+            using (var originalImage = System.Drawing.Image.FromFile(inputPath))
+            {
+                // Redimensionar la imagen a 800x800 píxeles
+                int newWidth = maxWidth;
+                int newHeight = maxHeight;
+
+                using (var bitmap = new System.Drawing.Bitmap(originalImage, newWidth, newHeight))
+                {
+                    // Configuración para comprimir la imagen
+                    var qualityParam = new System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+                    var codecInfo = GetEncoderInfo("image/jpeg");
+                    var encoderParams = new System.Drawing.Imaging.EncoderParameters(1);
+                    encoderParams.Param[0] = qualityParam;
+
+                    // Guardar la imagen comprimida
+                    string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".jpg");
+                    bitmap.Save(tempPath, codecInfo, encoderParams);
+
+                    return tempPath;
+                }
+            }
+        }
+
+        // Método auxiliar para obtener el códec del JPEG
+        private static System.Drawing.Imaging.ImageCodecInfo GetEncoderInfo(string mimeType)
+        {
+            var encoders = System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders();
+            foreach (var encoder in encoders)
+            {
+                if (encoder.MimeType == mimeType)
+                    return encoder;
+            }
+            return null;
+        }
+
+
+
 
         public static async Task MakeFilePublicAsync(string fileId)
         {

@@ -3,6 +3,7 @@ using MigraDoc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace DDW_PDV_WPF.Reportes
     {
         public static void CrearPDF(List<Modelo.RepVentasDTO> productos, string rutaSalida, DateTime fechaini, DateTime fechafin, int Sucursal)
         {
+            var culturaMexicana = new CultureInfo("es-MX");
             string RFC = "GUSY970729 868", Nombre = "YECENIA GURROLA SANCHEZ", Dirr = "PASTEUR 301 SUR", Cel = "618 230 9875", Ciudad = "DURANGO DGO.", CP = "34000";
             string rutaImagen = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "omegasymbol.png");
 
@@ -131,14 +133,11 @@ namespace DDW_PDV_WPF.Reportes
                 fila.Cells[0].AddParagraph(p.FechaHora.ToString("dd-MMM HH:mm"));
                 fila.Cells[1].AddParagraph(p.Descripcion);
                 fila.Cells[2].AddParagraph(p.GrupoVenta.ToString());
-                fila.Cells[3].AddParagraph(p.PrecioVenta.ToString("C"));
-                fila.Cells[4].AddParagraph(p.Ganancia.ToString("C"));
+                fila.Cells[3].AddParagraph(p.PrecioVenta.ToString("C", culturaMexicana));
+                fila.Cells[4].AddParagraph(p.Ganancia.ToString("C", culturaMexicana));
                 fila.Cells[5].AddParagraph(p.Cantidad.ToString());
-                fila.Cells[6].AddParagraph((p.PrecioVenta * p.Cantidad).ToString("C"));
-                fila.Cells[7].AddParagraph((p.Ganancia * p.Cantidad).ToString("C"));
-
-
-
+                fila.Cells[6].AddParagraph((p.PrecioVenta * p.Cantidad).ToString("C", culturaMexicana));
+                fila.Cells[7].AddParagraph((p.Ganancia * p.Cantidad).ToString("C", culturaMexicana));
             }
 
 
@@ -173,8 +172,8 @@ namespace DDW_PDV_WPF.Reportes
             filaTotales.Cells[0].Format.Alignment = ParagraphAlignment.Right;
 
             // Agrega los totales en las últimas columnas
-            filaTotales.Cells[6].AddParagraph(totalVenta.ToString("C"));
-            filaTotales.Cells[7].AddParagraph(totalGanancia.ToString("C"));
+            filaTotales.Cells[6].AddParagraph(totalVenta.ToString("C", culturaMexicana));
+            filaTotales.Cells[7].AddParagraph(totalGanancia.ToString("C", culturaMexicana));
 
 
 

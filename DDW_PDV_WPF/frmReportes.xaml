@@ -85,7 +85,6 @@
             <Setter Property="Padding" Value="0,5" />
         </Style>
 
-
     </Page.Resources>
 
     <Grid Margin="20">
@@ -123,15 +122,13 @@
             Orientation="Horizontal">
             <DatePicker
                 Language="es-ES"
-                SelectedDate="{Binding FechaInicio}"
-                SelectedDateFormat="Short"
-                Text="{Binding FechaInicio, StringFormat='dd-MMM-yyyy', ConverterCulture='es-ES'}" />
+                Loaded="DatePicker_Loaded"
+                SelectedDate="{Binding FechaInicio}" />
 
             <DatePicker
                 Language="es-ES"
-                SelectedDate="{Binding FechaFin}"
-                SelectedDateFormat="Short"
-                Text="{Binding FechaFin, StringFormat='dd-MMM-yyyy', ConverterCulture='es-ES'}" />
+                Loaded="DatePicker_Loaded"
+                SelectedDate="{Binding FechaFin}" />
             <ComboBox
                 DisplayMemberPath="Nombre"
                 ItemsSource="{Binding Sucursales}"

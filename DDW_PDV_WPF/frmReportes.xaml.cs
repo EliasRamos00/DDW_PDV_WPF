@@ -21,6 +21,9 @@ using DDW_PDV_WPF.Controlador;
 using DDW_PDV_WPF.Modelo;
 using DDW_PDV_WPF.Reportes;
 using System.Windows.Forms;
+using System.Globalization;
+using System.Windows.Controls.Primitives;
+using System.Threading;
 
 namespace DDW_PDV_WPF
 {
@@ -36,6 +39,7 @@ namespace DDW_PDV_WPF
         private MReportesDTO _reporte;
         private readonly ApiService _apiService = new ApiService();
         public event PropertyChangedEventHandler PropertyChanged;
+
 
         // Propiedades
         public DateTime FechaInicio
@@ -105,7 +109,11 @@ namespace DDW_PDV_WPF
            InitializeComponent();
             DataContext=this;
             CargarSucursales();
-            CargarDatos(); 
+            CargarDatos();
+
+            CultureInfo ci = new CultureInfo("es-ES");
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
         }
 
         private async void CargarSucursales()
@@ -153,6 +161,7 @@ namespace DDW_PDV_WPF
 
             try
             {
+
                 string url = $"/api/CReportes/{FechaInicio:yyyy-MM-dd},{FechaFin:yyyy-MM-dd},{IdSucursal}";
                 var resultado = await _apiService.GetAsync<MReportesDTO>(url);
                 Reporte = resultado ?? throw new Exception("No se recibieron datos");
@@ -161,6 +170,62 @@ namespace DDW_PDV_WPF
             {
                 System.Windows.MessageBox.Show($"Error: {ex.Message}", "Error",
                               MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DatePicker_Loaded(object sender, RoutedEventArgs e)
+        {
+            var datePicker = sender as DatePicker;
+            if (datePicker != null)
+            {
+                // Registrar todos los eventos necesarios
+                datePicker.Loaded -= DatePicker_Loaded;
+                datePicker.CalendarOpened += DatePicker_CalendarOpened;
+                datePicker.CalendarClosed += DatePicker_CalendarClosed;
+                datePicker.LostFocus += DatePicker_LostFocus;
+                datePicker.SelectedDateChanged += DatePicker_SelectedDateChanged;
+
+                ApplySpanishFormat(datePicker);
+            }
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplySpanishFormat(sender as DatePicker);
+        }
+
+        private void DatePicker_CalendarOpened(object sender, RoutedEventArgs e)
+        {
+            // No necesitamos hacer nada aquí, pero el evento debe estar registrado
+        }
+
+        private void DatePicker_CalendarClosed(object sender, RoutedEventArgs e)
+        {
+            ApplySpanishFormat(sender as DatePicker);
+        }
+
+        private void DatePicker_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ApplySpanishFormat(sender as DatePicker);
+        }
+
+        private void ApplySpanishFormat(DatePicker datePicker)
+        {
+            if (datePicker?.SelectedDate != null)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    var textBox = datePicker.Template.FindName("PART_TextBox", datePicker) as DatePickerTextBox;
+                    if (textBox != null)
+                    {
+                        // Formato con mes en minúsculas
+                        textBox.Text = datePicker.SelectedDate.Value.ToString("d-MMMM-yyyy", new CultureInfo("es-ES"));
+
+                        // Si prefieres el mes con mayúscula inicial ("Abril"):
+                        // textBox.Text = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(
+                        //     datePicker.SelectedDate.Value.ToString("d-MMMM-yyyy", new CultureInfo("es-ES")));
+                    }
+                }), System.Windows.Threading.DispatcherPriority.Render);
             }
         }
 
@@ -206,6 +271,7 @@ namespace DDW_PDV_WPF
 
         }
     }
+
 
     public class SucursalDTO
     {

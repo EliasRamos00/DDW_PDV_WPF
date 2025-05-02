@@ -414,12 +414,6 @@ namespace DDW_PDV_WPF
             }
         }
 
-        private async Task<UsuarioDTO> ObtenerUsuarioActual()
-        {
-            string url = "/api/CUsuarios/";
-            var usuarios = await _apiService.GetAsync<List<UsuarioDTO>>(url);
-            return usuarios.FirstOrDefault();
-        }
 
         public string LimpiarPrecio(string precioFormateado)
         {
@@ -507,8 +501,8 @@ namespace DDW_PDV_WPF
 
             try
             {
-                var usuarioActual = await ObtenerUsuarioActual();
-                if (usuarioActual == null) return;
+                var usuarioActual = Properties.Settings.Default.idUsuario;
+               
 
                 // Asignar categoría
                 MCategorias aux = (MCategorias)cmbCategoria.SelectedItem;
@@ -531,7 +525,7 @@ namespace DDW_PDV_WPF
                     var historial = new HistorialDTO
                     {
                         fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                        idUsuario = usuarioActual.idUsuario.ToString(),
+                        idUsuario = Properties.Settings.Default.idUsuario,
                         accion = accion,
                         clase = "Inventarios",
                         antes = SerializarAXml(_articuloOriginal),
@@ -541,8 +535,8 @@ namespace DDW_PDV_WPF
                     bool historialExito = await _apiService.PostAsync("/api/CHistoriales", historial);
 
                     string mensaje = historialExito
-                        ? $"Operación completada por {usuarioActual.Usuario} con registro en el historial."
-                        : $"Operación completada por {usuarioActual.Usuario}, pero falló el registro en el historial.";
+                        ? $"Operación completada  con registro en el historial."
+                        : $"Operación completada , pero falló el registro en el historial.";
 
                     MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -587,14 +581,14 @@ namespace DDW_PDV_WPF
             try
             {
                 // Obtener usuario actual completo
-                var usuarioActual = await ObtenerUsuarioActual();
-                if (usuarioActual == null) return;
+                var usuarioActual = Properties.Settings.Default.idUsuario;
+                
 
                 // Registrar en historial antes de eliminar
                 var historial = new HistorialDTO
                 {
                     fechaHora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    idUsuario = usuarioActual.Usuario,
+                    idUsuario = Properties.Settings.Default.idUsuario,
                     accion = "ELIM.",
                     clase = "ArticulosDTO",
                     antes = SerializarAXml(ArticuloSeleccionado),
@@ -609,8 +603,8 @@ namespace DDW_PDV_WPF
                 if (exito)
                 {
                     string mensaje = historialExito
-                        ? $"{usuarioActual.Usuario} eliminó el artículo con registro en el historial."
-                        : $"{usuarioActual.Usuario} eliminó el artículo, pero falló el registro en el historial.";
+                        ? $"Se eliminó el artículo con registro en el historial."
+                        : $"Se eliminó el artículo, pero falló el registro en el historial.";
 
                     MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                     CargarDatos();

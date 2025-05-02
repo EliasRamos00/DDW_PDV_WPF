@@ -219,6 +219,7 @@
     <Compile Include="Controlador\GoogleDriveHelper.cs" />
     <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
+    <Compile Include="Modelo\MCajasDTO.cs" />
     <Compile Include="Modelo\RepVentasDTO.cs" />
     <Compile Include="Reportes\VentasPDF.cs" />
     <Compile Include="Modelo\MReportesDTO.cs" />

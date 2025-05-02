@@ -326,13 +326,16 @@
                             Background="#E5C1DC"
                             CornerRadius="5">
                             <Grid>
-                                <Viewbox MaxHeight="140" Stretch="Uniform">
+                                <Viewbox Margin="10" Stretch="Fill">
                                     <Image
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
+                                        Margin="5"
                                         Source="{Binding ImagenProducto, TargetNullValue={x:Null}}"
-                                        Stretch="None" />
+                                        Stretch="UniformToFill" />
                                 </Viewbox>
+
+
+
+
 
                                 <Button
                                     x:Name="BtnCambiarImagen"
