@@ -58,9 +58,6 @@ namespace DDW_PDV_WPF
                 OnPropertyChanged(nameof(Categorias));
             }
         }
-
-
-
         public ObservableCollection<ArticuloDTO> ListaArticulos
         {
             get { return _listaArticulos; }
@@ -133,8 +130,7 @@ namespace DDW_PDV_WPF
                 string fileId = articuloSeleccionado.Foto;
                 if (fileId == "")
                 {
-                    // Si no hay ID de archivo, no se puede cargar la imagen
-                    return;
+                    fileId = "1RQQ0GNUWuLijKIKnZmYwbBh80eQpD9vp";
                 }
 
 
@@ -545,6 +541,7 @@ namespace DDW_PDV_WPF
                     HasChanges = false;
                     btnCancelarCambios.Visibility = Visibility.Hidden;
                     btnGuardarCambios.Visibility = Visibility.Hidden;
+                    txtBusqueda.Text ="";
                 }
             }
             catch (Exception ex)
@@ -608,6 +605,7 @@ namespace DDW_PDV_WPF
 
                     MessageBox.Show(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                     CargarDatos();
+                    txtBusqueda.Text = "";
                 }
                
             }
@@ -691,8 +689,7 @@ namespace DDW_PDV_WPF
                     ArticuloSeleccionado.ImagenProducto = imageSource;
                     copiaImageSource = imageSource;
 
-                    // Mostrar mensaje de éxito
-                    MessageBox.Show("Archivo subido con éxito. Enlace:\n" + fileId);
+
                 }
                 catch (Exception ex)
                 {
