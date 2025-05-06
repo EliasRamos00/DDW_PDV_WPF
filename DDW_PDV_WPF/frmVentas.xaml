@@ -398,6 +398,12 @@
                                                         Foreground="#A01A7D"
                                                         Text="{Binding Descripcion}"
                                                         TextWrapping="Wrap" />
+                                                    <TextBlock
+                                                        HorizontalAlignment="Center"
+                                                        FontSize="12"
+                                                        Foreground="#2E5E4E"
+                                                        Text="{Binding Color}"
+                                                        TextWrapping="Wrap" />
                                                 </StackPanel>
                                             </Button.Content>
                                         </Button>
@@ -501,7 +507,7 @@
                                             FontWeight="Bold"
                                             Foreground="#2E5E4E"
                                             Text="{Binding Descripcion}"
-                                            TextWrapping="Wrap" />
+                                            TextWrapping="Wrap" />                                       
                                         <TextBlock
                                             FontSize="10"
                                             Foreground="#6B9D89"
