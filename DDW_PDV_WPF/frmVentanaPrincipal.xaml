@@ -119,9 +119,9 @@
                     </Button>
 
                     <Image
-                        Margin="0,10,0,13"
                         Width="150"
                         Height="76"
+                        Margin="0,10,0,13"
                         Source="/Resources/omegasymbol.png" />
 
 
@@ -213,7 +213,7 @@
                         HorizontalAlignment="Center"
                         FontSize="9"
                         Foreground="White"
-                        Text="Versión 1. 0. 0 " />
+                        Text="Versión 1. 2. 0 " />
 
                 </StackPanel>
 

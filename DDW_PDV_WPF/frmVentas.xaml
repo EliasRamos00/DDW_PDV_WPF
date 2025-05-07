@@ -380,7 +380,7 @@
                                     <DataTemplate>
                                         <Button
                                             Width="150"
-                                            Height="150"
+                                            Height="195"
                                             Margin="5"
                                             Background="#F1E6D3"
                                             BorderBrush="#2E5E4E"
@@ -394,11 +394,14 @@
                                                         Source="{Binding ImagenProducto}"
                                                         Stretch="UniformToFill" />
                                                     <TextBlock
+                                                        Height="55"
                                                         HorizontalAlignment="Center"
+                                                        FontSize="14"
                                                         Foreground="#A01A7D"
                                                         Text="{Binding Descripcion}"
                                                         TextWrapping="Wrap" />
                                                     <TextBlock
+                                                        Height="45"
                                                         HorizontalAlignment="Center"
                                                         FontSize="12"
                                                         Foreground="#2E5E4E"
@@ -507,7 +510,14 @@
                                             FontWeight="Bold"
                                             Foreground="#2E5E4E"
                                             Text="{Binding Descripcion}"
-                                            TextWrapping="Wrap" />                                       
+                                            TextWrapping="Wrap" />
+                                        <TextBlock
+                                            Width="100"
+                                            FontSize="10"
+                                            FontWeight="Bold"
+                                            Foreground="#A01A7D"
+                                            Text="{Binding Color}"
+                                            TextWrapping="Wrap" />
                                         <TextBlock
                                             FontSize="10"
                                             Foreground="#6B9D89"

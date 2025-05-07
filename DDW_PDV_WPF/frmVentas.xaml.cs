@@ -480,7 +480,8 @@ namespace DDW_PDV_WPF
                         Descripcion = producto.Descripcion,
                         ImagenProducto = producto.ImagenProducto,
                         PrecioVenta = producto.PrecioVenta, // precio
-                        Cantidad = 1
+                        Cantidad = 1,
+                        Color=producto.Color
                     };
 
                     // Agregar el nuevo artículo al carrito de ventas

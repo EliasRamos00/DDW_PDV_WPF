@@ -450,6 +450,10 @@ namespace DDW_PDV_WPF
                 MessageBox.Show("El tamaño no puede estar vacío.", "Validación", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+            if (ArticuloSeleccionado.Foto == "")
+            {
+                ArticuloSeleccionado.Foto = "1RQQ0GNUWuLijKIKnZmYwbBh80eQpD9vp";
+            }
 
             if (cmbCategoria.SelectedItem == null)
             {
