@@ -46,7 +46,7 @@ namespace DDW_PDV_WPF
         private bool _isNewItem = false;
         private List<MCategorias> cat;
         private GoogleDriveHelper ds;
-       
+        private DispatcherTimer _debounceTimer;
 
         private ObservableCollection<MCategorias> _categorias;
         public ObservableCollection<MCategorias> Categorias
@@ -58,6 +58,23 @@ namespace DDW_PDV_WPF
                 OnPropertyChanged(nameof(Categorias));
             }
         }
+        public string TextoBusqueda
+        {
+            get => _textoBusqueda;
+            set
+            {
+                if (_textoBusqueda != value)
+                {
+                    _textoBusqueda = value;
+                    OnPropertyChanged(nameof(TextoBusqueda));
+
+                    // Reiniciar el debounce timer
+                    _debounceTimer.Stop();
+                    _debounceTimer.Start();
+                }
+            }
+        }
+
         public ObservableCollection<ArticuloDTO> ListaArticulos
         {
             get { return _listaArticulos; }
@@ -163,16 +180,6 @@ namespace DDW_PDV_WPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public string TextoBusqueda
-        {
-            get => _textoBusqueda;
-            set
-            {
-                _textoBusqueda = value;
-                OnPropertyChanged(nameof(TextoBusqueda));
-                FiltrarArticulos();
-            }
-        }
 
 
         private ObservableCollection<ArticuloDTO> _todosLosArticulos;
@@ -216,7 +223,15 @@ namespace DDW_PDV_WPF
             btnGuardarCambios.Visibility = Visibility.Hidden;
 
             this.ds = ds;
-
+            _debounceTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(300)
+            };
+            _debounceTimer.Tick += (s, e) =>
+            {
+                _debounceTimer.Stop(); // Detener el timer para evitar múltiples ejecuciones
+                FiltrarArticulos(); // Ejecutar el filtro
+            };
 
         }
 
@@ -344,25 +359,28 @@ namespace DDW_PDV_WPF
         }
         private void FiltrarArticulos()
         {
-            if (_todosLosArticulos == null) return;
+            if (_todosLosArticulos == null || cat == null) return;
 
-            if (string.IsNullOrWhiteSpace(TextoBusqueda))
-            {
-                ListaArticulos = new ObservableCollection<ArticuloDTO>(_todosLosArticulos);
-            }
-            else
-            {
-                var texto = TextoBusqueda.ToLower();
-                var resultados = _todosLosArticulos
-                    .Where(a => (a.Descripcion != null && a.Descripcion.ToLower().Contains(texto)) ||
-                               (a.idCategoria.ToString().Contains(texto)) ||
-                               (a.idArticulo.ToString().Contains(texto)) ||
-                               (a.Color != null && a.Color.ToLower().Contains(texto)))
-                    .ToList();
+            var productosFiltrados = _todosLosArticulos.AsEnumerable();
 
-                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultados);
+            if (!string.IsNullOrWhiteSpace(TextoBusqueda))
+            {
+                string texto = TextoBusqueda.ToLower();
+
+                productosFiltrados = productosFiltrados.Where(p =>
+                    (!string.IsNullOrEmpty(p.Descripcion) && p.Descripcion.ToLower().Contains(texto)) ||
+
+                    (!string.IsNullOrEmpty(p.Color) && p.Color.ToLower().Contains(texto)) ||
+
+                    p.PrecioVenta.ToString().ToLower().Contains(texto) ||
+
+                    cat.FirstOrDefault(c => c.idCategoria == p.idCategoria)?.Nombre.ToLower().Contains(texto) == true
+                );
             }
+
+            ListaArticulos = new ObservableCollection<ArticuloDTO>(productosFiltrados);
         }
+
 
 
 

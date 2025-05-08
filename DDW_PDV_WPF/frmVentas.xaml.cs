@@ -22,7 +22,7 @@ using System.Threading;
 using Dropbox.Api.TeamCommon;
 using HandyControl.Data;
 using HandyControl.Controls;
-
+using System.Windows.Threading;
 
 namespace DDW_PDV_WPF
 {
@@ -53,6 +53,9 @@ namespace DDW_PDV_WPF
         private Button _botonCategoriaSeleccionado;
         private Button _botonTodos;
         GoogleDriveHelper ds;
+        private DispatcherTimer _debounceTimer;
+
+
 
         public string TextoBusqueda
         {
@@ -63,10 +66,14 @@ namespace DDW_PDV_WPF
                 {
                     _textoBusqueda = value;
                     OnPropertyChanged(nameof(TextoBusqueda));
-                    FiltrarProductos();
+
+                    // Reiniciar el debounce timer
+                    _debounceTimer.Stop();
+                    _debounceTimer.Start();
                 }
             }
         }
+
 
         public MCategorias CategoriaSeleccionada
         {
@@ -82,7 +89,7 @@ namespace DDW_PDV_WPF
             }
         }
 
-        private ObservableCollection<ArticuloDTO> _productosOriginales; // Para guardar la lista completa
+        private ObservableCollection<ArticuloDTO> _productosOriginales; 
         public decimal Cambio
         {
             get => _montoRecibido - _total;
@@ -199,7 +206,9 @@ namespace DDW_PDV_WPF
             _apiService = new ApiService();
             CargarProductos();
             CargarCategorias();
+
             DataContext = this;
+
             _usuario = currentUser;
 
             if (btnTodos != null)
@@ -211,6 +220,15 @@ namespace DDW_PDV_WPF
             }
             // se cargan las imagenes
             this.ds = ds;
+            _debounceTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(300)
+            };
+            _debounceTimer.Tick += (s, e) =>
+            {
+                _debounceTimer.Stop(); // Detener el timer para evitar múltiples ejecuciones
+                FiltrarProductos(); // Ejecutar el filtro
+            };
         }
 
         private async void CargarCategorias()
@@ -336,7 +354,7 @@ namespace DDW_PDV_WPF
 
             var productosFiltrados = _productosOriginales.AsEnumerable();
 
-            // Filtro por categoría (usando la propiedad CategoriaSeleccionada)
+            // Filtro por categoría
             if (CategoriaSeleccionada != null && CategoriaSeleccionada.idCategoria != 0)
             {
                 productosFiltrados = productosFiltrados.Where(p => p.idCategoria == CategoriaSeleccionada.idCategoria);
@@ -345,14 +363,24 @@ namespace DDW_PDV_WPF
             // Filtro por texto de búsqueda
             if (!string.IsNullOrWhiteSpace(TextoBusqueda))
             {
-                string busqueda = TextoBusqueda.ToLower();
                 productosFiltrados = productosFiltrados.Where(p =>
-                    p.Descripcion.ToLower().Contains(busqueda) ||
-                    (p.CodigoBarras != null && p.CodigoBarras.ToLower().Contains(busqueda)));
+            // Búsqueda por descripción
+            p.Descripcion.ToLower().Contains(TextoBusqueda) ||
+
+
+            // Búsqueda por color (si existe la propiedad)
+            (!string.IsNullOrEmpty(p.Color) && p.Color.ToLower().Contains(TextoBusqueda)) ||
+
+            // Búsqueda por precio (convertido a string)
+            p.PrecioVenta.ToString().Contains(TextoBusqueda) 
+        );
             }
 
             ListaArticulos = new ObservableCollection<ArticuloDTO>(productosFiltrados);
         }
+
+           
+        
         private void IncrementarCantidad(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ArticuloDTO producto)

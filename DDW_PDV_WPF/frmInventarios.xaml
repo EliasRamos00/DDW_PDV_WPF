@@ -208,6 +208,11 @@
                                         FontSize="12"
                                         Foreground="#666666"
                                         Text="{Binding IdCategoria, StringFormat='Categoría: {0}'}" />
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="#000000"
+                                        Text="{Binding PrecioVenta, StringFormat={}$ {0:N2}}"
+                                        TextWrapping="Wrap" />
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
