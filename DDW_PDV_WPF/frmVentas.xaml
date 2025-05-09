@@ -229,41 +229,7 @@
 
 
 
-                    <StackPanel
-                        Grid.Row="0"
-                        Grid.ColumnSpan="2"
-                        Margin="10,10,10,10"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
 
-                        <!--  TextBox para la fecha  -->
-                        <TextBox
-                            x:Name="txtFecha"
-                            Width="250"
-                            Height="41"
-                            Margin="0,0,20,0"
-                            md:HintAssist.Hint="Fecha"
-                            Background="#F1E6D3"
-                            FontWeight="Bold"
-                            Foreground="#000"
-                            IsEnabled="False"
-                            Style="{DynamicResource txtFecha}"
-                            TextAlignment="Center" />
-                        <!--  Margen derecho para separación  -->
-
-                        <!--  TextBox para la hora  -->
-                        <TextBox
-                            x:Name="txtHora"
-                            Width="120"
-                            Height="41"
-                            md:HintAssist.Hint="Hora"
-                            Background="#F1E6D3"
-                            FontWeight="Bold"
-                            Foreground="#000"
-                            IsEnabled="False"
-                            Style="{DynamicResource txtFecha}"
-                            TextAlignment="Center" />
-                    </StackPanel>
 
                     <ScrollViewer
                         Grid.Row="1"
@@ -275,7 +241,7 @@
                             <Button
                                 x:Name="btnTodos"
                                 Width="136"
-                                Height="157"
+                                Height="155"
                                 Margin="10,0,10,0"
                                 VerticalContentAlignment="Bottom"
                                 Background="White"
@@ -316,7 +282,7 @@
                                     <DataTemplate>
                                         <Button
                                             Width="136"
-                                            Height="157"
+                                            Height="155"
                                             Margin="10,0,10,0"
                                             VerticalContentAlignment="Bottom"
                                             Background="White"
@@ -444,6 +410,42 @@
                 <!--  Título  -->
 
                 <StackPanel Grid.Row="0">
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        Margin="10,10,10,10"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+
+                        <!--  TextBox para la fecha  -->
+                        <TextBox
+                            x:Name="txtFecha"
+                            Height="41"
+                            Margin="0,0,20,0"
+                            Padding="10"
+                            VerticalContentAlignment="Center"
+                            md:HintAssist.Hint="Fecha"
+                            Background="#F1E6D3"
+                            FontWeight="Bold"
+                            Foreground="#000"
+                            IsEnabled="False"
+                            Style="{DynamicResource txtFecha}"
+                            TextAlignment="Center" />
+                        <!--  Margen derecho para separación  -->
+
+                        <!--  TextBox para la hora  -->
+                        <TextBox
+                            x:Name="txtHora"
+                            Height="41"
+                            VerticalContentAlignment="Center"
+                            md:HintAssist.Hint="Hora"
+                            Background="#F1E6D3"
+                            FontWeight="Bold"
+                            Foreground="#000"
+                            IsEnabled="False"
+                            Style="{DynamicResource txtFecha}"
+                            TextAlignment="Center" />
+                    </StackPanel>
                     <TextBlock
                         Margin="0,20,0,20"
                         HorizontalAlignment="Center"
