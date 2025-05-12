@@ -250,7 +250,7 @@ namespace DDW_PDV_WPF.Controlador
                 catch (Exception ex)
                 {
                     // Si ocurre algún error, manejarlo (puedes lanzar una excepción o devolver null)
-                    MessageBox.Show($"Error al descargar la imagen: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //MessageBox.Show($"Error al descargar la imagen: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return null;
                 }
             }
