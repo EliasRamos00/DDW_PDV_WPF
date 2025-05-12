@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using DDW_PDV_WPF.Modelo;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace DDW_PDV_WPF.Controlador
 {
@@ -22,8 +23,8 @@ namespace DDW_PDV_WPF.Controlador
 
         public static void ImprimeTicket(ObservableCollection<ArticuloDTO> productos, decimal totalCarro)
         {
-           
 
+            var culturaMexicana = new CultureInfo("es-MX");
             string RFC = "GUSY970729 868", Nombre = "YECENIA GURROLA SANCHEZ", Dirr = "PASTEUR 301 SUR", Cel = "618 230 9875", Ciudad = "DURANGO DGO.", CP = "34000";
 
 
@@ -127,7 +128,7 @@ namespace DDW_PDV_WPF.Controlador
                 int totalPorProd = Convert.ToInt32(producto.Cantidad) * Convert.ToInt32(producto.PrecioVenta);
 
                 // Celda para el precio (alineado a la derecha)
-                TableCell priceCell = new TableCell(new Paragraph(new Run(producto.TotalCarrito.ToString("C2"))))
+                TableCell priceCell = new TableCell(new Paragraph(new Run(producto.TotalCarrito.ToString("C2", culturaMexicana))))
                 {
                     TextAlignment = TextAlignment.Right,
                     Padding = new Thickness(0,0,20,0)
@@ -151,7 +152,7 @@ namespace DDW_PDV_WPF.Controlador
                 Margin = new Thickness(0,0,6,0)
             };
             totalParagraph.Inlines.Add(new Run("\n\n\n"));
-            totalParagraph.Inlines.Add(new Run($"TOTAL: {totalCarro.ToString("C2")}\n")); // Esto puede ser calculado dinámicamente también
+            totalParagraph.Inlines.Add(new Run($"TOTAL: {totalCarro.ToString("C2", culturaMexicana)}\n")); // Esto puede ser calculado dinámicamente también
             flowDoc.Blocks.Add(totalParagraph);
 
             // Crear un párrafo con el mensaje de agradecimiento
