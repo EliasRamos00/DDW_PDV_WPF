@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -315,6 +316,7 @@ namespace DDW_PDV_WPF
 
         private string CompararCambios(ArticuloDTO antes, ArticuloDTO despues)
         {
+            var culturaMexicana = new CultureInfo("es-MX");
             if (antes == null && despues == null) return "No hay datos para comparar";
 
             if (antes == null) return "CREACIÓN: \n" + FormatearDatosArticulo(despues);
@@ -344,10 +346,10 @@ namespace DDW_PDV_WPF
                 cambios.AppendLine($"• Máximo: {antes.Max} → {despues.Max}");
 
             if (antes.PrecioVenta != despues.PrecioVenta)
-                cambios.AppendLine($"• Precio Venta: {antes.PrecioVenta:C} → {despues.PrecioVenta:C}");
+                cambios.AppendLine($"• Precio Venta: {antes.PrecioVenta.ToString("C",culturaMexicana)} → {despues.PrecioVenta.ToString("C", culturaMexicana)}");
 
             if (antes.PrecioCompra != despues.PrecioCompra)
-                cambios.AppendLine($"• Precio Compra: {antes.PrecioCompra:C} → {despues.PrecioCompra:C}");
+                cambios.AppendLine($"• Precio Compra: {antes.PrecioCompra?.ToString("C",culturaMexicana)} → {despues.PrecioCompra?.ToString("C",culturaMexicana)}");
 
             if (antes.CodigoBarras != despues.CodigoBarras)
                 cambios.AppendLine($"• Código: {antes.CodigoBarras} → {despues.CodigoBarras}");

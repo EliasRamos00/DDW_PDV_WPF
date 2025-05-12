@@ -444,31 +444,42 @@
                 <!--  Título  -->
 
                 <StackPanel Grid.Row="0">
+                    <Image
+                        Width="75"
+                        Height="75"
+                        Source="/Resources/omegasymbol.png" />
                     <TextBlock
-                        Margin="0,20,0,20"
+                        Margin="0,5,0,5"
                         HorizontalAlignment="Center"
                         FontSize="18"
                         FontWeight="Bold"
                         Foreground="#2E5E4E"
                         Text="DETALLES DE LA VENTA" />
 
-                    <Image
-                        Width="214"
-                        Height="106"
-                        Source="/Resources/omegasymbol.png" />
+
                 </StackPanel>
                 <!--  Subtítulo  -->
-                <TextBlock
-                    Grid.Row="1"
-                    Width="241"
-                    Margin="0,0,0,10"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="#2E5E4E"
-                    Text="Carrito de artículos" />
-
-
-
+                <StackPanel Grid.Row="1">
+                    <!--<TextBlock
+                        Grid.Row="1"
+                        Width="241"
+                        Margin="0,0,0,10"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Foreground="#2E5E4E"
+                        Text="Carrito de artículos" />-->
+                    <Button
+                        Grid.Row="3"
+                        Margin="10"
+                        Padding="10,5"
+                        HorizontalAlignment="Right"
+                        Background="#A01A7D"
+                        Click="LimpiarCarrito_Click"
+                        Content="🗑 Limpiar carrito"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Foreground="White" />
+                </StackPanel>
                 <!--  Botón de escanear artículo  -->
 
 
@@ -556,15 +567,15 @@
                                             Content="-"
                                             FontSize="20"
                                             Foreground="White" />
-                                        <Label
+                                        <TextBlock
                                             Width="20"
                                             Margin="2,0,0,0"
-                                            Padding="0,0,0,0"
                                             VerticalAlignment="Center"
-                                            HorizontalContentAlignment="Center"
-                                            Content="{Binding Cantidad}"
                                             FontSize="14"
-                                            Foreground="#2E5E4E" />
+                                            Foreground="#2E5E4E"
+                                            MouseDown="CantidadTextBlock_MouseDown"
+                                            Text="{Binding Cantidad}"
+                                            TextAlignment="Center" />
                                         <Button
                                             Width="Auto"
                                             Height="Auto"
@@ -584,6 +595,66 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <Popup
+                    x:Name="CantidadPopup"
+                    AllowsTransparency="True"
+                    Placement="MousePoint"
+                    PopupAnimation="Fade"
+                    StaysOpen="True">
+                    <Border
+                        Width="250"
+                        Height="180"
+                        Padding="15"
+                        Background="White"
+                        BorderBrush="#6B9D89"
+                        BorderThickness="2"
+                        CornerRadius="10"
+                        SnapsToDevicePixels="True">
+                        <StackPanel VerticalAlignment="Stretch">
+                            <Button
+                                HorizontalAlignment="Right"
+                                Background="#6B9D89"
+                                BorderBrush="Transparent"
+                                Click="CerrarPopup_Click"
+                                Content="X"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="Black" />
+
+                            <!--  Título  -->
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                HorizontalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="#2E5E4E"
+                                Text="Editar Cantidad" />
+
+                            <TextBox
+                                x:Name="PopupCantidadBox"
+                                Width="100"
+                                Height="35"
+                                HorizontalContentAlignment="Center"
+                                Background="#D9D9D9"
+                                BorderBrush="#6B9D89"
+                                BorderThickness="1"
+                                FontSize="20"
+                                KeyDown="PopupCantidadBox_KeyDown"
+                                PreviewTextInput="PopupCantidadBox_PreviewTextInput" />
+
+                            <Button
+                                Margin="0,15,0,30"
+                                HorizontalAlignment="Center"
+                                Background="#6B9D89"
+                                BorderBrush="#6B9D89"
+                                Click="AceptarCantidad_Click"
+                                Content="Aceptar"
+                                FontWeight="Bold"
+                                Foreground="White" />
+                        </StackPanel>
+                    </Border>
+                </Popup>
+
 
                 <StackPanel Grid.Row="3" Margin="10,5,0,0">
                     <Grid>
@@ -614,6 +685,7 @@
                             Background="White"
                             FontSize="21"
                             Foreground="#2E5E4E"
+                            GotFocus="TextBox_GotFocus"
                             KeyDown="txtEnter"
                             Text="{Binding MontoRecibido, UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Right" />
@@ -643,6 +715,7 @@
                             Foreground="#2E5E4E"
                             Text="Total: " />
                         <TextBlock
+                            x:Name="txtBTotal"
                             Grid.Row="2"
                             Grid.Column="1"
                             Margin="0,5,10,5"
@@ -672,6 +745,13 @@
                             Text="{Binding Cambio, StringFormat=C2}"
                             TextAlignment="Right" />
                     </Grid>
+                    <!--<CheckBox
+                        x:Name="chkBDescuento"
+                        Margin="10,5"
+                        Click="chkBDescuentoClick"
+                        Content="Aplicar descuento general"
+                        FontSize="16"
+                        Foreground="#2E5E4E" />-->
                 </StackPanel>
 
                 <Button

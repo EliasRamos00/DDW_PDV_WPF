@@ -299,6 +299,72 @@ namespace DDW_PDV_WPF
         }
 
 
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var tb = sender as System.Windows.Controls.TextBox;
+            tb?.Dispatcher.BeginInvoke(new Action(() => tb.SelectAll()));
+        }
+        private void LimpiarCarrito_Click(object sender, RoutedEventArgs e)
+        {
+            if (System.Windows.MessageBox.Show("¿Estás seguro de que deseas limpiar el carrito?", "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                CarritoVenta.Clear();
+                CalcularTotalCarro();
+            }
+        }
+        private object itemActual;
+
+        private void CantidadTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock tb && tb.DataContext != null)
+            {
+                itemActual = tb.DataContext;
+                PopupCantidadBox.Text = (itemActual.GetType().GetProperty("Cantidad")?.GetValue(itemActual) ?? "1").ToString();
+                CantidadPopup.IsOpen = true;
+
+
+            }
+        }
+
+        private void AceptarCantidad_Click(object sender, RoutedEventArgs e)
+        {
+            if (itemActual != null && int.TryParse(PopupCantidadBox.Text, out int cantidad))
+            {
+                itemActual.GetType().GetProperty("Cantidad")?.SetValue(itemActual, cantidad);
+                CalcularTotalCarro();
+
+                if (Convert.ToUInt32(itemActual.GetType().GetProperty("Cantidad")?.GetValue(itemActual)) == 0)
+                {
+                    _carritoVenta.Remove((ArticuloDTO)itemActual);
+                }
+            }
+
+            CantidadPopup.IsOpen = false;
+        }
+
+
+        private void CerrarPopup_Click(object sender, RoutedEventArgs e)
+        {
+            CantidadPopup.IsOpen = false;
+        }
+
+        private void chkBDescuentoClick(object sender, RoutedEventArgs e)
+        {
+            var isChecked = (sender as CheckBox)?.IsChecked ?? false;
+
+            txtBTotal.IsEnabled = !isChecked;
+            txtBTotal.Background = isChecked ? Brushes.White : Brushes.Transparent;
+        }
+
+        private void PopupCantidadBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+           
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+        private void PopupCantidadBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
         private async void CargarProductos()
         {
             var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/productos/inventario");
@@ -598,6 +664,12 @@ namespace DDW_PDV_WPF
             }
         }
 
+        private void PopupCantidadBox_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+       
     }
 
 }
