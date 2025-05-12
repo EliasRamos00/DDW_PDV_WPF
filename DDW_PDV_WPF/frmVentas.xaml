@@ -388,6 +388,13 @@
                                             Click="ClickProducto">
                                             <Button.Content>
                                                 <StackPanel>
+                                                    <TextBlock
+                                                        HorizontalAlignment="Center"
+                                                        Background="White"
+                                                        FontSize="12"
+                                                        Foreground="#000000"
+                                                        Text="{Binding PrecioVenta, StringFormat={}$ {0:N2}}"
+                                                        TextWrapping="Wrap" />
                                                     <Image
                                                         Width="100"
                                                         Height="100"
@@ -407,6 +414,7 @@
                                                         Foreground="#2E5E4E"
                                                         Text="{Binding Color}"
                                                         TextWrapping="Wrap" />
+
                                                 </StackPanel>
                                             </Button.Content>
                                         </Button>
