@@ -270,6 +270,7 @@ namespace DDW_PDV_WPF
             UpdateDateTime();
         }
 
+
         private void Window_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
 
