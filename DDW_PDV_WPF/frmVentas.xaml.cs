@@ -359,7 +359,7 @@ namespace DDW_PDV_WPF
             DateTime now = DateTime.Now;
 
             // Formatear la fecha
-            txtFecha.Text = now.ToString("dddd, dd 'de' MMMM 'de' yyyy", new CultureInfo("es-MX"));
+            txtFecha.Text = now.ToString("dd 'de' MMMM 'de' yyyy", new CultureInfo("es-MX"));
 
             // Formatear la hora con minutos y segundos
             txtHora.Text = now.ToString("HH:mm:ss", new CultureInfo("es-MX"));
