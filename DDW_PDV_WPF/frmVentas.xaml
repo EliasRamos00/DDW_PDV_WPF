@@ -478,6 +478,8 @@
                         FontWeight="Bold"
                         Foreground="#2E5E4E"
                         Text="Carrito de artículos" />-->
+                    <!--  Leyenda y editor de precio si hay más de 6  -->
+
                     <Button
                         Grid.Row="3"
                         Margin="10"
@@ -503,7 +505,7 @@
                         <DataTemplate>
                             <Border
                                 Width="auto"
-                                Height="70"
+                                Height="110"
                                 Margin="0,0,0,5"
                                 Padding="5"
                                 Background="#F5F5F5"
@@ -515,7 +517,6 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-
                                     <Image
                                         Grid.Column="0"
                                         Width="60"
@@ -523,7 +524,6 @@
                                         Margin="2,0,4,0"
                                         VerticalAlignment="Top"
                                         Source="{Binding ImagenProducto}" />
-
                                     <StackPanel Grid.Column="1" Margin="0,0,4,0">
                                         <TextBlock
                                             Width="100"
@@ -539,25 +539,33 @@
                                             Foreground="#A01A7D"
                                             Text="{Binding Color}"
                                             TextWrapping="Wrap" />
-                                        <TextBlock
+                                        <TextBox
+                                            x:Name="txtBPrecioVenta"
                                             FontSize="10"
                                             Foreground="#6B9D89"
+                                            IsEnabled="False"
                                             Text="{Binding PrecioVenta, StringFormat=C}" />
                                         <TextBlock
                                             FontSize="10"
                                             Foreground="#8FBBA9"
                                             Text="{Binding IdCategoria}" />
+                                        <TextBlock
+                                            FontSize="10"
+                                            Foreground="Red"
+                                            Text="Descuento disponible"
+                                            Visibility="{Binding AlertaDescuento}" />
                                     </StackPanel>
 
                                     <TextBlock
                                         Grid.Column="2"
-                                        Width="60"
-                                        Margin="5,0,5,0"
+                                        Width="80"
                                         VerticalAlignment="Center"
-                                        FontSize="12"
+                                        Cursor="Hand"
                                         FontWeight="Bold"
                                         Foreground="#2E5E4E"
+                                        MouseDown="TextBlock_MouseDown"
                                         Text="{Binding TotalCarrito, StringFormat=C}" />
+
 
                                     <StackPanel
                                         Grid.Column="3"
@@ -565,6 +573,8 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Orientation="Horizontal">
+
+
                                         <Button
                                             Width="Auto"
                                             Height="Auto"
@@ -605,6 +615,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
                 <Popup
                     x:Name="CantidadPopup"
                     AllowsTransparency="True"
@@ -664,9 +675,44 @@
                         </StackPanel>
                     </Border>
                 </Popup>
-
+                <Popup
+                    x:Name="popupEditarPrecio"
+                    AllowsTransparency="True"
+                    IsOpen="False"
+                    Placement="Center"
+                    PopupAnimation="Fade"
+                    StaysOpen="True">
+                    <Border
+                        Padding="20"
+                        Background="White"
+                        BorderBrush="Gray"
+                        BorderThickness="2"
+                        CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock
+                                Margin="0,0,0,10"
+                                FontWeight="Bold"
+                                Text="Modificar precio total" />
+                            <TextBox x:Name="txtNuevoPrecio" Margin="0,0,0,10" />
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <Button
+                                    Margin="0,0,5,0"
+                                    Click="CancelarPopup"
+                                    Content="Cancelar" />
+                                <Button Click="AceptarPopup" Content="Aceptar" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Popup>
 
                 <StackPanel Grid.Row="3" Margin="10,5,0,0">
+
+                    <CheckBox
+                        Margin="0,0,10,5"
+                        Content="Editar Total"
+                        FontSize="16"
+                        Foreground="#2E5E4E"
+                        IsChecked="{Binding PuedeEditarTotal, Mode=TwoWay}" />
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -724,7 +770,7 @@
                             FontSize="33"
                             Foreground="#2E5E4E"
                             Text="Total: " />
-                        <TextBlock
+                        <TextBox
                             x:Name="txtBTotal"
                             Grid.Row="2"
                             Grid.Column="1"
@@ -733,8 +779,10 @@
                             FontSize="44"
                             FontWeight="Bold"
                             Foreground="#A01A7D"
-                            Text="{Binding Total, StringFormat=C2}"
+                            IsEnabled="{Binding PuedeEditarTotal}"
+                            Text="{Binding Total, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             TextAlignment="Right" />
+
 
                         <TextBlock
                             Grid.Row="3"
@@ -755,13 +803,7 @@
                             Text="{Binding Cambio, StringFormat=C2}"
                             TextAlignment="Right" />
                     </Grid>
-                    <!--<CheckBox
-                        x:Name="chkBDescuento"
-                        Margin="10,5"
-                        Click="chkBDescuentoClick"
-                        Content="Aplicar descuento general"
-                        FontSize="16"
-                        Foreground="#2E5E4E" />-->
+
                 </StackPanel>
 
                 <Button

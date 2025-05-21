@@ -12,6 +12,8 @@ namespace DDW_PDV_WPF.Modelo
     {
         private int _cantidad;
         private decimal _totalCarrito;
+        private System.Windows.Visibility _alertaDescuento = System.Windows.Visibility.Hidden;
+        private bool _totalManual = false;
 
         [XmlElement("idArticulo")]
         public int idArticulo { get; set; }
@@ -57,6 +59,20 @@ namespace DDW_PDV_WPF.Modelo
         public decimal Precio { get; set; }
 
         [XmlIgnore] // No serializar esta propiedad para el historial
+        public System.Windows.Visibility AlertaDescuento
+        {
+            get => _alertaDescuento;
+            set
+            {
+                if (_alertaDescuento != value)
+                {
+                    _alertaDescuento = value;
+                    OnPropertyChanged(nameof(AlertaDescuento)); // Esto es esencial
+                }
+            }
+        }
+
+        [XmlIgnore] // No serializar esta propiedad para el historial
         [JsonIgnore] // Si usas Newtonsoft.Json para evitar que esta se serialice
         public ImageSource ImagenProducto { get; set; } // Esta se usará en el binding
 
@@ -64,10 +80,11 @@ namespace DDW_PDV_WPF.Modelo
         [XmlIgnore] // No serializar esta propiedad para el historial
         public decimal TotalCarrito
         {
-            get => _totalCarrito;
+            get => _totalManual ? _totalCarrito : PrecioVenta * Cantidad;
             set
             {
-                _totalCarrito = PrecioVenta * _cantidad;
+                _totalCarrito = value;
+                _totalManual = true;
                 OnPropertyChanged(nameof(TotalCarrito));
             }
         }
@@ -86,6 +103,7 @@ namespace DDW_PDV_WPF.Modelo
                 }
             }
         }
+
 
         protected void OnPropertyChanged(string propertyName)
         {

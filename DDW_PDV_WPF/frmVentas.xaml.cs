@@ -54,9 +54,11 @@ namespace DDW_PDV_WPF
         private Button _botonTodos;
         GoogleDriveHelper ds;
         private DispatcherTimer _debounceTimer;
-
-
-
+        private ArticuloDTO articuloEnEdicion;
+        private bool _puedeEditarTotal;
+        private decimal _totalCarrito;
+        private Dictionary<int, decimal> _preciosModificados = new Dictionary<int, decimal>();
+        private bool huboCambio=false;
         public string TextoBusqueda
         {
             get => _textoBusqueda;
@@ -113,7 +115,20 @@ namespace DDW_PDV_WPF
             }
 
         }
+       
 
+        public decimal TotalCarrito
+        {
+            get => _totalCarrito;
+            set
+            {
+                if (_totalCarrito != value)
+                {
+                    _totalCarrito = value;
+                    OnPropertyChanged(nameof(TotalCarrito));
+                }
+            }
+        }
         private void CambiarColorCambio()
         {
             if (Cambio > 0)
@@ -139,6 +154,15 @@ namespace DDW_PDV_WPF
         public decimal Total
         {
             get => _total;
+            set
+            {
+                if (_total != value)
+                {
+                    _total = value;
+                    OnPropertyChanged(nameof(Total));
+                    OnPropertyChanged(nameof(Cambio));
+                }
+            }
         }
 
 
@@ -187,6 +211,21 @@ namespace DDW_PDV_WPF
                 OnPropertyChanged(nameof(CarritoVenta)); // 
             }
         }
+
+       
+        public bool PuedeEditarTotal
+        {
+            get => _puedeEditarTotal;
+            set
+            {
+                if (_puedeEditarTotal != value)
+                {
+                    _puedeEditarTotal = value;
+                    OnPropertyChanged(nameof(PuedeEditarTotal));
+                }
+            }
+        }
+
 
 
         protected void OnPropertyChanged(string propertyName)
@@ -292,19 +331,28 @@ namespace DDW_PDV_WPF
         private void CalcularTotalCarro()
         {
             decimal aux = 0;
-            foreach (ArticuloDTO dto in _carritoVenta)
+
+            foreach (var dto in CarritoVenta)
             {
-                aux = aux + (dto.PrecioVenta * dto.Cantidad);
+                // Solo calcular total real aquí, no se lo asignas al dto directamente
+                decimal total = _preciosModificados.TryGetValue(dto.idArticulo, out var modificado)
+                    ? modificado
+                    : dto.PrecioVenta * dto.Cantidad;
+
+                aux += total;
             }
+
             _total = aux;
             _subTotal = aux;
+
             CambiarColorCambio();
             OnPropertyChanged(nameof(Total));
             OnPropertyChanged(nameof(SubTotal));
             OnPropertyChanged(nameof(Cambio));
-
-
         }
+
+
+
         private void UpdateDateTime()
         {
             // Obtener la fecha y hora actual
@@ -357,7 +405,6 @@ namespace DDW_PDV_WPF
                     _carritoVenta.Remove((ArticuloDTO)itemActual);
                 }
             }
-
             CantidadPopup.IsOpen = false;
         }
 
@@ -453,35 +500,64 @@ namespace DDW_PDV_WPF
             if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
             {
                 producto.Cantidad++;
-                producto.TotalCarrito = producto.Cantidad * producto.PrecioVenta;
+
+                if (_preciosModificados.ContainsKey(producto.idArticulo))
+                {
+                    // Si tiene precio modificado, eliminar para restablecer original
+                    _preciosModificados.Remove(producto.idArticulo);
+                    producto.TotalCarrito = producto.Cantidad * producto.PrecioVenta;
+                }
+                else
+                {
+                    producto.TotalCarrito = producto.Cantidad * producto.PrecioVenta;
+                }
+
+                producto.AlertaDescuento = producto.Cantidad >= 6 ? Visibility.Visible : Visibility.Hidden;
             }
+
             CalcularTotalCarro();
-
-
+            popupEditarPrecio.IsOpen = false;
         }
+
+
+
 
         private void DecrementarCantidad(object sender, RoutedEventArgs e)
         {
-
             if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
             {
-
                 if (producto.Cantidad > 0)
                 {
                     producto.Cantidad--;
+
+                    if (producto.Cantidad >= 6)
+                    {
+                        producto.AlertaDescuento = Visibility.Visible;
+                    }
+                    else
+                    {
+                        producto.AlertaDescuento = Visibility.Hidden;
+
+                        if (_preciosModificados.ContainsKey(producto.idArticulo))
+                        {
+                            _preciosModificados.Remove(producto.idArticulo);
+                        }
+                    }
+
                     producto.TotalCarrito = producto.Cantidad * producto.PrecioVenta;
-
-
                 }
+
                 CalcularTotalCarro();
 
                 if (producto.Cantidad == 0)
                 {
                     _carritoVenta.Remove(producto);
                 }
-
             }
+            popupEditarPrecio.IsOpen = false;
         }
+
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -502,11 +578,11 @@ namespace DDW_PDV_WPF
             clickedButton.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#333333"));
             clickedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0E0E0"));
         }
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+
+        private void AbrirPopup_Click(object sender, RoutedEventArgs e)
         {
-
+            popupEditarPrecio.IsOpen = true;
         }
-
         private void ScannArticulo(string CodigoArticulo)
         {
             // Buscar el artículo en la lista de productos disponibles
@@ -522,6 +598,11 @@ namespace DDW_PDV_WPF
                     // Si el artículo ya existe en el carrito, incrementar cantidad
                     articuloEnCarrito.Cantidad++;
                     articuloEnCarrito.TotalCarrito = articuloEnCarrito.Cantidad * articuloEnCarrito.PrecioVenta;
+                    if (articuloEnCarrito.Cantidad >= 6)
+                    {
+                            articuloEnCarrito.AlertaDescuento = Visibility.Visible;
+                        popupEditarPrecio.IsOpen = true;
+                    }
                 }
                 else
                 {
@@ -537,6 +618,8 @@ namespace DDW_PDV_WPF
 
                     _carritoVenta.Add(nuevoArticulo);
                     nuevoArticulo.TotalCarrito = nuevoArticulo.Cantidad * nuevoArticulo.PrecioVenta;
+
+
                 }
 
                 // Notificar cambios en el carrito y recalcular el total
@@ -548,6 +631,26 @@ namespace DDW_PDV_WPF
                 //MessageBox.Show("Artículo no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void AceptarPopup(object sender, RoutedEventArgs e)
+        {
+            if (articuloEnEdicion != null && decimal.TryParse(txtNuevoPrecio.Text, out decimal nuevoPrecio))
+            {
+                _preciosModificados[articuloEnEdicion.idArticulo] = nuevoPrecio;
+                articuloEnEdicion.TotalCarrito = nuevoPrecio; 
+                CalcularTotalCarro();
+            }
+
+            popupEditarPrecio.IsOpen = false;
+        }
+
+
+
+
+        private void CancelarPopup(object sender, RoutedEventArgs e)
+        {
+            popupEditarPrecio.IsOpen = false;
+            articuloEnEdicion = null;
+        }
 
 
 
@@ -555,40 +658,40 @@ namespace DDW_PDV_WPF
         {
             if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
             {
-
-                // Verificar si el artículo ya existe en el carrito
                 var articuloExistente = _carritoVenta.FirstOrDefault(item => item.idArticulo == producto.idArticulo);
 
                 if (articuloExistente != null)
                 {
-                    // Si el artículo ya existe, incrementamos su cantidad
                     articuloExistente.Cantidad++;
                     articuloExistente.TotalCarrito = articuloExistente.Cantidad * articuloExistente.PrecioVenta;
 
+                    if (articuloExistente.Cantidad >= 6)
+                    {
+                        articuloExistente.AlertaDescuento = Visibility.Visible;
+                    }
                 }
                 else
                 {
-                    // Si el artículo no existe, creamos un nuevo objeto y lo agregamos al carrito
                     ArticuloDTO nuevoArticulo = new ArticuloDTO
                     {
-                        idArticulo = producto.idArticulo, // Asumiendo que el producto tiene un ID
+                        idArticulo = producto.idArticulo,
                         Descripcion = producto.Descripcion,
                         ImagenProducto = producto.ImagenProducto,
-                        PrecioVenta = producto.PrecioVenta, // precio
+                        PrecioVenta = producto.PrecioVenta,
                         Cantidad = 1,
-                        Color=producto.Color
+                        Color = producto.Color
                     };
 
-                    // Agregar el nuevo artículo al carrito de ventas
                     _carritoVenta.Add(nuevoArticulo);
-                    nuevoArticulo.TotalCarrito = nuevoArticulo.Cantidad * nuevoArticulo.PrecioVenta;
+                    nuevoArticulo.TotalCarrito = nuevoArticulo.Cantidad * nuevoArticulo.PrecioVenta;                  
                 }
 
-                // Notificar que el carrito ha cambiado 
+
                 OnPropertyChanged(nameof(CarritoVenta));
                 CalcularTotalCarro();
             }
         }
+
 
         private async void CerrarVenta(object sender, RoutedEventArgs e)
         {
@@ -620,14 +723,21 @@ namespace DDW_PDV_WPF
                     idSucursal = 1, // Modifica según la sucursal correspondiente
                     idCaja = Properties.Settings.Default.Caja
                 },
-                detalle = _carritoVenta.Select(a => new
+                detalle = _carritoVenta.Select(a =>
                 {
-                    idArticulo = a.idArticulo,
-                    idVenta = 0, // Se actualizará en la BD
-                    precioVenta = a.PrecioVenta,
-                    cantidad = a.Cantidad
+                    decimal precioUnitario = _preciosModificados.ContainsKey(a.idArticulo) ?
+                        _preciosModificados[a.idArticulo] / a.Cantidad :
+                        a.PrecioVenta;
+
+                    return new
+                    {
+                        idArticulo = a.idArticulo,
+                        idVenta = 0,
+                        precioVenta = precioUnitario,
+                        cantidad = a.Cantidad
+                    };
                 }).ToList()
-            };
+        };
 
             try
             {
@@ -641,6 +751,8 @@ namespace DDW_PDV_WPF
                     _total = 0;
                     _subTotal = 0;
                     _montoRecibido = 0;
+                    _preciosModificados= new Dictionary<int, decimal>();
+
                     CalcularTotalCarro();
 
 
@@ -698,7 +810,15 @@ namespace DDW_PDV_WPF
 
         }
 
-       
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement fe && fe.DataContext is ArticuloDTO producto)
+            {
+                articuloEnEdicion = producto;
+                txtNuevoPrecio.Text = producto.TotalCarrito.ToString("0.##");
+                popupEditarPrecio.IsOpen = true;
+            }
+        }
     }
 
 }
