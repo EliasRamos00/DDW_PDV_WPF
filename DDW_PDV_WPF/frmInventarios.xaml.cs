@@ -27,6 +27,7 @@ using QRCoder;
 using System.Xml.Serialization;
 using System.Drawing.Imaging;
 using System.Drawing;
+using System.Windows.Interop;
 
 
 namespace DDW_PDV_WPF
@@ -47,6 +48,7 @@ namespace DDW_PDV_WPF
         private List<MCategorias> cat;
         private GoogleDriveHelper ds;
         private DispatcherTimer _debounceTimer;
+        private System.Windows.Media.Imaging.BitmapImage imagenActualBitMap;
 
         private ObservableCollection<MCategorias> _categorias;
         public ObservableCollection<MCategorias> Categorias
@@ -154,7 +156,9 @@ namespace DDW_PDV_WPF
                 string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
 
                 var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+                imagenActualBitMap = imageSource;
                 articuloSeleccionado.ImagenProducto = imageSource;
+
 
                 OnPropertyChanged(nameof(ArticuloSeleccionado)); // Notificar cambio visual
             }
@@ -827,12 +831,50 @@ namespace DDW_PDV_WPF
                 DefaultExt = ".png"
             };
 
+
             if (saveFileDialog.ShowDialog() == true)
             {
                 try
                 {
+                    // Convertimos ambas imágenes a BitmapSource
+                    var qrSource = imgCodigoQR.Source as BitmapSource;
+                    var imgSource = imagenActualBitMap;
+
+                    if (qrSource == null || imgSource == null)
+                        throw new InvalidOperationException("QR o imagen no están disponibles.");
+
+                    // Establecer tamaño deseado (tomamos el menor lado para evitar distorsión)
+                    int targetWidth = Math.Min(qrSource.PixelWidth, imgSource.PixelWidth);
+                    int targetHeight = Math.Min(qrSource.PixelHeight, imgSource.PixelHeight);
+
+                    // Escalamos ambas imágenes al mismo tamaño
+                    var qrScaled = new TransformedBitmap(qrSource, new ScaleTransform(
+                        (double)targetWidth / qrSource.PixelWidth,
+                        (double)targetHeight / qrSource.PixelHeight));
+
+                    var imgScaled = new TransformedBitmap(imgSource, new ScaleTransform(
+                        (double)targetWidth / imgSource.PixelWidth,
+                        (double)targetHeight / imgSource.PixelHeight));
+
+                    // Creamos un dibujo combinado
+                    DrawingVisual drawingVisual = new DrawingVisual();
+                    using (DrawingContext dc = drawingVisual.RenderOpen())
+                    {
+                        dc.DrawImage(qrScaled, new Rect(0, 0, targetWidth, targetHeight));
+                        dc.DrawImage(imgScaled, new Rect(targetWidth, 0, targetWidth, targetHeight));
+                    }
+
+                    // Renderizamos ambos en un nuevo bitmap
+                    int finalWidth = targetWidth * 2;
+                    int finalHeight = targetHeight;
+
+                    RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
+                        finalWidth, finalHeight, 96, 96, PixelFormats.Pbgra32);
+                    renderBitmap.Render(drawingVisual);
+
                     BitmapEncoder encoder;
-                    if (saveFileDialog.FileName.EndsWith(".jpg"))
+
+                    if (saveFileDialog.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase))
                     {
                         encoder = new JpegBitmapEncoder();
                     }
@@ -841,22 +883,26 @@ namespace DDW_PDV_WPF
                         encoder = new PngBitmapEncoder();
                     }
 
-                    encoder.Frames.Add(BitmapFrame.Create((BitmapSource)imgCodigoQR.Source));
 
+                    encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+
+                    // Guardamos a archivo
                     using (var fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                     {
                         encoder.Save(fileStream);
                     }
 
-                    MessageBox.Show("Código QR exportado correctamente.", "Éxito",
-                                  MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Código QR e imagen exportados correctamente.", "Éxito",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al exportar el código QR: {ex.Message}", "Error",
-                                  MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error al exportar: {ex.Message}", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+
+
         }
         private void txtDescripcion_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -864,6 +910,7 @@ namespace DDW_PDV_WPF
             btnCancelarCambios.Visibility = Visibility.Visible;
             btnGuardarCambios.Visibility = Visibility.Visible;
         }
+       
 
         private void cmbCategoriaCambio(object sender, SelectionChangedEventArgs e)
         {

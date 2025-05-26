@@ -57,7 +57,7 @@ namespace DDW_PDV_WPF.Modelo
 
         [XmlIgnore] // No serializar esta propiedad para el historial
         public decimal Precio { get; set; }
-
+        public decimal PrecioDescuento { get; set; } = 0;
         [XmlIgnore] // No serializar esta propiedad para el historial
         public System.Windows.Visibility AlertaDescuento
         {

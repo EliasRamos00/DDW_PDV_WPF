@@ -215,6 +215,7 @@
     <Compile Include="ConfigCajaSucursal.xaml.cs">
       <DependentUpon>ConfigCajaSucursal.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controlador\CurrencyConverter.cs" />
     <Compile Include="Controlador\DropboxHelper.cs" />
     <Compile Include="Controlador\GoogleDriveHelper.cs" />
     <Compile Include="LessThanZeroConverter.cs" />

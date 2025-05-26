@@ -208,7 +208,7 @@ namespace DDW_PDV_WPF
                 Fecha = DateTime.Now.Date,
                 Hora = DateTime.Now.TimeOfDay
             };
-
+            
             // Llamamos a la API para hacer el cierre de caja
             try
             {
