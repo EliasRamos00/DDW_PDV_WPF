@@ -252,11 +252,14 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Orientation="Vertical">
+
                                     <Image
                                         Margin="0,0,0,20"
                                         VerticalAlignment="Center"
                                         Source="/Resources/omegasymbol.png"
                                         Stretch="UniformToFill" />
+
+
                                     <TextBlock HorizontalAlignment="Center" Text="TODOS" />
                                 </StackPanel>
                             </Button>

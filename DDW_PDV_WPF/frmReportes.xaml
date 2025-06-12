@@ -120,6 +120,7 @@
             HorizontalAlignment="Center"
             Background="Transparent"
             Orientation="Horizontal">
+            
             <DatePicker
                 Language="es-ES"
                 Loaded="DatePicker_Loaded"
@@ -129,6 +130,7 @@
                 Language="es-ES"
                 Loaded="DatePicker_Loaded"
                 SelectedDate="{Binding FechaFin}" />
+            
             <ComboBox
                 DisplayMemberPath="Nombre"
                 ItemsSource="{Binding Sucursales}"

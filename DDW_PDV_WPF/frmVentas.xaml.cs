@@ -831,6 +831,7 @@ namespace DDW_PDV_WPF
             }
             catch (Exception ex)
             {
+                MessageBox.Show("Error: " + ex.Message);
                 // Aquí manejar error de conexión
             }
         }
