@@ -31,6 +31,7 @@ namespace DDW_PDV_WPF
     /// <summary>
     /// Lógica de interacción para frmVentas.xaml
     /// </summary>
+  
     public partial class frmVentas : Page, INotifyPropertyChanged
     {
 
@@ -280,61 +281,84 @@ namespace DDW_PDV_WPF
         /// <param name="currentUser"></param>
         public frmVentas(string currentUser, GoogleDriveHelper ds)
         {
-            InitializeComponent();
-            time();
-            // Inicializar ApiService
-            _apiService = new ApiService();
-            CargarProductos();
-            CargarCategorias();
-
-            DataContext = this;
-
-            _usuario = currentUser;
-
-            if (btnTodos != null)
             {
-                _botonTodos = btnTodos;
-                _botonCategoriaSeleccionado = btnTodos;
-                btnTodos.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
-                btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
-            }
-            // se cargan las imagenes
-            this.ds = ds;
-            _debounceTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(300)
-            };
-            _debounceTimer.Tick += (s, e) =>
-            {
-                _debounceTimer.Stop(); // Detener el timer para evitar múltiples ejecuciones
-                FiltrarProductos(); // Ejecutar el filtro
-            };
-        }
+                InitializeComponent();
+                time();
+                // Inicializar ApiService
+                _apiService = new ApiService();
 
-        private async void CargarCategorias()
-        {
-            var resultado = await _apiService.GetAsync<List<MCategorias>>("api/CCategorias/");
+                CargarProductos();
+                CargarCategorias();
 
-            if (resultado != null)
-            {
-                Categorias = new ObservableCollection<MCategorias>(resultado);
+                DataContext = this;
 
+                _usuario = currentUser;
 
-                if (_botonCategoriaSeleccionado != null)
+                if (btnTodos != null)
                 {
-                    _botonCategoriaSeleccionado.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
-                    _botonCategoriaSeleccionado.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
-                }
-                else if (btnTodos != null)
-                {
-
+                    _botonTodos = btnTodos;
                     _botonCategoriaSeleccionado = btnTodos;
                     btnTodos.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
                     btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
                 }
+                // se cargan las imagenes
+                this.ds = ds;
+                _debounceTimer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromMilliseconds(300)
+                };
+                _debounceTimer.Tick += (s, e) =>
+                {
+                    _debounceTimer.Stop(); // Detener el timer para evitar múltiples ejecuciones
+                    FiltrarProductos(); // Ejecutar el filtro
+                };
             }
         }
 
+        private async void CargarCategorias()
+        {
+            try
+            {
+                var resultado = await _apiService.GetAsync<List<MCategorias>>("api/CCategorias/");
+
+                if (resultado != null)
+                {
+                    Categorias = new ObservableCollection<MCategorias>(resultado);
+
+                    if (_botonCategoriaSeleccionado != null)
+                    {
+                        _botonCategoriaSeleccionado.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
+                        _botonCategoriaSeleccionado.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+                    }
+                    else if (btnTodos != null)
+                    {
+                        _botonCategoriaSeleccionado = btnTodos;
+                        btnTodos.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E5C1DC"));
+                        btnTodos.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#000000"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Error al cargar categorías: " + ex.Message);
+            }
+        }
+
+        public void LiberarRecursos()
+        {
+            // 1. Limpia listas
+            ListaArticulos?.Clear();
+            _productosOriginales?.Clear();
+            CarritoSeleccionado?.Articulos?.Clear();
+
+            // 2. Libera imágenes (si no se congelaron, se eliminan al limpiar las listas)
+            foreach (var articulo in ListaArticulos ?? new ObservableCollection<ArticuloDTO>())
+            {
+                articulo.ImagenProducto = null;
+            }
+            // 4. Limpia cualquier UI adicional
+            DataContext = null;
+        }
         public void time()
         {
             _timer = new DispatcherTimer();
@@ -488,32 +512,37 @@ namespace DDW_PDV_WPF
         }
         private async void CargarProductos()
         {
-            var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/productos/inventario");
-
-            if (resultado != null)
+            try
             {
-                _productosOriginales = new ObservableCollection<ArticuloDTO>(resultado);
-                ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+                var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/productos/inventario");
 
-
-                // Asignar imágenes a los artículos
-                foreach (var article in ListaArticulos)
+                if (resultado != null)
                 {
-                    if (article.Foto == "" || article.Foto.Equals(DBNull.Value))
+                    _productosOriginales = new ObservableCollection<ArticuloDTO>(resultado);
+                    ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+
+                    foreach (var article in ListaArticulos)
                     {
-                        continue;
+                        try
+                        {
+                            if (string.IsNullOrEmpty(article.Foto) || article.Foto.Equals(DBNull.Value))
+                                continue;
+
+                            string fileId = article.Foto;
+                            string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+                            var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+                            article.ImagenProducto = imageSource;
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Windows.Forms.MessageBox.Show("Error al cargar imagen del artículo: " + ex.Message);
+                        }
                     }
-
-                    //COMO LAS IMAGENES SON PUBLICAS Y DE ACCESO LIBRE, LITERALMENTE NO SE NECESITA NINGUN SECETRO PARA CONSUMIRLAS.
-                    // Suponemos que cada artículo tiene un "ImageId" que corresponde al ID de Google Drive de la imagen
-                    string fileId = article.Foto;  // ID del archivo de Google Drive
-                    string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
-                    var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId); // GUARDA EN CACHE SUPER IMPORTANTE
-                    article.ImagenProducto = imageSource; // Asignamos aquí la imagen lista
-
-
                 }
-
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Error al cargar productos: " + ex.Message);
             }
         }
 
@@ -643,52 +672,50 @@ namespace DDW_PDV_WPF
         }
         private void ScannArticulo(string CodigoArticulo)
         {
-            // Buscar el artículo en la lista de productos disponibles
-            var articuloEscaneado = _listaArticulos.FirstOrDefault(a => a.CodigoBarras == CodigoArticulo);
-
-            if (articuloEscaneado != null)
+            try
             {
-                // Buscar si el artículo ya está en el carrito seleccionado actual
-                var articuloEnCarrito = CarritoSeleccionado.Articulos.FirstOrDefault(item => item.idArticulo == articuloEscaneado.idArticulo);
+                var articuloEscaneado = _listaArticulos.FirstOrDefault(a => a.CodigoBarras == CodigoArticulo);
 
-                if (articuloEnCarrito != null)
+                if (articuloEscaneado != null)
                 {
-                    // Si el artículo ya existe en el carrito, incrementar cantidad
-                    articuloEnCarrito.Cantidad++;
-                    articuloEnCarrito.TotalCarrito = articuloEnCarrito.Cantidad * articuloEnCarrito.PrecioVenta;
+                    var articuloEnCarrito = CarritoSeleccionado?.Articulos.FirstOrDefault(item => item.idArticulo == articuloEscaneado.idArticulo);
 
-                    if (articuloEnCarrito.Cantidad >= 6)
+                    if (articuloEnCarrito != null)
                     {
-                        articuloEnCarrito.AlertaDescuento = Visibility.Visible;
-                        popupEditarPrecio.IsOpen = true;
+                        articuloEnCarrito.Cantidad++;
+                        articuloEnCarrito.TotalCarrito = articuloEnCarrito.Cantidad * articuloEnCarrito.PrecioVenta;
+
+                        if (articuloEnCarrito.Cantidad >= 6)
+                        {
+                            articuloEnCarrito.AlertaDescuento = Visibility.Visible;
+                            popupEditarPrecio.IsOpen = true;
+                        }
                     }
-                }
-                else
-                {
-                    // Si el artículo no está en el carrito, agregarlo como nuevo
-                    ArticuloDTO nuevoArticulo = new ArticuloDTO
+                    else
                     {
-                        idArticulo = articuloEscaneado.idArticulo,
-                        Descripcion = articuloEscaneado.Descripcion,
-                        ImagenProducto = articuloEscaneado.ImagenProducto,
-                        PrecioVenta = articuloEscaneado.PrecioVenta,
-                        Cantidad = 1
-                    };
+                        ArticuloDTO nuevoArticulo = new ArticuloDTO
+                        {
+                            idArticulo = articuloEscaneado.idArticulo,
+                            Descripcion = articuloEscaneado.Descripcion,
+                            ImagenProducto = articuloEscaneado.ImagenProducto,
+                            PrecioVenta = articuloEscaneado.PrecioVenta,
+                            Cantidad = 1
+                        };
 
-                    CarritoSeleccionado.Articulos.Add(nuevoArticulo);
-                    nuevoArticulo.TotalCarrito = nuevoArticulo.Cantidad * nuevoArticulo.PrecioVenta;
+                        CarritoSeleccionado?.Articulos.Add(nuevoArticulo);
+                        nuevoArticulo.TotalCarrito = nuevoArticulo.Cantidad * nuevoArticulo.PrecioVenta;
+                    }
+
+                    OnPropertyChanged(nameof(CarritoSeleccionado));
+                    CalcularTotalCarro();
                 }
-
-                // Notificar cambios en el carrito seleccionado y recalcular el total
-                OnPropertyChanged(nameof(CarritoSeleccionado));
-                CalcularTotalCarro();
             }
-            else
+            catch (Exception ex)
             {
-                // Opcional: mostrar mensaje de error si no se encontró el artículo
-                // MessageBox.Show("Artículo no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.Forms.MessageBox.Show("Error al escanear artículo: " + ex.Message);
             }
         }
+
         private void AceptarPopup(object sender, RoutedEventArgs e)
         {
             if (articuloEnEdicion != null && decimal.TryParse(txtNuevoPrecio.Text, out decimal nuevoPrecio))
@@ -767,7 +794,7 @@ namespace DDW_PDV_WPF
 
         private async void CerrarVenta(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(200); // Espera que termine la animación
+            await Task.Delay(200);
 
             if (CarritoSeleccionado == null || CarritoSeleccionado.Articulos == null || !CarritoSeleccionado.Articulos.Any())
             {
@@ -780,13 +807,12 @@ namespace DDW_PDV_WPF
                 return;
             }
 
-            // Construimos el objeto para la API usando el carrito seleccionado
             var ventaDTO = new
             {
                 venta = new
                 {
                     idVenta = 0,
-                    total = _total,  // Asegúrate de que _total se haya calculado correctamente antes
+                    total = _total,
                     fechahora = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss"),
                     vendedor = Properties.Settings.Default.Usuario,
                     tieneFactura = 0,
@@ -807,34 +833,39 @@ namespace DDW_PDV_WPF
                 }).ToList()
             };
 
-
             try
             {
                 var resultado = await _apiService.PostAsync("api/CVentas/crear", ventaDTO);
 
                 if (resultado)
                 {
-                    ImpresoraTicket.ImprimeTicket(CarritoSeleccionado.Articulos, _total);
+                    try
+                    {
+                        ImpresoraTicket.ImprimeTicket(CarritoSeleccionado.Articulos, _total);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error al imprimir ticket: " + ex.Message);
+                    }
 
                     CarritoSeleccionado.Articulos.Clear();
                     _total = 0;
                     _subTotal = 0;
                     _montoRecibido = 0;
                     _preciosModificados = new Dictionary<int, decimal>();
-
                     CalcularTotalCarro();
                 }
                 else
                 {
-                    // Aquí podrías mostrar error
+                    System.Windows.Forms.MessageBox.Show("Error al registrar la venta.");
                 }
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show("Error: " + ex.Message);
-                // Aquí manejar error de conexión
+                System.Windows.Forms.MessageBox.Show("Error al cerrar la venta: " + ex.Message);
             }
         }
+
 
         private void txtEnter(object sender, KeyEventArgs e)
         {

@@ -79,9 +79,24 @@ namespace DDW_PDV_WPF
         private void NavigateToVentas(object sender, RoutedEventArgs e)
         {
             ResetNavigationButtons();
+
+            // Si la vista actual es frmVentas, liberarla antes de soltarla
+            if (MainFrame.Content is frmVentas vistaAnterior)
+            {
+                vistaAnterior.LiberarRecursos();
+            }
+
+            // Limpiar contenido actual
+            MainFrame.Content = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // Navegar a una nueva instancia
             MainFrame.Navigate(new frmVentas(Usuario, ds));
+
             buttonVentas.IsEnabled = false;
         }
+
 
         private void NavigateToReportes(object sender, RoutedEventArgs e)
         {
