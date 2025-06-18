@@ -208,10 +208,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="example.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="frmCierreCajaEmergente.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -222,9 +218,6 @@
     <Compile Include="Controlador\CurrencyConverter.cs" />
     <Compile Include="Controlador\DropboxHelper.cs" />
     <Compile Include="Controlador\GoogleDriveHelper.cs" />
-    <Compile Include="example.xaml.cs">
-      <DependentUpon>example.xaml</DependentUpon>
-    </Compile>
     <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
     <Compile Include="Modelo\MCajasDTO.cs" />

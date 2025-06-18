@@ -169,11 +169,21 @@ namespace DDW_PDV_WPF.Controlador
         private BitmapImage LoadImageFromFile(string filePath)
         {
             BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
-            bitmapImage.EndInit();
+
+            using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Carga completamente y cierra el stream
+                bitmapImage.DecodePixelWidth = 300; // Redimensiona si las imágenes son muy grandes
+                bitmapImage.StreamSource = stream;
+                bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze(); // Permite compartir en UI y libera recursos
+            }
+
             return bitmapImage;
         }
+
 
         private static string ResizeAndCompressImage(string inputPath, int maxWidth = 800, int maxHeight = 800, long quality = 80)
         {
