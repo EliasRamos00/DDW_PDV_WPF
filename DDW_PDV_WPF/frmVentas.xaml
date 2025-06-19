@@ -229,15 +229,7 @@
 
 
 
-                    <Button
-                        Width="150"
-                        Height="30"
-                        Margin="0,0,0,10"
-                        HorizontalAlignment="Left"
-                        Background="White"
-                        BorderBrush="#2E5E4E"
-                        Click="BtnRefrescar_Click"
-                        Content="🔄 Refrescar." />
+
 
                     <ScrollViewer
                         Grid.Row="1"
@@ -323,16 +315,38 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <TextBox
-                        x:Name="txtBusqueda"
+                    <Grid
                         Grid.Row="2"
                         Width="580"
                         Height="40"
-                        Margin="0,10,0,10"
+                        Margin="0,10"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Background="White"
-                        Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}" />
+                        VerticalAlignment="Center">
+                        <!--  Dos columnas: 1 para el TextBox (auto-expandible) y 1 para el botón  -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            x:Name="txtBusqueda"
+                            Grid.Column="0"
+                            Margin="0"
+                            VerticalContentAlignment="Center"
+                            Background="White"
+                            Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <Button
+                            Grid.ColumnSpan="2"
+                            Height="40"
+                            Margin="525,0,0,0"
+                            Background="White"
+                            BorderBrush="#2E5E4E"
+                            Click="BtnRefrescar_Click"
+                            Content="🔄"
+                            FontSize="23" />
+                    </Grid>
+
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
