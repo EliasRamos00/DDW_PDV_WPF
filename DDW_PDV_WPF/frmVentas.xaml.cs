@@ -62,6 +62,8 @@ namespace DDW_PDV_WPF
         private Dictionary<int, decimal> _preciosModificados = new Dictionary<int, decimal>();
         private bool huboCambio=false;
         private CarritoViewModel _carritoSeleccionado;
+        private static ObservableCollection<ArticuloDTO> _productosEnMemoria;
+        private static bool _productosCargados = false;
 
 
         private ObservableCollection<CarritoViewModel> _carritos = new ObservableCollection<CarritoViewModel>()
@@ -287,7 +289,11 @@ namespace DDW_PDV_WPF
                 // Inicializar ApiService
                 _apiService = new ApiService();
 
-                CargarProductos();
+                if (!_productosCargados)
+                    CargarProductos();
+                else
+                    ListaArticulos = new ObservableCollection<ArticuloDTO>(_productosEnMemoria);
+
                 CargarCategorias();
 
                 DataContext = this;
@@ -344,21 +350,7 @@ namespace DDW_PDV_WPF
             }
         }
 
-        public void LiberarRecursos()
-        {
-            // 1. Limpia listas
-            ListaArticulos?.Clear();
-            _productosOriginales?.Clear();
-            CarritoSeleccionado?.Articulos?.Clear();
 
-            // 2. Libera imágenes (si no se congelaron, se eliminan al limpiar las listas)
-            foreach (var articulo in ListaArticulos ?? new ObservableCollection<ArticuloDTO>())
-            {
-                articulo.ImagenProducto = null;
-            }
-            // 4. Limpia cualquier UI adicional
-            DataContext = null;
-        }
         public void time()
         {
             _timer = new DispatcherTimer();
@@ -512,14 +504,20 @@ namespace DDW_PDV_WPF
         }
         private async void CargarProductos()
         {
+            if (_productosCargados && _productosEnMemoria != null)
+            {
+                ListaArticulos = new ObservableCollection<ArticuloDTO>(_productosEnMemoria);
+                return;
+            }
+
             try
             {
                 var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/productos/inventario");
 
                 if (resultado != null)
                 {
-                    _productosOriginales = new ObservableCollection<ArticuloDTO>(resultado);
                     ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+                    _productosEnMemoria = ListaArticulos;
 
                     foreach (var article in ListaArticulos)
                     {
@@ -528,16 +526,25 @@ namespace DDW_PDV_WPF
                             if (string.IsNullOrEmpty(article.Foto) || article.Foto.Equals(DBNull.Value))
                                 continue;
 
-                            string fileId = article.Foto;
-                            string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
-                            var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
-                            article.ImagenProducto = imageSource;
+                            if (article.ImagenProducto == null)
+                            {
+                                string fileId = article.Foto;
+                                string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+                                var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+
+                                if (imageSource != null && imageSource.CanFreeze)
+                                    imageSource.Freeze();
+
+                                article.ImagenProducto = imageSource;
+                            }
                         }
                         catch (Exception ex)
                         {
                             System.Windows.Forms.MessageBox.Show("Error al cargar imagen del artículo: " + ex.Message);
                         }
                     }
+
+                    _productosCargados = true;
                 }
             }
             catch (Exception ex)
@@ -545,6 +552,14 @@ namespace DDW_PDV_WPF
                 System.Windows.Forms.MessageBox.Show("Error al cargar productos: " + ex.Message);
             }
         }
+
+        private void BtnRefrescar_Click(object sender, RoutedEventArgs e)
+        {
+            _productosCargados = false;
+            _productosEnMemoria = null;
+            CargarProductos();
+        }
+
 
         private void FiltrarProductos()
         {

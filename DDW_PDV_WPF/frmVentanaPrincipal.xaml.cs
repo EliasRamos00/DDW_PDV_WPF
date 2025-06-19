@@ -24,14 +24,17 @@ namespace DDW_PDV_WPF
     {
         private string Usuario { get; set; }
         GoogleDriveHelper ds = new GoogleDriveHelper();
-
+        frmVentas _frmventas;
         public frmVentanaPrincipal(string Usuario, string Rol)
         {
             InitializeComponent();
-            MainFrame.Navigate(new frmVentas(Usuario, ds));
+            _frmventas = new frmVentas(Usuario, ds);
+            MainFrame.Navigate(_frmventas);
             MainFrame.UpdateLayout();
             Permisos(Rol);
             this.Usuario = Usuario;
+
+            
         }
 
         private void Permisos(string rol)
@@ -79,24 +82,9 @@ namespace DDW_PDV_WPF
         private void NavigateToVentas(object sender, RoutedEventArgs e)
         {
             ResetNavigationButtons();
-
-            // Si la vista actual es frmVentas, liberarla antes de soltarla
-            if (MainFrame.Content is frmVentas vistaAnterior)
-            {
-                vistaAnterior.LiberarRecursos();
-            }
-
-            // Limpiar contenido actual
-            MainFrame.Content = null;
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            // Navegar a una nueva instancia
-            MainFrame.Navigate(new frmVentas(Usuario, ds));
-
+            MainFrame.Navigate(_frmventas);
             buttonVentas.IsEnabled = false;
         }
-
 
         private void NavigateToReportes(object sender, RoutedEventArgs e)
         {

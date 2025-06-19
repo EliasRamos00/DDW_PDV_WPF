@@ -229,7 +229,15 @@
 
 
 
-
+                    <Button
+                        Width="150"
+                        Height="30"
+                        Margin="0,0,0,10"
+                        HorizontalAlignment="Left"
+                        Background="White"
+                        BorderBrush="#2E5E4E"
+                        Click="BtnRefrescar_Click"
+                        Content="🔄 Refrescar." />
 
                     <ScrollViewer
                         Grid.Row="1"
@@ -402,6 +410,7 @@
             Margin="10,0,0,0"
             Padding="15"
             Background="#FFFFFF">
+
             <Grid>
                 <!--  Definir filas  -->
                 <Grid.RowDefinitions>
