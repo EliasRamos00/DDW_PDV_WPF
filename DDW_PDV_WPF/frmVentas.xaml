@@ -317,12 +317,12 @@
 
                     <Grid
                         Grid.Row="2"
-                        Width="580"
+                        Width="620"
                         Height="40"
                         Margin="0,10"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-                        <!--  Dos columnas: 1 para el TextBox (auto-expandible) y 1 para el botón  -->
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -331,30 +331,42 @@
                         <TextBox
                             x:Name="txtBusqueda"
                             Grid.Column="0"
-                            Margin="0"
+                            Margin="0,0,5,0"
+                            Padding="10,0"
                             VerticalContentAlignment="Center"
                             Background="White"
+                            BorderBrush="#2E5E4E"
+                            BorderThickness="1"
+                            FontSize="14"
                             Text="{Binding TextoBusqueda, UpdateSourceTrigger=PropertyChanged}" />
 
                         <Button
-                            Grid.ColumnSpan="2"
+                            Grid.Column="1"
                             Height="40"
-                            Margin="525,0,0,0"
-                            Background="White"
+                            MinWidth="50"
+                            Background="#2E5E4E"
                             BorderBrush="#2E5E4E"
                             Click="BtnRefrescar_Click"
                             Content="🔄"
-                            FontSize="23" />
+                            Cursor="Hand"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Foreground="White" />
                     </Grid>
+
 
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="23*" />
+                        <!--  Productos  -->
                         <RowDefinition Height="4*" />
+                        <!--  Paginación  -->
                     </Grid.RowDefinitions>
-                    <Grid>
+
+                    <!--  Lista de productos  -->
+                    <Grid Grid.Row="0">
                         <ScrollViewer
                             Margin="35,0,35,0"
                             CanContentScroll="False"
@@ -405,7 +417,6 @@
                                                         Foreground="#2E5E4E"
                                                         Text="{Binding Color}"
                                                         TextWrapping="Wrap" />
-
                                                 </StackPanel>
                                             </Button.Content>
                                         </Button>
@@ -415,7 +426,73 @@
                         </ScrollViewer>
                     </Grid>
 
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="0,10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+
+                        <!--  Botón Anterior  -->
+                        <Button
+                            Width="120"
+                            Height="35"
+                            Margin="5"
+                            Padding="10,5"
+                            Background="#2E5E4E"
+                            BorderBrush="#2E5E4E"
+                            BorderThickness="1"
+                            Click="BtnAnterior_Click"
+                            Content="⟨ Anterior"
+                            Cursor="Hand"
+                            FontWeight="SemiBold"
+                            Foreground="White">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="6" />
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <!--  Indicador de página  -->
+                        <TextBlock
+                            Margin="10,0"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Text="{Binding PaginaActual, RelativeSource={RelativeSource AncestorType=Page}, StringFormat='Página {0} de'}" />
+
+                        <TextBlock
+                            Margin="2,0,10,0"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Text="{Binding TotalPaginas, RelativeSource={RelativeSource AncestorType=Page}}" />
+
+                        <!--  Botón Siguiente  -->
+                        <Button
+                            Width="120"
+                            Height="35"
+                            Margin="5"
+                            Padding="10,5"
+                            Background="#2E5E4E"
+                            BorderBrush="#2E5E4E"
+                            BorderThickness="1"
+                            Click="BtnSiguiente_Click"
+                            Content="Siguiente ⟩"
+                            Cursor="Hand"
+                            FontWeight="SemiBold"
+                            Foreground="White">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="6" />
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+
                 </Grid>
+
             </Grid>
         </Border>
         <Border
@@ -731,7 +808,7 @@
                             <TextBlock
                                 Margin="0,0,0,10"
                                 FontWeight="Bold"
-                                Text="Modificar precio total" />
+                                Text="Modificar precio unitario" />
                             <TextBox x:Name="txtNuevoPrecio" Margin="0,0,0,10" />
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                 <Button
