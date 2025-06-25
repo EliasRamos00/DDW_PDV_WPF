@@ -27,9 +27,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.4.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -63,6 +64,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>istockphoto-1270936857-612x612.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
@@ -403,6 +407,9 @@
     <Resource Include="Resources\f2.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="xxx.ico" />
+    <Resource Include="logo negro-01.ico" />
+    <Resource Include="istockphoto-1270936857-612x612.ico" />
     <Content Include="Resources\art_20250331220233.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
