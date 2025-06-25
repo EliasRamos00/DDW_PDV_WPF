@@ -23,6 +23,7 @@ using Dropbox.Api.TeamCommon;
 using HandyControl.Data;
 using HandyControl.Controls;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace DDW_PDV_WPF
 {
@@ -62,6 +63,11 @@ namespace DDW_PDV_WPF
         private Dictionary<int, decimal> _preciosModificados = new Dictionary<int, decimal>();
         private bool huboCambio=false;
         private CarritoViewModel _carritoSeleccionado;
+        private static ObservableCollection<ArticuloDTO> _productosEnMemoria;
+        private static bool _productosCargados = false;
+        private int _paginaActual = 1;
+        private int _itemsPorPagina = 30;
+        private int _totalPaginas = 1;
 
 
         private ObservableCollection<CarritoViewModel> _carritos = new ObservableCollection<CarritoViewModel>()
@@ -86,6 +92,7 @@ namespace DDW_PDV_WPF
                 }
             }
         }
+
         public ObservableCollection<CarritoViewModel> Carritos
         {
             get => _carritos;
@@ -137,6 +144,32 @@ namespace DDW_PDV_WPF
         }
 
 
+        public int PaginaActual
+        {
+            get => _paginaActual;
+            set
+            {
+                if (_paginaActual != value)
+                {
+                    _paginaActual = value;
+                    OnPropertyChanged(nameof(PaginaActual));
+                }
+            }
+        }
+
+        public int TotalPaginas
+        {
+            get => _totalPaginas;
+            set
+            {
+                if (_totalPaginas != value)
+                {
+                    _totalPaginas = value;
+                    OnPropertyChanged(nameof(TotalPaginas));
+                }
+            }
+        }
+
         public decimal MontoRecibido
         {
             get => _montoRecibido;
@@ -182,6 +215,7 @@ namespace DDW_PDV_WPF
                 txtCambio.Foreground = new SolidColorBrush(Colors.Black);
             }
         }
+
 
         public decimal SubTotal
         {
@@ -287,7 +321,11 @@ namespace DDW_PDV_WPF
                 // Inicializar ApiService
                 _apiService = new ApiService();
 
-                CargarProductos();
+                if (!_productosCargados)
+                    CargarProductos();
+                else
+                    ListaArticulos = new ObservableCollection<ArticuloDTO>(_productosEnMemoria);
+
                 CargarCategorias();
 
                 DataContext = this;
@@ -344,21 +382,7 @@ namespace DDW_PDV_WPF
             }
         }
 
-        public void LiberarRecursos()
-        {
-            // 1. Limpia listas
-            ListaArticulos?.Clear();
-            _productosOriginales?.Clear();
-            CarritoSeleccionado?.Articulos?.Clear();
 
-            // 2. Libera imágenes (si no se congelaron, se eliminan al limpiar las listas)
-            foreach (var articulo in ListaArticulos ?? new ObservableCollection<ArticuloDTO>())
-            {
-                articulo.ImagenProducto = null;
-            }
-            // 4. Limpia cualquier UI adicional
-            DataContext = null;
-        }
         public void time()
         {
             _timer = new DispatcherTimer();
@@ -372,6 +396,25 @@ namespace DDW_PDV_WPF
         {
             // Actualizar la fecha y hora en cada tick del timer
             UpdateDateTime();
+        }
+
+
+        private void BtnAnterior_Click(object sender, RoutedEventArgs e)
+        {
+            if (PaginaActual > 1) 
+            {
+                PaginaActual--;   
+                FiltrarProductos();
+            }
+        }
+
+        private void BtnSiguiente_Click(object sender, RoutedEventArgs e)
+        {
+            if (PaginaActual < TotalPaginas) 
+            {
+                PaginaActual++;              
+                FiltrarProductos();
+            }
         }
 
 
@@ -512,6 +555,8 @@ namespace DDW_PDV_WPF
         }
         private async void CargarProductos()
         {
+            if (_productosCargados) return;
+
             try
             {
                 var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("api/CArticulos/productos/inventario");
@@ -519,25 +564,32 @@ namespace DDW_PDV_WPF
                 if (resultado != null)
                 {
                     _productosOriginales = new ObservableCollection<ArticuloDTO>(resultado);
-                    ListaArticulos = new ObservableCollection<ArticuloDTO>(resultado);
+                    _paginaActual = 1;
 
-                    foreach (var article in ListaArticulos)
+                    // Carga imágenes (optimizado)
+                    foreach (var article in _productosOriginales)
                     {
-                        try
+                        if (!string.IsNullOrEmpty(article.Foto) && article.ImagenProducto == null)
                         {
-                            if (string.IsNullOrEmpty(article.Foto) || article.Foto.Equals(DBNull.Value))
-                                continue;
+                            try
+                            {
+                                string fileId = article.Foto;
+                                string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
+                                var image = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
+                                if (image != null && image.CanFreeze)
+                                    image.Freeze();
 
-                            string fileId = article.Foto;
-                            string downloadUrl = $"https://drive.google.com/uc?export=download&id={fileId}";
-                            var imageSource = await ds.GetImageFromCacheOrDownload(downloadUrl, fileId);
-                            article.ImagenProducto = imageSource;
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Windows.Forms.MessageBox.Show("Error al cargar imagen del artículo: " + ex.Message);
+                                article.ImagenProducto = image;
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Error imagen: {ex.Message}");
+                            }
                         }
                     }
+
+                    _productosCargados = true;
+                    FiltrarProductos();
                 }
             }
             catch (Exception ex)
@@ -546,39 +598,53 @@ namespace DDW_PDV_WPF
             }
         }
 
+
+        private void BtnRefrescar_Click(object sender, RoutedEventArgs e)
+        {
+            _productosCargados = false;
+            _productosEnMemoria = null;
+            CargarProductos();
+        }
+
         private void FiltrarProductos()
         {
             if (_productosOriginales == null) return;
 
             var productosFiltrados = _productosOriginales.AsEnumerable();
 
-            // Filtro por categoría
             if (CategoriaSeleccionada != null && CategoriaSeleccionada.idCategoria != 0)
             {
                 productosFiltrados = productosFiltrados.Where(p => p.idCategoria == CategoriaSeleccionada.idCategoria);
             }
 
-            // Filtro por texto de búsqueda
             if (!string.IsNullOrWhiteSpace(TextoBusqueda))
             {
+                string texto = TextoBusqueda.ToLower();
                 productosFiltrados = productosFiltrados.Where(p =>
-            // Búsqueda por descripción
-            p.Descripcion.ToLower().Contains(TextoBusqueda) ||
-
-
-            // Búsqueda por color (si existe la propiedad)
-            (!string.IsNullOrEmpty(p.Color) && p.Color.ToLower().Contains(TextoBusqueda)) ||
-
-            // Búsqueda por precio (convertido a string)
-            p.PrecioVenta.ToString().Contains(TextoBusqueda) 
-        );
+                    p.Descripcion?.ToLower().Contains(texto) == true ||
+                    (!string.IsNullOrEmpty(p.Color) && p.Color.ToLower().Contains(texto)) ||
+                    p.PrecioVenta.ToString().Contains(texto)
+                );
             }
 
-            ListaArticulos = new ObservableCollection<ArticuloDTO>(productosFiltrados);
+            int totalItems = productosFiltrados.Count();
+
+            TotalPaginas = (int)Math.Ceiling((double)totalItems / _itemsPorPagina);
+
+            if (PaginaActual < 1) PaginaActual = 1;
+            if (PaginaActual > TotalPaginas) PaginaActual = TotalPaginas;
+
+            var paginados = productosFiltrados
+                .Skip((PaginaActual - 1) * _itemsPorPagina)
+                .Take(_itemsPorPagina)
+                .ToList();
+            ListaArticulos = new ObservableCollection<ArticuloDTO>(paginados);
         }
 
-           
-        
+
+
+
+
         private void IncrementarCantidad(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is ArticuloDTO producto)
@@ -720,8 +786,8 @@ namespace DDW_PDV_WPF
         {
             if (articuloEnEdicion != null && decimal.TryParse(txtNuevoPrecio.Text, out decimal nuevoPrecio))
             {
-                articuloEnEdicion.PrecioDescuento = nuevoPrecio / articuloEnEdicion.Cantidad;
-                articuloEnEdicion.TotalCarrito = nuevoPrecio;
+                articuloEnEdicion.PrecioDescuento = nuevoPrecio ;
+                articuloEnEdicion.TotalCarrito = nuevoPrecio * articuloEnEdicion.Cantidad;
 
                 //// Guardar el nuevo precio modificado en el diccionario
                 //_preciosModificados[articuloEnEdicion.idArticulo] = nuevoPrecio;
@@ -916,7 +982,7 @@ namespace DDW_PDV_WPF
                 if(producto.Cantidad >= 6)
                 {
                     articuloEnEdicion = producto;
-                    txtNuevoPrecio.Text = producto.TotalCarrito.ToString("0.##");
+                    txtNuevoPrecio.Text = producto.PrecioVenta.ToString("0.##");
                     popupEditarPrecio.IsOpen = true;
                 }
                
