@@ -48,8 +48,13 @@
         <Grid Grid.Column="0" Margin="{StaticResource StandardMargin}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <!--  Título  -->
                 <RowDefinition Height="Auto" />
+                <!--  Barra de búsqueda  -->
                 <RowDefinition Height="*" />
+                <!--  DataGrid  -->
+                <RowDefinition Height="Auto" />
+                <!--  Paginación  -->
             </Grid.RowDefinitions>
 
             <!--  Título  -->
@@ -94,7 +99,7 @@
                 </Grid>
             </Border>
 
-            <!--  DataGrid con altura flexible  -->
+            <!--  DataGrid  -->
             <DataGrid
                 Grid.Row="2"
                 Margin="0"
@@ -105,11 +110,10 @@
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                 SelectionChanged="DataGrid_SelectionChanged"
                 SelectionMode="Single">
-                <!--  Columnas con proporciones  -->
                 <DataGrid.Columns>
                     <DataGridTextColumn Width="1.5*" Header="FECHA Y HORA">
                         <DataGridTextColumn.Binding>
-                            <Binding Path="fechaHora" StringFormat="{}{0:yyyy-MM-dd HH:mm:ss}" />
+                            <Binding Path="FechaHoraDate" StringFormat="{}{0:yyyy-MM-dd HH:mm:ss}" />
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
@@ -162,7 +166,77 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <!--  StackPanel de paginación  -->
+            <StackPanel
+                Grid.Row="3"
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+
+                <!--  Botón Anterior  -->
+                <Button
+                    Width="120"
+                    Height="35"
+                    Margin="5"
+                    Padding="10,5"
+                    Background="#2E5E4E"
+                    BorderBrush="#2E5E4E"
+                    BorderThickness="1"
+                    Click="BtnAnterior_Click"
+                    Content="⟨ Anterior"
+                    Cursor="Hand"
+                    FontWeight="SemiBold"
+                    Foreground="White">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6" />
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <!--  Etiqueta página actual  -->
+                <TextBlock
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Text="{Binding PaginaActual, StringFormat='Página {0} de'}" />
+
+                <!--  Etiqueta total páginas  -->
+                <TextBlock
+                    Margin="2,0,10,0"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Text="{Binding TotalPaginas}" />
+
+                <!--  Botón Siguiente  -->
+                <Button
+                    Width="120"
+                    Height="35"
+                    Margin="5"
+                    Padding="10,5"
+                    Background="#2E5E4E"
+                    BorderBrush="#2E5E4E"
+                    BorderThickness="1"
+                    Click="BtnSiguiente_Click"
+                    Content="Siguiente ⟩"
+                    Cursor="Hand"
+                    FontWeight="SemiBold"
+                    Foreground="White">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6" />
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+            </StackPanel>
+
         </Grid>
+
 
         <!--  Panel Derecho (30%)  -->
         <Grid
