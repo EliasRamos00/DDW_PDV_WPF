@@ -40,6 +40,36 @@ namespace DDW_PDV_WPF
         private ObservableCollection<HistorialDTO> _todosLosHistoriales;
         private ImageSource _imagenAntes;
         private ImageSource _imagenDespues;
+        private int _paginaActual = 1;
+        private int _totalPaginas = 1;
+        private int _itemsPorPagina = 30;
+
+        public int PaginaActual
+        {
+            get => _paginaActual;
+            set
+            {
+                if (_paginaActual != value)
+                {
+                    _paginaActual = value;
+                    OnPropertyChanged(nameof(PaginaActual));
+                }
+            }
+        }
+
+        public int TotalPaginas
+        {
+            get => _totalPaginas;
+            set
+            {
+                if (_totalPaginas != value)
+                {
+                    _totalPaginas = value;
+                    OnPropertyChanged(nameof(TotalPaginas));
+                }
+            }
+        }
+
 
         public ImageSource ImagenAntes
         {
@@ -117,8 +147,13 @@ namespace DDW_PDV_WPF
 
                 if (resultado != null)
                 {
-                    _todosLosHistoriales = new ObservableCollection<HistorialDTO>(resultado.OrderByDescending(h => h.fechaHora));
-                    ListaHistorial = new ObservableCollection<HistorialDTO>(resultado.OrderByDescending(h => h.fechaHora));
+                    var ordenados = resultado.OrderByDescending(h => h.FechaHoraDate).ToList();
+                    _todosLosHistoriales = new ObservableCollection<HistorialDTO>(ordenados);
+
+                    // Resetea a página 1 al cargar
+                    PaginaActual = 1;
+
+                    AplicarPaginacionHistorial(ordenados);
                 }
             }
             catch (Exception ex)
@@ -128,13 +163,17 @@ namespace DDW_PDV_WPF
             }
         }
 
+
+
         private void FiltrarHistorial()
         {
             if (_todosLosHistoriales == null) return;
 
             if (string.IsNullOrWhiteSpace(TextoBusqueda))
             {
-                ListaHistorial = new ObservableCollection<HistorialDTO>(_todosLosHistoriales);
+                ListaHistorial = new ObservableCollection<HistorialDTO>(
+                    _todosLosHistoriales.OrderByDescending(h => h.fechaHora)
+                );
             }
             else
             {
@@ -142,54 +181,56 @@ namespace DDW_PDV_WPF
                 var resultados = _todosLosHistoriales
                     .Where(h =>
                     {
-                        // Filtros básicos (originales)
+                        // Filtros básicos
                         var coincideBasico =
-                            (h.Usuario != null && h.Usuario.ToLower().Contains(texto)) ||
-                            (h.accion != null && h.accion.ToLower().Contains(texto)) ||
+                            (!string.IsNullOrEmpty(h.Usuario) && h.Usuario.ToLower().Contains(texto)) ||
+                            (!string.IsNullOrEmpty(h.accion) && h.accion.ToLower().Contains(texto)) ||
                             (h.fechaHora.ToString().Contains(texto)) ||
-                            (h.clase != null && h.clase.ToLower().Contains(texto));
+                            (!string.IsNullOrEmpty(h.clase) && h.clase.ToLower().Contains(texto));
 
                         if (coincideBasico) return true;
 
-                        // Filtro por datos "antes"
+                        // Filtro por "antes"
                         if (!string.IsNullOrEmpty(h.antes))
                         {
                             try
                             {
                                 var articuloAntes = DeserializarArticuloParcial(h.antes);
                                 if (articuloAntes != null &&
-                                    articuloAntes.Descripcion != null &&
+                                    !string.IsNullOrEmpty(articuloAntes.Descripcion) &&
                                     articuloAntes.Descripcion.ToLower().Contains(texto))
                                 {
                                     return true;
                                 }
                             }
-                            catch { /* Ignorar errores de deserialización */ }
+                            catch { /* Ignorar */ }
                         }
 
-                        // Filtro por datos "después"
+                        // Filtro por "después"
                         if (!string.IsNullOrEmpty(h.despues))
                         {
                             try
                             {
                                 var articuloDespues = DeserializarArticuloParcial(h.despues);
                                 if (articuloDespues != null &&
-                                    articuloDespues.Descripcion != null &&
+                                    !string.IsNullOrEmpty(articuloDespues.Descripcion) &&
                                     articuloDespues.Descripcion.ToLower().Contains(texto))
                                 {
                                     return true;
                                 }
                             }
-                            catch { /* Ignorar errores de deserialización */ }
+                            catch { /* Ignorar */ }
                         }
 
                         return false;
                     })
+                    .OrderByDescending(h => h.fechaHora) // ✅ Orden final
                     .ToList();
 
                 ListaHistorial = new ObservableCollection<HistorialDTO>(resultados);
             }
         }
+
 
         // Método optimizado para deserializar solo lo necesario
         private ArticuloDTO DeserializarArticuloParcial(string xml)
@@ -208,6 +249,25 @@ namespace DDW_PDV_WPF
             {
                 return null;
             }
+        }
+        private void AplicarPaginacionHistorial(List<HistorialDTO> listaFiltrada)
+        {
+            if (listaFiltrada == null || !listaFiltrada.Any())
+            {
+                ListaHistorial = new ObservableCollection<HistorialDTO>();
+                return;
+            }
+
+            TotalPaginas = (int)Math.Ceiling((double)listaFiltrada.Count / _itemsPorPagina);
+
+            if (PaginaActual < 1) PaginaActual = 1;
+            if (PaginaActual > TotalPaginas) PaginaActual = TotalPaginas;
+            var paginados = listaFiltrada
+                .Skip((PaginaActual - 1) * _itemsPorPagina)
+                .Take(_itemsPorPagina)
+                .ToList();
+
+            ListaHistorial = new ObservableCollection<HistorialDTO>(paginados);
         }
 
         private async void DecodificarDatosHistorial(HistorialDTO historial)
@@ -296,7 +356,24 @@ namespace DDW_PDV_WPF
             }
         }
 
-     
+        private void BtnAnterior_Click(object sender, RoutedEventArgs e)
+        {
+            if (PaginaActual > 1)
+            {
+                PaginaActual--;
+                AplicarPaginacionHistorial(_todosLosHistoriales.ToList());
+            }
+        }
+
+        private void BtnSiguiente_Click(object sender, RoutedEventArgs e)
+        {
+            if (PaginaActual < TotalPaginas)
+            {
+                PaginaActual++;
+                AplicarPaginacionHistorial(_todosLosHistoriales.ToList());
+            }
+        }
+
 
         private string FormatearDatosArticulo(ArticuloDTO articulo)
         {

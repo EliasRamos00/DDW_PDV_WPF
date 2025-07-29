@@ -18,6 +18,18 @@ namespace DDW_PDV_WPF.Modelo
         public string clase { get; set; }   
         public string antes { get; set; }  
         public string despues { get; set; }
-     
+
+
+        public DateTime FechaHoraDate
+        {
+            get
+            {
+                if (DateTime.TryParse(fechaHora, out var fecha))
+                    return fecha;
+                return DateTime.MinValue; 
+            }
+        }
+
+
     }
 }
