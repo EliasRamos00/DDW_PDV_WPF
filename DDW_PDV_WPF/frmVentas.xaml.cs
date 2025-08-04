@@ -784,24 +784,29 @@ namespace DDW_PDV_WPF
 
         private void AceptarPopup(object sender, RoutedEventArgs e)
         {
-            if (articuloEnEdicion != null && decimal.TryParse(txtNuevoPrecio.Text, out decimal nuevoPrecio))
+            if (articuloEnEdicion != null)
             {
-                articuloEnEdicion.PrecioDescuento = nuevoPrecio ;
-                articuloEnEdicion.TotalCarrito = nuevoPrecio * articuloEnEdicion.Cantidad;
+                string precioTexto = txtNuevoPrecio.Text.Replace(',', '.');
 
-                //// Guardar el nuevo precio modificado en el diccionario
-                //_preciosModificados[articuloEnEdicion.idArticulo] = nuevoPrecio;
+                if (decimal.TryParse(precioTexto, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal nuevoPrecio))
+                {
+                    nuevoPrecio = Math.Round(nuevoPrecio, 2); 
+                    articuloEnEdicion.PrecioDescuento = nuevoPrecio;
+                    articuloEnEdicion.TotalCarrito = Math.Round(nuevoPrecio * articuloEnEdicion.Cantidad, 2);
 
-                //// Actualizar el TotalCarrito basado en la nueva cantidad * nuevo precio
-                //articuloEnEdicion.TotalCarrito = articuloEnEdicion.Cantidad * nuevoPrecio;
-
-                //// Actualizar la UI y recalcular totales del carrito activo
-                ///
-                articuloEnEdicion.AlertaDescuento = Visibility.Hidden;
-                CalcularTotalCarro();
-                OnPropertyChanged(nameof(CarritoSeleccionado)); // Para refrescar UI si es necesario
+                    articuloEnEdicion.AlertaDescuento = Visibility.Hidden;
+                    CalcularTotalCarro();
+                    OnPropertyChanged(nameof(CarritoSeleccionado));
+                }
+                else
+                {
+                    Growl.Error(new GrowlInfo
+                    {
+                        Message = "Formato de precio inválido. Use punto como separador decimal.",
+                        WaitTime = 3
+                    });
+                }
             }
-
             popupEditarPrecio.IsOpen = false;
         }
 
@@ -989,6 +994,7 @@ namespace DDW_PDV_WPF
             }
         }
     }
+
 
 
     public class CarritoViewModel
