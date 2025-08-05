@@ -378,6 +378,8 @@ namespace DDW_PDV_WPF
 
                     p.PrecioVenta.ToString().ToLower().Contains(texto) ||
 
+                    p.CodigoBarras.ToString().ToLower().Contains(texto) ||
+
                     cat.FirstOrDefault(c => c.idCategoria == p.idCategoria)?.Nombre.ToLower().Contains(texto) == true
                 );
             }
