@@ -634,7 +634,9 @@ namespace DDW_PDV_WPF
                 productosFiltrados = productosFiltrados.Where(p =>
                     p.Descripcion?.ToLower().Contains(texto) == true ||
                     (!string.IsNullOrEmpty(p.Color) && p.Color.ToLower().Contains(texto)) ||
-                    p.PrecioVenta.ToString().Contains(texto)
+                    p.PrecioVenta.ToString().Contains(texto) ||                
+                    p.CodigoBarras.ToString().ToLower().Contains(texto)
+
                 );
             }
 

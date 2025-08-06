@@ -578,7 +578,7 @@
                         <GroupBox
                             Grid.Column="0"
                             Margin="0,0,5,0"
-                            Header="Código de Barras"
+                            Header="Código QR"
                             Style="{StaticResource CustomGroupBoxStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
