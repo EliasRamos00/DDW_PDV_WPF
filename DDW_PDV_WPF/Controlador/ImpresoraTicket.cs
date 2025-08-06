@@ -19,7 +19,7 @@ namespace DDW_PDV_WPF.Controlador
 {
     public class ImpresoraTicket
     {
-        public static void ImprimeTicket(ObservableCollection<ArticuloDTO> productos, decimal totalCarro)
+        public static void ImprimeTicket(ObservableCollection<ArticuloDTO> productos, decimal totalCarro, decimal subTotalCarro)
         {
             try
             {
@@ -140,7 +140,9 @@ namespace DDW_PDV_WPF.Controlador
                     Inlines =
                     {
                         new Run("\n\n\n"),
+                        new Run($"subtotal: {subTotalCarro.ToString("C2", culturaMexicana)}\n"),
                         new Run($"TOTAL: {totalCarro.ToString("C2", culturaMexicana)}\n")
+
                     }
                 });
 

@@ -417,7 +417,7 @@ namespace DDW_PDV_WPF
             }
         }
 
-
+        
         private void Window_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
 
@@ -441,6 +441,7 @@ namespace DDW_PDV_WPF
             if (CarritoSeleccionado == null) return;
 
             decimal aux = 0;
+            decimal aux2 = 0;
 
             foreach (var dto in CarritoSeleccionado.Articulos)
             {
@@ -452,7 +453,17 @@ namespace DDW_PDV_WPF
             }
 
             _total = aux;
-            _subTotal = aux;
+
+
+            foreach (var dto in CarritoSeleccionado.Articulos)
+            {
+                decimal subtotal = dto.PrecioVenta * dto.Cantidad;
+
+                aux2 += subtotal;
+            }
+
+            _subTotal = aux2;
+
 
             CambiarColorCambio();
             OnPropertyChanged(nameof(Total));
@@ -740,7 +751,7 @@ namespace DDW_PDV_WPF
         {
             try
             {
-                var articuloEscaneado = _listaArticulos.FirstOrDefault(a => a.CodigoBarras == CodigoArticulo);
+                var articuloEscaneado = _productosOriginales.FirstOrDefault(a => a.CodigoBarras == CodigoArticulo);
 
                 if (articuloEscaneado != null)
                 {
@@ -907,7 +918,7 @@ namespace DDW_PDV_WPF
                 {
                     try
                     {
-                        ImpresoraTicket.ImprimeTicket(CarritoSeleccionado.Articulos, _total);
+                        ImpresoraTicket.ImprimeTicket(CarritoSeleccionado.Articulos, _total,_subTotal);
                     }
                     catch (Exception ex)
                     {
