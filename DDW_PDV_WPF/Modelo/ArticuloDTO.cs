@@ -56,6 +56,11 @@ namespace DDW_PDV_WPF.Modelo
         public decimal? PrecioCompra { get; set; }
 
         [XmlIgnore] // No serializar esta propiedad para el historial
+        public decimal PrecioDescuentoGral { get; set; }
+        [XmlIgnore] // No serializar esta propiedad para el historial
+        public int PiezasMinimasDescuentoGral { get; set; }
+
+        [XmlIgnore] // No serializar esta propiedad para el historial
         public decimal Precio { get; set; }
         public decimal PrecioDescuento { get; set; } = 0;
         [XmlIgnore] // No serializar esta propiedad para el historial

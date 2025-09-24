@@ -68,6 +68,7 @@ namespace DDW_PDV_WPF
         private int _paginaActual = 1;
         private int _itemsPorPagina = 30;
         private int _totalPaginas = 1;
+        private bool _descuentoAtm;
 
 
         private ObservableCollection<CarritoViewModel> _carritos = new ObservableCollection<CarritoViewModel>()
@@ -103,6 +104,22 @@ namespace DDW_PDV_WPF
             }
         }
 
+        public bool DescuentoAtm
+        {
+            get => _descuentoAtm;
+            set
+            {
+                if (_descuentoAtm != value)
+                {
+                    _descuentoAtm = value;
+                    OnPropertyChanged(nameof(DescuentoAtm));
+                    CalcularTotalCarro();
+                   
+                }
+            }
+        }
+
+       
 
         public string TextoBusqueda
         {
@@ -436,34 +453,86 @@ namespace DDW_PDV_WPF
             }
         }
 
+        //private void CalcularTotalCarro() METODO OBSOLETO ANTES DE EL ULTIMO CAMBIO A DESCUENTOS.
+        //{
+        //    if (CarritoSeleccionado == null) return;
+
+        //    decimal aux = 0; // Variable acumulada para el total.
+        //    decimal aux2 = 0;
+
+        //    foreach (var dto in CarritoSeleccionado.Articulos)
+        //    {
+        //        decimal total = 0;
+
+        //        if (dto.Cantidad >= dto.PiezasMinimasDescuentoGral)
+        //        {
+        //            total = dto.PrecioDescuentoGral * dto.Cantidad;
+        //        }
+
+
+        //            total = dto.PrecioDescuento > 0
+        //               ? dto.PrecioDescuento * dto.Cantidad
+        //               : dto.PrecioVenta * dto.Cantidad;
+
+        //        aux += total;
+        //    }
+
+        //    _total = aux;
+
+
+        //    foreach (var dto in CarritoSeleccionado.Articulos)
+        //    {
+        //        decimal subtotal = dto.PrecioVenta * dto.Cantidad;
+
+        //        aux2 += subtotal;
+        //    }
+
+        //    _subTotal = aux2;
+
+
+        //    CambiarColorCambio();
+        //    OnPropertyChanged(nameof(Total));
+        //    OnPropertyChanged(nameof(SubTotal));
+        //    OnPropertyChanged(nameof(Cambio));
+        //}
+
         private void CalcularTotalCarro()
         {
             if (CarritoSeleccionado == null) return;
 
-            decimal aux = 0;
-            decimal aux2 = 0;
+            decimal totalConDescuento = 0;
+            decimal subtotalSinDescuento = 0;
 
             foreach (var dto in CarritoSeleccionado.Articulos)
             {
-                decimal total = dto.PrecioDescuento > 0
-                    ? dto.PrecioDescuento * dto.Cantidad
-                    : dto.PrecioVenta * dto.Cantidad;
+                decimal precioUnitario = dto.PrecioVenta; // Precio base
 
-                aux += total;
+                // --- Subtotal sin descuentos ---
+                subtotalSinDescuento += precioUnitario * dto.Cantidad;
+
+                // --- Calcular el precio unitario con descuentos ---
+               
+                    // Si el descuento ATM está activo, se prioriza esta lógica
+                    if (dto.Cantidad >= dto.PiezasMinimasDescuentoGral && dto.PrecioDescuentoGral > 0 && DescuentoAtm)
+                    {
+                        precioUnitario = dto.PrecioDescuentoGral;
+                    }
+                    else if (dto.PrecioDescuento > 0) // Despues se prioriza el precio que tenga descuento.
+                    {
+                        precioUnitario = dto.PrecioDescuento;
+
+                    }
+                    else
+                    {
+                        precioUnitario = dto.PrecioVenta; // Si no hay descuento se toma el precio normal.
+
+                    }
+                                          
+                totalConDescuento += precioUnitario * dto.Cantidad;
             }
 
-            _total = aux;
-
-
-            foreach (var dto in CarritoSeleccionado.Articulos)
-            {
-                decimal subtotal = dto.PrecioVenta * dto.Cantidad;
-
-                aux2 += subtotal;
-            }
-
-            _subTotal = aux2;
-
+            _total = totalConDescuento;
+            _subTotal = subtotalSinDescuento;
 
             CambiarColorCambio();
             OnPropertyChanged(nameof(Total));
@@ -778,6 +847,10 @@ namespace DDW_PDV_WPF
                             Descripcion = articuloEscaneado.Descripcion,
                             ImagenProducto = articuloEscaneado.ImagenProducto,
                             PrecioVenta = articuloEscaneado.PrecioVenta,
+                            CodigoBarras = articuloEscaneado.CodigoBarras,
+                            Color = articuloEscaneado.Color,
+                            PiezasMinimasDescuentoGral = articuloEscaneado.PiezasMinimasDescuentoGral,
+                            PrecioDescuentoGral = articuloEscaneado.PrecioDescuentoGral,
                             Cantidad = 1
                         };
 
@@ -863,6 +936,8 @@ namespace DDW_PDV_WPF
                         Cantidad = 1,
                         Color = producto.Color,
                         TotalCarrito = producto.PrecioVenta,
+                        PiezasMinimasDescuentoGral = producto.PiezasMinimasDescuentoGral,
+                        PrecioDescuentoGral = producto.PrecioDescuentoGral,
                         AlertaDescuento = Visibility.Collapsed
                     };
 
@@ -993,7 +1068,7 @@ namespace DDW_PDV_WPF
 
         }
 
-        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e) // Descuentos
         {
             if (sender is FrameworkElement fe && fe.DataContext is ArticuloDTO producto)
             {

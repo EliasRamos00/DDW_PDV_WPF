@@ -213,7 +213,7 @@
                         HorizontalAlignment="Center"
                         FontSize="9"
                         Foreground="White"
-                        Text="Versión 1. 5. 0 " />
+                        Text="Versión 1. 6. 0 " />
 
                 </StackPanel>
 
