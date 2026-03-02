@@ -173,6 +173,15 @@
                         Content="Historial C. Cajas"
                         FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
+                    
+                    <Button
+                        x:Name="buttonProveedores"
+                        Margin="8"
+                        Click="NavigateProveedores"
+                        Content="Proveedores
+                        "
+                        FontSize="16"
+                        Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
                         x:Name="btnBorrarCache"

@@ -63,6 +63,7 @@ namespace DDW_PDV_WPF
             buttonVentas.IsEnabled = true;
             buttonResumen.IsEnabled = true;
             buttonHistorial.IsEnabled = true;
+            buttonProveedores.IsEnabled = true;
 
         }
         private void NavigateToInventarios(object sender, RoutedEventArgs e)
@@ -72,12 +73,12 @@ namespace DDW_PDV_WPF
             buttonInventario.IsEnabled = false;
         }
 
-        private void NavigateToCierreDeCajas(object sender, RoutedEventArgs e)
-        {
-            ResetNavigationButtons();
-            MainFrame.Navigate(new frmCierreDeCajas());
-            buttonCierreCajas.IsEnabled = false;
-        }
+        //private void NavigateToCierreDeCajas(object sender, RoutedEventArgs e)
+        //{
+        //    ResetNavigationButtons();
+        //    MainFrame.Navigate(new frmCierreDeCajas());
+        //    buttonCierreCajas.IsEnabled = false;
+        //}
 
         private void NavigateToVentas(object sender, RoutedEventArgs e)
         {
@@ -106,7 +107,12 @@ namespace DDW_PDV_WPF
             MainFrame.Navigate(new frmCierreDeCajas());
             buttonCierreCajas.IsEnabled = false;
         }
-
+        private void NavigateProveedores(object sender, RoutedEventArgs e)
+        {
+            ResetNavigationButtons();
+            MainFrame.Navigate(new frmProveedores());
+            buttonProveedores.IsEnabled = false;
+        }
 
         private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)
         {
