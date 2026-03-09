@@ -249,6 +249,9 @@
     <Compile Include="frmProveedores.xaml.cs">
       <DependentUpon>frmProveedores.xaml</DependentUpon>
     </Compile>
+    <Compile Include="frm_Proveedores.xaml.cs">
+      <DependentUpon>frm_Proveedores.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
     <Compile Include="Modelo\MCajasDTO.cs" />
@@ -286,6 +289,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="frmVentas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="frm_Proveedores.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
