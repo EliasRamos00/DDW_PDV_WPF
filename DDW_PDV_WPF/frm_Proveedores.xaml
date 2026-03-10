@@ -192,7 +192,7 @@
                                     <TextBlock FontSize="22" FontWeight="Bold" Foreground="#2E5E4E" Text="{Binding Nombre, TargetNullValue='[ El nombre aparecerá aquí ]'}" TextWrapping="Wrap" VerticalAlignment="Center" />
                                 </Border>
 
-                                <Button x:Name="btnToggleEstado" Click="btnToggleEstado_Click" Padding="40,10" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" Cursor="Hand" BorderThickness="0" Content="{Binding Estado, TargetNullValue='Activo'}">
+                                <Button x:Name="btnToggleEstado" Click="btnToggleEstado_Click" Padding="41,10" FontSize="16" FontWeight="Bold" HorizontalAlignment="center" Cursor="Hand" BorderThickness="0" Content="{Binding Estado, TargetNullValue='Activo'}">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Background" Value="#D4EDDA" />

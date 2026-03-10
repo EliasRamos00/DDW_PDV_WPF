@@ -17,9 +17,9 @@ namespace DDW_PDV_WPF
     /// <summary>
     /// Lógica de interacción para frm_Proveedores.xaml
     /// </summary>
-    public partial class frm_Proveedores : Window
+    public partial class Frm_Proveedores : Window
     {
-        public frm_Proveedores()
+        public Frm_Proveedores()
         {
             InitializeComponent();
         }

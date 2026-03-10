@@ -9,7 +9,6 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <!--  Estilos compartidos  -->
         <Style TargetType="ListBoxItem">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -33,7 +32,6 @@
             <Setter Property="BorderBrush" Value="#E5C1DC" />
         </Style>
 
-        <!--  Estilo base para GroupBox  -->
         <Style x:Key="CustomGroupBoxStyle" TargetType="GroupBox">
             <Setter Property="BorderBrush" Value="#6B9D89" />
             <Setter Property="BorderThickness" Value="1" />
@@ -53,7 +51,6 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <!--  Header con fondo y margen  -->
                                 <Border
                                     Grid.Row="0"
                                     Margin="10,0,10,0"
@@ -64,7 +61,6 @@
                                         RecognizesAccessKey="True"
                                         TextBlock.FontWeight="Bold" />
                                 </Border>
-                                <!--  Contenido  -->
                                 <ContentPresenter Grid.Row="1" Margin="{TemplateBinding Padding}" />
                             </Grid>
                         </Border>
@@ -87,7 +83,6 @@
             <ColumnDefinition Width="0.6*" MinWidth="450" />
         </Grid.ColumnDefinitions>
 
-        <!--  Panel izquierdo - Lista de productos  -->
         <Grid
             Grid.Row="1"
             Grid.Column="0"
@@ -98,7 +93,6 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!--  Título INVENTARIO  -->
             <TextBlock
                 Grid.Row="0"
                 Margin="0,0,0,15"
@@ -108,7 +102,6 @@
                 Foreground="#2E5E4E"
                 Text="INVENTARIO" />
 
-            <!--  Barra de búsqueda  -->
             <Border
                 Grid.Row="0"
                 Margin="0,0,0,10"
@@ -155,7 +148,6 @@
                 </Grid>
             </Border>
 
-            <!--  Lista de productos  -->
             <Border
                 Grid.Row="1"
                 Background="#F1E6D3"
@@ -168,11 +160,9 @@
                     ItemsSource="{Binding ListaArticulos}"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     SelectedItem="{Binding ArticuloSeleccionado, Mode=TwoWay}">
-                    <!--  Asegura que el contenido se estire  -->
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            <!--  Estira cada item  -->
                             <Setter Property="Padding" Value="0" />
                             <Setter Property="Background" Value="Transparent" />
                             <Style.Triggers>
@@ -193,7 +183,6 @@
                                 Background="white"
                                 BorderBrush="white"
                                 BorderThickness="0,0,0,1">
-                                <!--  Fondo transparente para heredar el color  -->
                                 <StackPanel>
                                     <TextBlock
                                         FontSize="14"
@@ -225,7 +214,6 @@
                 Margin="0,15"
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
-                <!--  Estilo compartido para ambos botones-texto  -->
                 <StackPanel.Resources>
                     <Style x:Key="TextButtonStyle" TargetType="Button">
                         <Setter Property="Background" Value="Transparent" />
@@ -259,7 +247,6 @@
                     </Style>
                 </StackPanel.Resources>
 
-                <!--  Botón Agregar  -->
                 <Button
                     x:Name="BotonAgregar1"
                     Margin="0,0,20,0"
@@ -267,8 +254,6 @@
                     Content="+  Agregar"
                     Foreground="Green"
                     Style="{StaticResource TextButtonStyle}" />
-
-                <!--  Botón Quitar  -->
                 <Button
                     x:Name="BotonQuitar1"
                     Click="EliminarArticulo"
@@ -278,7 +263,6 @@
             </StackPanel>
         </Grid>
 
-        <!--  Panel derecho - Detalles del producto  -->
         <Border
             Grid.Row="1"
             Grid.Column="1"
@@ -291,8 +275,6 @@
                 <Grid DataContext="{Binding ArticuloSeleccionado}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="0.3*" MinHeight="200" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -302,12 +284,10 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <!--  Encabezado compacto  -->
                     <StackPanel
                         Grid.Row="0"
                         Margin="0,0,0,10"
                         Orientation="Horizontal">
-
                         <TextBlock
                             Margin="8,0,0,0"
                             VerticalAlignment="Center"
@@ -318,16 +298,17 @@
                             TextTrimming="CharacterEllipsis" />
                     </StackPanel>
 
-                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                    <Grid Grid.Row="1" Margin="0,0,0,15">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" MinWidth="150" />
-                            <ColumnDefinition Width="*" MinWidth="150" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Imagen del producto - Versión responsiva  -->
                         <Border
                             Grid.Column="0"
-                            Margin="0,0,5,0"
+                            Width="140"
+                            Height="140"
+                            HorizontalAlignment="Center"
                             Background="#E5C1DC"
                             CornerRadius="5">
                             <Grid>
@@ -337,11 +318,6 @@
                                         Source="{Binding ImagenProducto, TargetNullValue={x:Null}}"
                                         Stretch="UniformToFill" />
                                 </Viewbox>
-
-
-
-
-
                                 <Button
                                     x:Name="BtnCambiarImagen"
                                     Width="28"
@@ -360,14 +336,14 @@
                             </Grid>
                         </Border>
 
-
-
                         <Border
                             Grid.Column="1"
-                            Background="white"
+                            Width="140"
+                            Height="140"
+                            HorizontalAlignment="Center"
+                            Background="White"
                             CornerRadius="5">
                             <Grid>
-                                <!--  Código QR  -->
                                 <Viewbox Stretch="Uniform">
                                     <Image
                                         x:Name="imgCodigoQR"
@@ -375,8 +351,6 @@
                                         VerticalAlignment="Center"
                                         Stretch="None" />
                                 </Viewbox>
-
-                                <!--  Botón de exportación  -->
                                 <Button
                                     x:Name="btnExportarQR"
                                     Margin="5"
@@ -393,14 +367,11 @@
                         </Border>
                     </Grid>
 
-                    <!--  Grupo Descripción compacto  -->
                     <GroupBox
                         Grid.Row="2"
                         Margin="0,0,0,5"
                         Header="Descripción"
                         Style="{StaticResource CustomGroupBoxStyle}">
-
-
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="0.2*" />
@@ -415,14 +386,12 @@
                         </Grid>
                     </GroupBox>
 
-                    <!--  Grupo Características y Categoría optimizados  -->
                     <Grid Grid.Row="3" Margin="0,0,0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.6*" />
                             <ColumnDefinition Width="0.4*" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Características  -->
                         <GroupBox
                             Grid.Column="0"
                             Margin="0,0,5,0"
@@ -472,11 +441,11 @@
                             </Grid>
                         </GroupBox>
 
-                        <!--  Categoría  -->
                         <GroupBox
                             Grid.Column="1"
                             Margin="5,0,0,0"
-                            Header="Categoría">
+                            Header="Categoría"
+                            Style="{StaticResource CustomGroupBoxStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.2*" />
@@ -489,12 +458,10 @@
                                     DisplayMemberPath="Nombre"
                                     SelectedValuePath="idCategoria"
                                     SelectionChanged="cmbCategoriaCambio" />
-
                             </Grid>
                         </GroupBox>
                     </Grid>
 
-                    <!--  Grupo Inventario optimizado  -->
                     <GroupBox
                         Grid.Row="4"
                         Margin="0,0,0,5"
@@ -507,74 +474,41 @@
                                 <ColumnDefinition Width="0.34*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--  Stock  -->
                             <Grid Grid.Column="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.4*" />
                                     <ColumnDefinition Width="0.6*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Margin="8,5,5,5"
-                                    VerticalAlignment="Center"
-                                    FontSize="12"
-                                    Foreground="#555555"
-                                    Text="Stock:" />
-                                <TextBox
-                                    x:Name="txtStock"
-                                    Grid.Column="1"
-                                    MinHeight="28"
-                                    Style="{StaticResource DetailTextBoxStyle}"
-                                    Text="{Binding Stock, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Margin="8,5,5,5" VerticalAlignment="Center" FontSize="12" Foreground="#555555" Text="Stock:" />
+                                <TextBox x:Name="txtStock" Grid.Column="1" MinHeight="28" Style="{StaticResource DetailTextBoxStyle}" Text="{Binding Stock, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
 
-                            <!--  Mínimo  -->
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.4*" />
                                     <ColumnDefinition Width="0.6*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Margin="8,5,5,5"
-                                    VerticalAlignment="Center"
-                                    FontSize="12"
-                                    Foreground="#555555"><Run Text="Mín" /><Run Language="es-mx" Text="." /></TextBlock>
-                                <TextBox
-                                    x:Name="txtMin"
-                                    Grid.Column="1"
-                                    MinHeight="28"
-                                    Style="{StaticResource DetailTextBoxStyle}"
-                                    Text="{Binding Min, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Margin="8,5,5,5" VerticalAlignment="Center" FontSize="12" Foreground="#555555"><Run Text="Mín" /><Run Language="es-mx" Text="." /></TextBlock>
+                                <TextBox x:Name="txtMin" Grid.Column="1" MinHeight="28" Style="{StaticResource DetailTextBoxStyle}" Text="{Binding Min, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
 
-                            <!--  Máximo  -->
                             <Grid Grid.Column="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.4*" />
                                     <ColumnDefinition Width="0.6*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Margin="8,5,5,5"
-                                    VerticalAlignment="Center"
-                                    FontSize="12"
-                                    Foreground="#555555"><Run Text="Máx" /><Run Language="es-mx" Text="." /></TextBlock>
-                                <TextBox
-                                    x:Name="txtMax"
-                                    Grid.Column="1"
-                                    MinHeight="28"
-                                    Style="{StaticResource DetailTextBoxStyle}"
-                                    Text="{Binding Max, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Margin="8,5,5,5" VerticalAlignment="Center" FontSize="12" Foreground="#555555"><Run Text="Máx" /><Run Language="es-mx" Text="." /></TextBlock>
+                                <TextBox x:Name="txtMax" Grid.Column="1" MinHeight="28" Style="{StaticResource DetailTextBoxStyle}" Text="{Binding Max, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Grid>
                     </GroupBox>
 
-                    <!--  Grupo Código y Precios en una línea  -->
                     <Grid Grid.Row="5" Margin="0,0,0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.4*" />
                             <ColumnDefinition Width="0.6*" />
                         </Grid.ColumnDefinitions>
 
-                        <!--  Código  -->
                         <GroupBox
                             Grid.Column="0"
                             Margin="0,0,5,0"
@@ -585,23 +519,11 @@
                                     <ColumnDefinition Width="0.2*" />
                                     <ColumnDefinition Width="0.8*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Margin="8,5,5,5"
-                                    VerticalAlignment="Center"
-                                    FontSize="12"
-                                    Foreground="#555555"
-                                    Text="Código:" />
-                                <TextBox
-                                    x:Name="txtCodigo"
-                                    Grid.Column="1"
-                                    MinHeight="28"
-                                    Style="{StaticResource DetailTextBoxStyle}"
-                                    Text="{Binding CodigoBarras, UpdateSourceTrigger=PropertyChanged}"
-                                    TextChanged="txtCodigo_TextChanged" />
+                                <TextBlock Margin="8,5,5,5" VerticalAlignment="Center" FontSize="12" Foreground="#555555" Text="Código:" />
+                                <TextBox x:Name="txtCodigo" Grid.Column="1" MinHeight="28" Style="{StaticResource DetailTextBoxStyle}" Text="{Binding CodigoBarras, UpdateSourceTrigger=PropertyChanged}" TextChanged="txtCodigo_TextChanged" />
                             </Grid>
                         </GroupBox>
 
-                        <!--  Precios  -->
                         <GroupBox
                             Grid.Column="1"
                             Margin="5,0,0,0"
@@ -618,18 +540,8 @@
                                         <ColumnDefinition Width="0.4*" />
                                         <ColumnDefinition Width="0.6*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Margin="8,5,5,5"
-                                        VerticalAlignment="Center"
-                                        FontSize="12"
-                                        Foreground="#555555"
-                                        Text="P. Venta:" />
-                                    <TextBox
-                                        x:Name="txtPrecioVenta"
-                                        Grid.Column="1"
-                                        MinHeight="28"
-                                        Style="{StaticResource DetailTextBoxStyle}"
-                                        Text="{Binding PrecioVenta, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" />
+                                    <TextBlock Margin="8,5,5,5" VerticalAlignment="Center" FontSize="12" Foreground="#555555" Text="P. Venta:" />
+                                    <TextBox x:Name="txtPrecioVenta" Grid.Column="1" MinHeight="28" Style="{StaticResource DetailTextBoxStyle}" Text="{Binding PrecioVenta, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" />
                                 </Grid>
 
                                 <Grid Grid.Column="1">
@@ -637,26 +549,52 @@
                                         <ColumnDefinition Width="0.4*" />
                                         <ColumnDefinition Width="0.6*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Margin="8,5,5,5"
-                                        VerticalAlignment="Center"
-                                        FontSize="12"
-                                        Foreground="#555555"
-                                        Text="P. Compra:" />
-                                    <TextBox
-                                        x:Name="txtPrecioCompra"
-                                        Grid.Column="1"
-                                        MinHeight="28"
-                                        Style="{StaticResource DetailTextBoxStyle}"
-                                        Text="{Binding PrecioCompra, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" />
+                                    <TextBlock Margin="8,5,5,5" VerticalAlignment="Center" FontSize="12" Foreground="#555555" Text="P. Compra:" />
+                                    <TextBox x:Name="txtPrecioCompra" Grid.Column="1" MinHeight="28" Style="{StaticResource DetailTextBoxStyle}" Text="{Binding PrecioCompra, StringFormat='{}{0:C}', UpdateSourceTrigger=LostFocus}" />
                                 </Grid>
                             </Grid>
                         </GroupBox>
                     </Grid>
 
-                    <!--  Botones de acción  -->
+                    <Grid Grid.Row="6" Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.6*" />
+                            <ColumnDefinition Width="0.4*" />
+                        </Grid.ColumnDefinitions>
+
+                        <GroupBox
+                            Grid.Column="0"
+                            Margin="0,0,5,0"
+                            Header="Proveedor"
+                            Style="{StaticResource CustomGroupBoxStyle}">
+                            <ComboBox 
+                                x:Name="cmbProveedor" 
+                                Margin="5" 
+                                MinHeight="35" 
+                                FontSize="14" 
+                                Background="White" 
+                                BorderBrush="#E5C1DC" 
+                                BorderThickness="1" 
+                                Padding="8,4"
+                                DisplayMemberPath="Nombre" 
+                                SelectedValuePath="IdProveedor" />
+                        </GroupBox>
+
+                        <GroupBox
+                            Grid.Column="1"
+                            Margin="5,0,0,0"
+                            Header="Código del Proveedor"
+                            Style="{StaticResource CustomGroupBoxStyle}">
+                            <TextBox 
+                                x:Name="txtCodigoProveedor" 
+                                MinHeight="28" 
+                                Style="{StaticResource DetailTextBoxStyle}" 
+                                Text="{Binding CodigoProveedor, UpdateSourceTrigger=PropertyChanged}" />
+                        </GroupBox>
+                    </Grid>
+
                     <StackPanel
-                        Grid.Row="6"
+                        Grid.Row="7"
                         Margin="0,5,0,0"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal"
