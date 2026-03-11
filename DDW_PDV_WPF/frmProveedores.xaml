@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Carga desde PDF"
-    Width="1000"
-    Height="600"
+    Width="1100"
+    Height="620"
     Background="#6B9D89">
 
     <Grid Margin="10" Background="White">
@@ -12,9 +12,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!--  ENCABEZADOS  -->
+        <!--  ENCABEZADO  -->
         <Grid Grid.Row="0" Margin="5">
 
             <Grid.ColumnDefinitions>
@@ -35,44 +36,30 @@
                     x:Name="cbPDF"
                     Width="250"
                     SelectionChanged="cbPDF_SelectionChanged">
-
                     <ComboBoxItem Content="Seleccionar PDF" />
-
                 </ComboBox>
 
             </StackPanel>
 
-            <!--  PROVEEDOR + REFRESCAR  -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <!--  PROVEEDOR  -->
+            <StackPanel Grid.Column="1">
 
-                <StackPanel>
-                    <Label
-                        Margin="0,0,0,5"
-                        Content="Proveedor"
-                        FontSize="14"
-                        FontWeight="Bold" />
+                <Label
+                    Margin="0,0,0,5"
+                    Content="Proveedor"
+                    FontSize="14"
+                    FontWeight="Bold" />
 
-                    <ComboBox
-                        x:Name="cbProveedor"
-                        Width="120"
-                        SelectedIndex="0">
+                <ComboBox
+                    x:Name="cbProveedor"
+                    Width="220"
+                    SelectedIndex="0">
+                    <!--  PROVEEDOR debe venir de Base de Datos  -->
+                    <ComboBoxItem Content="VIABELLA INT'L INC." Tag="1" />
+                    <ComboBoxItem Content="Proveedor 2" Tag="2" />
+                    <ComboBoxItem Content="Proveedor 3" Tag="3" />
 
-                        <ComboBoxItem Content="1" />
-
-                    </ComboBox>
-                </StackPanel>
-
-                <Button
-                    Width="100"
-                    Height="28"
-                    Margin="15,25,0,0"
-                    Background="#6B9D89"
-                    BorderThickness="0"
-                    Click="btnRefrescar_Click"
-                    Content="Refrescar"
-                    Cursor="Hand"
-                    FontWeight="Bold"
-                    Foreground="White" />
+                </ComboBox>
 
             </StackPanel>
 
@@ -85,7 +72,7 @@
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.5*" />
                 </Grid.ColumnDefinitions>
 
                 <!--  TABLA PDF  -->
@@ -95,6 +82,7 @@
                     AutoGenerateColumns="False"
                     Background="#F2F2F2"
                     CanUserAddRows="False"
+                    CanUserSortColumns="False"
                     HeadersVisibility="Column"
                     ItemsSource="{Binding ProductosPdf}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
@@ -104,12 +92,12 @@
                         <DataGridTextColumn
                             Width="120"
                             Binding="{Binding Cantidad}"
-                            Header="Cantidad PDF" />
+                            Header="Cantidad" />
 
                         <DataGridTextColumn
                             Width="*"
                             Binding="{Binding Codigo}"
-                            Header="Código PDF" />
+                            Header="Código Proveedor" />
 
                     </DataGrid.Columns>
 
@@ -122,16 +110,40 @@
                     AutoGenerateColumns="False"
                     Background="#F2F2F2"
                     CanUserAddRows="False"
+                    CanUserSortColumns="False"
                     HeadersVisibility="Column"
                     ItemsSource="{Binding ArticulosEncontrados}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
 
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+
+                            <Style.Triggers>
+
+                                <DataTrigger Binding="{Binding Descripcion}" Value="NO ENCONTRADO">
+                                    <Setter Property="Background" Value="#FFD6D6" />
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding Descripcion}" Value="ERROR">
+                                    <Setter Property="Background" Value="#FFD6D6" />
+                                </DataTrigger>
+
+                            </Style.Triggers>
+
+                        </Style>
+                    </DataGrid.RowStyle>
+
                     <DataGrid.Columns>
 
                         <DataGridTextColumn
-                            Width="120"
-                            Binding="{Binding idArticulo}"
-                            Header="Código Sistema" />
+                            Width="100"
+                            Binding="{Binding Cantidad}"
+                            Header="Cantidad" />
+
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Descripcion}"
+                            Header="Artículo" />
 
                     </DataGrid.Columns>
 
@@ -140,6 +152,57 @@
             </Grid>
 
         </ScrollViewer>
+
+        <!--  PIE  -->
+        <Grid Grid.Row="2" Margin="10">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label
+                x:Name="lblTotalCompra"
+                Margin="0,0,664,0"
+                VerticalAlignment="Center"
+                Content="Total compra:"
+                FontSize="18"
+                FontWeight="Bold" />
+            <TextBox
+                x:Name="txtBTotalCompra"
+                Margin="126,0,377,0"
+                VerticalAlignment="Center"
+                FontSize="18"
+                FontWeight="Bold"
+                Text="0.00" />
+
+
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+
+                <Button
+                    Width="120"
+                    Height="40"
+                    Margin="0,0,10,0"
+                    Background="#4F7D6A"
+                    BorderThickness="0"
+                    Click="btnRefrescar_Click"
+                    Content="Refrescar"
+                    Foreground="White" />
+
+                <Button
+                    Width="140"
+                    Height="40"
+                    Background="#6B9D89"
+                    BorderThickness="0"
+                    Content="Cargar Compra"
+                    Cursor="Hand"
+                    FontWeight="Bold"
+                    Foreground="White" />
+
+            </StackPanel>
+
+        </Grid>
 
     </Grid>
 </Page>

@@ -56,6 +56,8 @@ namespace DDW_PDV_WPF
             try
             {
                 string rutaPdf = openFileDialog.FileName;
+                string nombreArchivo = System.IO.Path.GetFileName(rutaPdf);
+                item.Content = nombreArchivo;
 
                 string textoPdf = LeerTextoPdf(rutaPdf);
 
@@ -84,14 +86,13 @@ namespace DDW_PDV_WPF
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
-
-            cbPDF.SelectedIndex = -1;
         }
 
         private async void btnRefrescar_Click(object sender, RoutedEventArgs e)
         {
             await BuscarEnApi();
         }
+
         private async Task BuscarEnApi()
         {
             try
@@ -106,7 +107,7 @@ namespace DDW_PDV_WPF
                     return;
                 }
 
-                int idProveedor = int.Parse(item.Content.ToString());
+                int idProveedor = int.Parse(item.Tag.ToString());
 
                 foreach (var producto in ProductosPdf)
                 {
@@ -123,29 +124,32 @@ namespace DDW_PDV_WPF
                             $"api/CCodigosProveedores/{codigo}?idProveedor={idProveedor}"
                         );
 
-                        if (articulos != null && articulos.Count > 0)
+                        if (articulos == null || articulos.Count == 0)
                         {
-                            var articulo = articulos.First();
+                            ArticulosEncontrados.Add(new ArticuloDTO
+                            {
+                                Cantidad = (int)producto.Cantidad,
+                                Descripcion = "NO ENCONTRADO"
+                            });
 
-                            ArticulosEncontrados.Add(new ArticuloDTO
-                            {
-                                idArticulo = articulo.idArticulo
-                            });
+                            continue;
                         }
-                        else
+
+                        var articulo = articulos.First();
+
+                        ArticulosEncontrados.Add(new ArticuloDTO
                         {
-                            // mantener alineación con PDF
-                            ArticulosEncontrados.Add(new ArticuloDTO
-                            {
-                                idArticulo = 0
-                            });
-                        }
+                            Cantidad = (int)producto.Cantidad,
+                            Descripcion = articulo.Descripcion
+                        });
+
                     }
                     catch
                     {
                         ArticulosEncontrados.Add(new ArticuloDTO
                         {
-                            idArticulo = 0
+                            Cantidad = (int)producto.Cantidad,
+                            Descripcion = "ERROR"
                         });
                     }
                 }
@@ -156,18 +160,19 @@ namespace DDW_PDV_WPF
             }
         }
 
+
+
         private List<ProductoPdf> ExtraerProductos(string textoPdf)
         {
             var productos = new List<ProductoPdf>();
 
             var bloques = Regex.Split(textoPdf, @"(?=PC\d+)");
-            var contProd=0;
+            var contProd = 0;
+
             foreach (var bloque in bloques)
             {
-                if (contProd==33)
-                {
-                    contProd = 1;
-                }
+
+
                 if (!bloque.StartsWith("PC"))
                     continue;
 
@@ -179,11 +184,12 @@ namespace DDW_PDV_WPF
                 string codigo = codigoMatch.Groups[1].Value;
 
                 var numeros = Regex.Matches(bloque, @"\d+\.\d{2}");
-                var numCount= numeros.Count;
-                
+
                 if (numeros.Count == 0)
                     continue;
-                string cantidadTexto="";
+
+                string cantidadTexto = "";
+
                 if (numeros.Count != 5)
                 {
                     cantidadTexto = numeros[numeros.Count - 7].Value;
@@ -192,7 +198,6 @@ namespace DDW_PDV_WPF
                 {
                     cantidadTexto = numeros[numeros.Count - 1].Value;
                 }
-                    
 
                 if (!decimal.TryParse(
                     cantidadTexto,
@@ -206,6 +211,7 @@ namespace DDW_PDV_WPF
                     Codigo = codigo.TrimStart('0'),
                     Cantidad = cantidad
                 });
+
                 contProd++;
             }
 
