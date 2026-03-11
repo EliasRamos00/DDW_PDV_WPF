@@ -275,13 +275,13 @@
                 <Grid DataContext="{Binding ArticuloSeleccionado}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
+                        <RowDefinition />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="45" />
                     </Grid.RowDefinitions>
 
                     <StackPanel
@@ -306,12 +306,12 @@
 
                         <Border
                             Grid.Column="0"
-                            Width="140"
-                            Height="140"
+                            Width="auto"
+                            Height="auto"
                             HorizontalAlignment="Center"
                             Background="#E5C1DC"
                             CornerRadius="5">
-                            <Grid>
+                            <Grid >
                                 <Viewbox Margin="10" Stretch="Fill">
                                     <Image
                                         Margin="5"
@@ -338,8 +338,8 @@
 
                         <Border
                             Grid.Column="1"
-                            Width="140"
-                            Height="140"
+                            Width="auto"
+                            Height="auto"
                             HorizontalAlignment="Center"
                             Background="White"
                             CornerRadius="5">
@@ -454,10 +454,13 @@
                                 <ComboBox
                                     x:Name="cmbCategoria"
                                     Grid.Column="1"
-                                    Margin="5"
+                                    Margin="0,5,40,5"
                                     DisplayMemberPath="Nombre"
                                     SelectedValuePath="idCategoria"
-                                    SelectionChanged="cmbCategoriaCambio" />
+                                    SelectionChanged="cmbCategoriaCambio"
+                                    Foreground="Black"
+                                    BorderBrush="Pink"
+                                    />
                             </Grid>
                         </GroupBox>
                     </Grid>
@@ -516,11 +519,18 @@
                             Style="{StaticResource CustomGroupBoxStyle}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.2*" />
-                                    <ColumnDefinition Width="0.8*" />
+                                    <ColumnDefinition Width="0.3*" />
+                                    <ColumnDefinition Width="0.7*" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Margin="8,5,5,5" VerticalAlignment="Center" FontSize="12" Foreground="#555555" Text="Código:" />
-                                <TextBox x:Name="txtCodigo" Grid.Column="1" MinHeight="28" Style="{StaticResource DetailTextBoxStyle}" Text="{Binding CodigoBarras, UpdateSourceTrigger=PropertyChanged}" TextChanged="txtCodigo_TextChanged" />
+                                <TextBox x:Name="txtCodigo" 
+                                         Grid.Column="1" 
+                                         MinHeight="28" 
+                                         Style="{StaticResource DetailTextBoxStyle}" 
+                                         Text="{Binding CodigoBarras, UpdateSourceTrigger=PropertyChanged}" 
+                                         TextChanged="txtCodigo_TextChanged"
+                                         
+                                         />
                             </Grid>
                         </GroupBox>
 
@@ -575,9 +585,11 @@
                                 Background="White" 
                                 BorderBrush="#E5C1DC" 
                                 BorderThickness="1" 
+                                Foreground="Black"
+                                SelectionChanged="cmbProveedorCambio"
                                 Padding="8,4"
                                 DisplayMemberPath="Nombre" 
-                                SelectedValuePath="IdProveedor" />
+                                SelectedValuePath="idProveedor" />
                         </GroupBox>
 
                         <GroupBox

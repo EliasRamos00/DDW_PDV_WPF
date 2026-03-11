@@ -109,6 +109,13 @@ namespace DDW_PDV_WPF.Modelo
             }
         }
 
+        // PROVEEDORES Y CODIGOS PROVEEDORES.
+        [XmlElement("idInventario")]
+        public int idProveedor { get; set; }
+        [XmlElement("idInventario")]
+        public string CodigoProveedor { get; set; }
+
+
 
         protected void OnPropertyChanged(string propertyName)
         {

@@ -46,6 +46,7 @@ namespace DDW_PDV_WPF
         private ArticuloDTO _articuloOriginal;
         private bool _isNewItem = false;
         private List<MCategorias> cat;
+        private List<MProveedores> prov;
         private GoogleDriveHelper ds;
         private DispatcherTimer _debounceTimer;
         private System.Windows.Media.Imaging.BitmapImage imagenActualBitMap;
@@ -60,6 +61,19 @@ namespace DDW_PDV_WPF
                 OnPropertyChanged(nameof(Categorias));
             }
         }
+
+        private ObservableCollection<MProveedores> _proveedores;
+        public ObservableCollection<MProveedores> Proveedores
+        {
+            get => _proveedores;
+            set
+            {
+                _proveedores = value;
+                OnPropertyChanged(nameof(Proveedores));
+            }
+        }
+
+
         public string TextoBusqueda
         {
             get => _textoBusqueda;
@@ -113,7 +127,11 @@ namespace DDW_PDV_WPF
                         Max = _articuloSeleccionado.Max,
                         PrecioVenta = _articuloSeleccionado.PrecioVenta,
                         PrecioCompra = _articuloSeleccionado.PrecioCompra,
-                        ImagenProducto = _articuloSeleccionado.ImagenProducto
+                        ImagenProducto = _articuloSeleccionado.ImagenProducto,
+
+                        idProveedor = _articuloSeleccionado.idProveedor,
+                        CodigoProveedor = _articuloSeleccionado.CodigoProveedor
+
 
                     };
                     // Cargar la categoría seleccionada
@@ -123,6 +141,14 @@ namespace DDW_PDV_WPF
                      .FirstOrDefault(c => c.idCategoria == _articuloSeleccionado.idCategoria);
 
                     cmbCategoria.SelectedItem = itemEncontrado;
+
+
+                    // SE CARGAN LOS PROVEEDORES
+
+                    MProveedores proveed = cmbProveedor.ItemsSource.Cast<MProveedores>()
+                    .FirstOrDefault(p => p.idProveedor == _articuloSeleccionado.idProveedor);
+
+                    cmbProveedor.SelectedItem = proveed;
 
                     // Se muestra la foto que tenga.
                     // Suponemos que cada artículo tiene un "ImageId" que corresponde al ID de Google Drive de la imagen
@@ -220,9 +246,9 @@ namespace DDW_PDV_WPF
             _apiService = new ApiService();
             CargarDatos();
             DataContext = this;
-
+            
             CargarCategorias();
-
+            CargarProveedores();
             btnCancelarCambios.Visibility = Visibility.Hidden;
             btnGuardarCambios.Visibility = Visibility.Hidden;
 
@@ -306,9 +332,11 @@ namespace DDW_PDV_WPF
             if (parameter?.ToString() == "inverse") return isEmpty ? Visibility.Visible : Visibility.Collapsed;
             return isEmpty ? Visibility.Collapsed : Visibility.Visible;
         }
+
         private async void CargarDatos()
         {
             await CargarCategorias();
+            await CargarProveedores();
             var resultado = await _apiService.GetAsync<List<ArticuloDTO>>("/api/CArticulos/productos/inventario");
 
             if (resultado != null)
@@ -361,6 +389,29 @@ namespace DDW_PDV_WPF
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private async Task CargarProveedores()
+        {
+            try
+            {
+                prov = await _apiService.GetAsync<List<MProveedores>>("/api/CProveedores");
+                if (prov != null)
+                {
+
+                    cmbProveedor.ItemsSource = prov; // Limpiar el ItemsSource antes de asignar
+                    cmbProveedor.DisplayMemberPath = "Nombre";     // Lo que se muestra
+                    cmbProveedor.SelectedValuePath = "idProveedor";
+                    //Categorias = new ObservableCollection<MCategorias>(resultado);
+                    //_cbCategorias.ItemsSource = Categorias;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar proveedores: {ex.Message}", "Error",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void FiltrarArticulos()
         {
             if (_todosLosArticulos == null || cat == null) return;
@@ -531,6 +582,10 @@ namespace DDW_PDV_WPF
                 // Asignar categoría
                 MCategorias aux = (MCategorias)cmbCategoria.SelectedItem;
                 ArticuloSeleccionado.idCategoria = aux.idCategoria;
+
+                MProveedores PR = (MProveedores)cmbProveedor.SelectedItem;
+                ArticuloSeleccionado.idProveedor = PR.idProveedor;
+
 
                 bool exito;
                 string accion = _isNewItem ? "CREADO" : "ACT.";
@@ -923,5 +978,18 @@ namespace DDW_PDV_WPF
             }
 
         }
+
+
+        private void cmbProveedorCambio(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbProveedor.SelectedValue != null)
+            {
+                MProveedores aux = (MProveedores)cmbProveedor.SelectedItem;
+                _articuloSeleccionado.idProveedor = aux.idProveedor;
+            }
+
+        }
+
+
     }
 }
