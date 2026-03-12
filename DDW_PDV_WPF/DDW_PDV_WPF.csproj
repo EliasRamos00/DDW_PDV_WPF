@@ -28,7 +28,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>1.5.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -447,6 +447,9 @@
     <Compile Include="frmProveedores.xaml.cs">
       <DependentUpon>frmProveedores.xaml</DependentUpon>
     </Compile>
+    <Compile Include="frm_Proveedores.xaml.cs">
+      <DependentUpon>frm_Proveedores.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
     <Compile Include="Modelo\MCajasDTO.cs" />
@@ -487,6 +490,10 @@
     <Page Include="frmVentas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="frm_Proveedores.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -178,10 +178,18 @@
                         x:Name="buttonProveedores"
                         Margin="8"
                         Click="NavigateProveedores"
-                        Content="Proveedores
-                        "
+                        Content="Compras"
                         FontSize="16"
                         Style="{StaticResource MenuButtonStyle}" />
+
+
+                    <Button
+                      x:Name="btnRegProv"
+                      Margin="8"
+                      Click="NavigateRegProv"
+                      Content="Proveedores"
+                      FontSize="16"
+                      Style="{StaticResource MenuButtonStyle}" />
 
                     <Button
                         x:Name="btnBorrarCache"

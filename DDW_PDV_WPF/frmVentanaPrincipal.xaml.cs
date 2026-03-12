@@ -52,6 +52,8 @@ namespace DDW_PDV_WPF
                 buttonResumen.Visibility = Visibility.Collapsed;
                 buttonHistorial.Visibility = Visibility.Collapsed;
                 buttonCierreCajas.Visibility = Visibility.Collapsed;
+                btnRegProv.Visibility = Visibility.Collapsed;
+                buttonProveedores.Visibility = Visibility.Collapsed; // CAMBIAR NOMBRE
             } 
           
         }
@@ -64,6 +66,8 @@ namespace DDW_PDV_WPF
             buttonResumen.IsEnabled = true;
             buttonHistorial.IsEnabled = true;
             buttonProveedores.IsEnabled = true;
+            btnRegProv.IsEnabled = true;
+
 
         }
         private void NavigateToInventarios(object sender, RoutedEventArgs e)
@@ -110,8 +114,15 @@ namespace DDW_PDV_WPF
         private void NavigateProveedores(object sender, RoutedEventArgs e)
         {
             ResetNavigationButtons();
-            MainFrame.Navigate(new frmProveedores());
+            MainFrame.Navigate(new frmProveedores()); // CAMBIAR NOMBRE A COMPRAS / NOTA DEL 11 DE MARZO 2026
             buttonProveedores.IsEnabled = false;
+        }
+
+        private void NavigateRegProv(object sender, RoutedEventArgs e)
+        {
+            ResetNavigationButtons();
+            MainFrame.Navigate(new frm_Proveedores());
+            btnRegProv.IsEnabled = false;
         }
 
         private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)
