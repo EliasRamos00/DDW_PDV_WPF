@@ -61,24 +61,18 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Page.Resources>
 
-    <Grid Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="9*" />
-            <RowDefinition Height="662*" />
-        </Grid.RowDefinitions>
+    <Grid Background="White" Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.4*" MinWidth="300" />
             <ColumnDefinition Width="0.6*" MinWidth="450" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" Grid.Column="0" Margin="10,1,10,10">
+        <Grid Grid.Column="0" Margin="0,0,10,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
-            <TextBlock Grid.Row="0" Margin="0,0,0,15" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="#2E5E4E" Text="PROVEEDORES"/>
 
             <Border Grid.Row="0" Margin="0,0,0,10" Background="White" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="3">
                 <Grid>
@@ -118,7 +112,7 @@
                 </ListBox>
             </Border>
 
-            <StackPanel Grid.Row="2" Margin="0,15" HorizontalAlignment="Center" Orientation="Horizontal">
+            <StackPanel Grid.Row="2" Margin="0,15,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
                 <StackPanel.Resources>
                     <Style x:Key="TextButtonStyle" TargetType="Button">
                         <Setter Property="Background" Value="Transparent" />
@@ -154,7 +148,7 @@
             </StackPanel>
         </Grid>
 
-        <Border Grid.Row="1" Grid.Column="1" Margin="10,1,10,10" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="5" Padding="15">
+        <Border Grid.Column="1" Margin="10,0,0,0" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="5" Padding="15">
             <Grid DataContext="{Binding ProveedorSeleccionado}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
