@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using DDW_PDV_WPF.Controlador;
+using DDW_PDV_WPF.Modelo;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,8 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using DDW_PDV_WPF.Controlador;
-using DDW_PDV_WPF.Modelo;
+using System.Windows.Input;
+using System.IO;
 
 namespace DDW_PDV_WPF
 {
@@ -29,6 +31,49 @@ namespace DDW_PDV_WPF
             ArticulosEncontrados = new ObservableCollection<ArticuloDTO>();
 
             DataContext = this;
+
+            CargarPDFGuardados();
+        }
+
+        private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+
+            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+            eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+            eventArg.Source = sender;
+
+            var parent = ((Control)sender).Parent as UIElement;
+            parent.RaiseEvent(eventArg);
+        }
+
+        private string ObtenerCarpetaPDF()
+        {
+            string carpeta = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "PDFsGuardados"
+            );
+
+            if (!Directory.Exists(carpeta))
+                Directory.CreateDirectory(carpeta);
+
+            return carpeta;
+        }
+
+        private void CargarPDFGuardados()
+        {
+            string carpeta = ObtenerCarpetaPDF();
+
+            var archivos = Directory.GetFiles(carpeta, "*.pdf");
+
+            foreach (var archivo in archivos)
+            {
+                cbPDF.Items.Add(new ComboBoxItem
+                {
+                    Content = Path.GetFileName(archivo),
+                    Tag = archivo
+                });
+            }
         }
 
         private async void cbPDF_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -41,24 +86,47 @@ namespace DDW_PDV_WPF
             if (item == null)
                 return;
 
-            if (item.Content.ToString() != "Seleccionar PDF")
-                return;
+            string rutaPdf = "";
 
-            var openFileDialog = new OpenFileDialog
+            // Si es PDF guardado
+            if (item.Tag != null)
             {
-                Filter = "Archivos PDF (*.pdf)|*.pdf",
-                Title = "Seleccionar PDF"
-            };
+                rutaPdf = item.Tag.ToString();
+            }
+            else
+            {
+                var openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Archivos PDF (*.pdf)|*.pdf",
+                    Title = "Seleccionar PDF"
+                };
 
-            if (openFileDialog.ShowDialog() != true)
-                return;
+                if (openFileDialog.ShowDialog() != true)
+                    return;
+
+                rutaPdf = openFileDialog.FileName;
+
+                string carpetaDestino = ObtenerCarpetaPDF();
+                string nombreArchivo = Path.GetFileName(rutaPdf);
+                string destino = Path.Combine(carpetaDestino, nombreArchivo);
+
+                // Guardar copia
+                if (!File.Exists(destino))
+                {
+                    File.Copy(rutaPdf, destino);
+
+                    cbPDF.Items.Add(new ComboBoxItem
+                    {
+                        Content = nombreArchivo,
+                        Tag = destino
+                    });
+                }
+
+                item.Content = nombreArchivo;
+            }
 
             try
             {
-                string rutaPdf = openFileDialog.FileName;
-                string nombreArchivo = System.IO.Path.GetFileName(rutaPdf);
-                item.Content = nombreArchivo;
-
                 string textoPdf = LeerTextoPdf(rutaPdf);
 
                 var productos = ExtraerProductos(textoPdf);
@@ -160,8 +228,6 @@ namespace DDW_PDV_WPF
             }
         }
 
-
-
         private List<ProductoPdf> ExtraerProductos(string textoPdf)
         {
             var productos = new List<ProductoPdf>();
@@ -171,8 +237,6 @@ namespace DDW_PDV_WPF
 
             foreach (var bloque in bloques)
             {
-
-
                 if (!bloque.StartsWith("PC"))
                     continue;
 
