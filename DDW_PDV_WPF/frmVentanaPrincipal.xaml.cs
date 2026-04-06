@@ -13,8 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Xps;
 
-
-
 namespace DDW_PDV_WPF
 {
     /// <summary>
@@ -25,6 +23,7 @@ namespace DDW_PDV_WPF
         private string Usuario { get; set; }
         GoogleDriveHelper ds = new GoogleDriveHelper();
         frmVentas _frmventas;
+
         public frmVentanaPrincipal(string Usuario, string Rol)
         {
             InitializeComponent();
@@ -33,8 +32,6 @@ namespace DDW_PDV_WPF
             MainFrame.UpdateLayout();
             Permisos(Rol);
             this.Usuario = Usuario;
-
-            
         }
 
         private void Permisos(string rol)
@@ -54,8 +51,7 @@ namespace DDW_PDV_WPF
                 buttonCierreCajas.Visibility = Visibility.Collapsed;
                 btnRegProv.Visibility = Visibility.Collapsed;
                 buttonProveedores.Visibility = Visibility.Collapsed; // CAMBIAR NOMBRE
-            } 
-          
+            }
         }
 
         private void ResetNavigationButtons()
@@ -67,9 +63,8 @@ namespace DDW_PDV_WPF
             buttonHistorial.IsEnabled = true;
             buttonProveedores.IsEnabled = true;
             btnRegProv.IsEnabled = true;
-
-
         }
+
         private void NavigateToInventarios(object sender, RoutedEventArgs e)
         {
             ResetNavigationButtons();
@@ -111,6 +106,7 @@ namespace DDW_PDV_WPF
             MainFrame.Navigate(new frmCierreDeCajas());
             buttonCierreCajas.IsEnabled = false;
         }
+
         private void NavigateProveedores(object sender, RoutedEventArgs e)
         {
             ResetNavigationButtons();
@@ -121,13 +117,13 @@ namespace DDW_PDV_WPF
         private void NavigateRegProv(object sender, RoutedEventArgs e)
         {
             ResetNavigationButtons();
-            MainFrame.Navigate(new frm_Proveedores());
+            // ¡AQUÍ ESTÁ EL CAMBIO! Ya le pasamos la variable ds
+            MainFrame.Navigate(new frm_Proveedores(ds));
             btnRegProv.IsEnabled = false;
         }
 
         private void BtnCerrarSesion_Click(object sender, RoutedEventArgs e)
         {
-
             var result = System.Windows.MessageBox.Show("¿Está seguro que desea cerrar sesión?",
                                "Confirmar cierre de sesión",
                                MessageBoxButton.YesNo,
@@ -164,8 +160,7 @@ namespace DDW_PDV_WPF
         {
             // DESCOMENTAR UNA VEZ TERMINADAS LAS PRUEBAS EN DROPBOX
             CierrCaj paginaDestino = new CierrCaj(Usuario, Properties.Settings.Default.Caja);
-            paginaDestino.ShowDialog();           
-
+            paginaDestino.ShowDialog();
         }
 
         private void clickBorrarCache(object sender, RoutedEventArgs e)
