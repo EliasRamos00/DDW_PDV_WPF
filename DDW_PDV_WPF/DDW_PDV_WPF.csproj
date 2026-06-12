@@ -444,6 +444,7 @@
     <Compile Include="Controlador\CurrencyConverter.cs" />
     <Compile Include="Controlador\DropboxHelper.cs" />
     <Compile Include="Controlador\GoogleDriveHelper.cs" />
+    <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="frmProveedores.xaml.cs">
       <DependentUpon>frmProveedores.xaml</DependentUpon>
     </Compile>

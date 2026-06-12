@@ -11,7 +11,7 @@
 
     <Page.Resources>
         <local:LessThanZeroConverter x:Key="LessThanZeroConverter" />
-        <!--  Estilo para la barra de búsqueda  -->
+
         <Style x:Key="SearchBoxStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="#CCCCCC" />
             <Setter Property="BorderThickness" Value="1" />
@@ -20,7 +20,6 @@
             <Setter Property="Margin" Value="10,0,10,10" />
         </Style>
 
-        <!--  Estilo para el DataGrid  -->
         <Style x:Key="CierresDataGridStyle" TargetType="DataGrid">
             <Setter Property="AutoGenerateColumns" Value="False" />
             <Setter Property="MinHeight" Value="400" />
@@ -32,7 +31,6 @@
             <Setter Property="Margin" Value="10,0,10,0" />
         </Style>
 
-        <!--  Estilo para las columnas del DataGrid  -->
         <Style x:Key="DataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#A01A7D" />
             <Setter Property="Foreground" Value="White" />
@@ -41,26 +39,21 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
 
-        <!--  Estilo para los detalles del cierre  -->
         <Style x:Key="DetailSectionStyle" TargetType="Grid">
             <Setter Property="Margin" Value="10,5" />
         </Style>
 
-        <!--  Estilo para las etiquetas de detalles  -->
         <Style x:Key="DetailLabelStyle" TargetType="TextBlock">
-
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Margin" Value="0,0,5,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Width" Value="120" />
         </Style>
 
-        <!--  Estilo para los valores de detalles  -->
         <Style x:Key="DetailValueStyle" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <!--  Estilo para el separador  -->
         <Style x:Key="SeparatorStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="#000000" />
             <Setter Property="BorderThickness" Value="0,1,0,0" />
@@ -75,17 +68,22 @@
             <ColumnDefinition Width="0.3*" MinWidth="300" />
         </Grid.ColumnDefinitions>
 
-        <!--  Panel Izquierdo  -->
-        <StackPanel Grid.Column="0" Margin="10">
+        <Grid Grid.Column="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <TextBlock
+                Grid.Row="0"
                 Margin="0,0,0,10"
                 FontSize="18"
                 FontWeight="Bold"
                 Foreground="#2E5E4E"
                 Text="   HISTORIAL DE CIERRE DE CAJAS" />
 
-            <!--  Barra de búsqueda  -->
-            <Border Style="{StaticResource SearchBoxStyle}">
+            <Border Grid.Row="1" Style="{StaticResource SearchBoxStyle}">
                 <Grid>
                     <TextBox
                         x:Name="txtBusqueda"
@@ -114,13 +112,13 @@
                 </Grid>
             </Border>
 
-            <!--  DataGrid  -->
             <DataGrid
+                Grid.Row="2"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
                 ItemsSource="{Binding ListaCierres}"
                 SelectionChanged="DataGrid_SelectionChanged"
                 Style="{StaticResource CierresDataGridStyle}">
                 <DataGrid.Columns>
-                    <!--  Fecha  -->
                     <DataGridTextColumn
                         Width="1*"
                         Binding="{Binding Fecha, StringFormat='dd/MM/yyyy'}"
@@ -133,7 +131,6 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!--  Hora  -->
                     <DataGridTextColumn
                         Width="0.8*"
                         Binding="{Binding Hora}"
@@ -146,7 +143,6 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!--  ID Usuario  -->
                     <DataGridTextColumn
                         Width="0.8*"
                         Binding="{Binding Usuario}"
@@ -159,7 +155,6 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!--  ID Caja  -->
                     <DataGridTextColumn
                         Width="0.8*"
                         Binding="{Binding idCaja}"
@@ -172,7 +167,6 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!--  Total Sistema  -->
                     <DataGridTextColumn
                         Width="1.2*"
                         Binding="{Binding TotalSistema, StringFormat='{}{0:C}'}"
@@ -185,7 +179,6 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!--  Total Físico  -->
                     <DataGridTextColumn
                         Width="1.2*"
                         Binding="{Binding TotalFisico, StringFormat='{}{0:C}'}"
@@ -198,7 +191,6 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <!--  Diferencia  -->
                     <DataGridTextColumn
                         Width="1.2*"
                         Binding="{Binding Diferencia, StringFormat='{}{0:C}'}"
@@ -207,14 +199,11 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="Foreground" Value="Red" />
+                                <Setter Property="FontWeight" Value="Bold" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Diferencia}" Value="0">
                                         <Setter Property="Foreground" Value="Green" />
-                                        <Setter Property="FontWeight" Value="Bold" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Diferencia}">
-                                        <Setter Property="Foreground" Value="Red" />
-                                        <Setter Property="FontWeight" Value="Bold" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -222,9 +211,8 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
+        </Grid>
 
-        <!--  Panel Derecho - Detalles de Cierre  -->
         <Border
             Grid.Column="1"
             Margin="10"
@@ -235,7 +223,6 @@
             <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
                 <StackPanel DataContext="{Binding CierreSeleccionado}">
 
-                    <!--  Encabezado  -->
                     <TextBlock
                         Margin="0,0,0,15"
                         HorizontalAlignment="Center"
@@ -248,7 +235,6 @@
                         Height="76"
                         Source="/Resources/omegasymbol.png" />
 
-                    <!--  Fecha  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -261,7 +247,6 @@
                             Text="{Binding Fecha}" />
                     </Grid>
 
-                    <!--  Hora  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -274,7 +259,6 @@
                             Text="{Binding Hora}" />
                     </Grid>
 
-                    <!--  ID Usuario  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -287,7 +271,6 @@
                             Text="{Binding idUsuario}" />
                     </Grid>
 
-                    <!--  ID Caja  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -300,10 +283,8 @@
                             Text="{Binding idCaja}" />
                     </Grid>
 
-                    <!--  Línea divisoria  -->
                     <Border Style="{StaticResource SeparatorStyle}" />
 
-                    <!--  Total Sistema  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -317,7 +298,6 @@
                             Text="{Binding TotalSistema, StringFormat='{}{0:C}'}" />
                     </Grid>
 
-                    <!--  Total Físico  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -331,7 +311,6 @@
                             Text="{Binding TotalFisico, StringFormat='{}{0:C}'}" />
                     </Grid>
 
-                    <!--  Diferencia  -->
                     <Grid Style="{StaticResource DetailSectionStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -346,17 +325,14 @@
                             <TextBlock.Style>
                                 <Style BasedOn="{StaticResource DetailValueStyle}" TargetType="TextBlock">
                                     <Style.Triggers>
-                                        <!--  Verde cuando es 0  -->
                                         <DataTrigger Binding="{Binding Diferencia}" Value="0">
                                             <Setter Property="Foreground" Value="Black" />
                                         </DataTrigger>
 
-                                        <!--  Rojo cuando es negativo  -->
                                         <DataTrigger Binding="{Binding Diferencia, Converter={StaticResource LessThanZeroConverter}}" Value="True">
                                             <Setter Property="Foreground" Value="Red" />
                                         </DataTrigger>
 
-                                        <!--  Opcional: Color por defecto para positivos  -->
                                         <DataTrigger Binding="{Binding Diferencia, Converter={StaticResource LessThanZeroConverter}}" Value="False">
                                             <Setter Property="Foreground" Value="Green" />
                                         </DataTrigger>
