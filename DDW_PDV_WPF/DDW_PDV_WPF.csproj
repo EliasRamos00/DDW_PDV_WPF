@@ -453,6 +453,7 @@
     </Compile>
     <Compile Include="LessThanZeroConverter.cs" />
     <Compile Include="Modelo\CierreCajasDTO.cs" />
+    <Compile Include="Modelo\ComprasDTO.cs" />
     <Compile Include="Modelo\MCajasDTO.cs" />
     <Compile Include="Modelo\MProveedores.cs" />
     <Compile Include="Modelo\RepVentasDTO.cs" />

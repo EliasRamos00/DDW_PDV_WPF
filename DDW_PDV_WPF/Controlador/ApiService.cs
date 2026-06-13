@@ -43,6 +43,7 @@ namespace DDW_PDV_WPF.Controlador
             HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await _httpClient.PostAsync(endpoint, content);
+            var contenido = await response.Content.ReadAsStringAsync();
 
             return response.IsSuccessStatusCode;  // Devuelve true si la respuesta es exitosa (status code 2xx)
         }

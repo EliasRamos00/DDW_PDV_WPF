@@ -21,6 +21,11 @@ namespace DDW_PDV_WPF
         public ObservableCollection<ProductoPdf> ProductosPdf { get; set; }
         public ObservableCollection<ArticuloDTO> ArticulosEncontrados { get; set; }
 
+        public ObservableCollection<MProveedores> Proveedores { get; set; }
+
+        public ObservableCollection<ArticuloDTO> ListaArticulos { get; set; }
+
+
         ApiService api = new ApiService();
 
         public frmProveedores()
@@ -29,10 +34,13 @@ namespace DDW_PDV_WPF
 
             ProductosPdf = new ObservableCollection<ProductoPdf>();
             ArticulosEncontrados = new ObservableCollection<ArticuloDTO>();
-
+            Proveedores = new ObservableCollection<MProveedores>();
+            ListaArticulos = new ObservableCollection<ArticuloDTO>();
             DataContext = this;
-
+            CargarArticulosDesdeAPI();
             CargarPDFGuardados();
+            CargarProveedoresDesdeAPI();
+
         }
 
         private void DataGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -45,6 +53,119 @@ namespace DDW_PDV_WPF
 
             var parent = ((Control)sender).Parent as UIElement;
             parent.RaiseEvent(eventArg);
+        }
+        private async void CargarProveedoresDesdeAPI()
+        {
+            try
+            {
+                var resultadoAPI = await api.GetAsync<List<MProveedores>>("/api/CProveedores");
+
+                if (resultadoAPI != null)
+                {
+                    Proveedores.Clear();
+
+                    foreach (var prov in resultadoAPI)
+                    {
+                        Proveedores.Add(new MProveedores
+                        {
+                            idProveedor = prov.idProveedor,
+                            Nombre = prov.Nombre ?? "Sin Nombre",
+
+                        });
+                    }
+                }
+                cbProveedor.ItemsSource = Proveedores;
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al descargar los proveedores: " + ex.Message, "Error de Conexión", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void CargarArticulosDesdeAPI()
+        {
+            try
+            {
+                var resultadoAPI = await api.GetAsync<List<ArticuloDTO>>("/api/CArticulos/productos/inventario");
+
+                if (resultadoAPI != null)
+                {
+                    ListaArticulos.Clear(); // RETOMAR DESDE AQUI ELIAS DEL FUTURO
+
+                    foreach (var articulo in resultadoAPI)
+                    {
+                        ListaArticulos.Add(new ArticuloDTO
+                        {
+                            idArticulo = articulo.idArticulo,
+                            Descripcion = articulo.CodigoBarras +" - "+ articulo.Descripcion + " - " + articulo.Color ?? "Sin Nombre",
+                            PrecioCompra = articulo.PrecioCompra ?? 0
+                        });
+                    }
+                    cbArticuloManual.ItemsSource = ListaArticulos;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Error al descargar los artículos: " + ex.Message,
+                    "Error de Conexión",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void btnAgregarArticulo_Click(object sender, RoutedEventArgs e)
+        {
+            int idArticulo = (cbArticuloManual.SelectedItem as ArticuloDTO)?.idArticulo ?? 0;
+            int cantidad = Convert.ToInt16(txtCantidadManual.Text);
+            decimal precio = Convert.ToDecimal(txtPrecioManual.Text);
+            var articuloExistente = ArticulosEncontrados
+                .FirstOrDefault(x => x.idArticulo == idArticulo);
+
+            if (articuloExistente != null)
+            {
+                articuloExistente.Cantidad += cantidad;
+                // Opcional: actualizar el último precio capturado
+                articuloExistente.PrecioCompra = precio;
+            }
+            else
+            {
+                ArticulosEncontrados.Add(new ArticuloDTO
+                {
+                    idArticulo = idArticulo,
+                    Cantidad = cantidad,
+                    Descripcion = cbArticuloManual.Text,
+                    PrecioCompra = Convert.ToDecimal(txtPrecioManual.Text)
+                });
+            }
+
+            CalcularTotal();
+
+        }
+
+
+        private void btnEliminarArticulo_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (sender is Button btn && btn.DataContext is ArticuloDTO articulo)
+            {
+                ArticulosEncontrados.Remove(articulo);
+            }
+            CalcularTotal();
+
+        }
+
+        private void CalcularTotal()
+        {
+            decimal? total = 0;
+
+            foreach (var articulo in ArticulosEncontrados)
+            {
+                total += articulo.Cantidad * articulo.PrecioCompra;
+            }
+
+            txtBTotalCompra.Text = total?.ToString("F2");
         }
 
         private string ObtenerCarpetaPDF()
@@ -296,6 +417,64 @@ namespace DDW_PDV_WPF
             }
 
             return textoCompleto.ToString();
+        }
+
+        private async void CargarCompra_Click(object sender, RoutedEventArgs e)
+        {           
+            // UNA COMPRA NECESITA 
+            // id Compra, Fecha Compra, Total, idProveedor, FechaRegistro, DetalleCompra (idCompraDetalle, idArticulo, idCompra, Cantidad, PrecioUnitario)
+            if (ArticulosEncontrados.Count == 0)
+            {
+                MessageBox.Show("No hay artículos para cargar. Agrega artículos antes de cargar la compra.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+
+            MComprasDTO compra = new MComprasDTO();
+            var proveedor = (MProveedores)cbProveedor.SelectedItem;
+            List<MComprasDetalleDTO> ListaCompra = new List<MComprasDetalleDTO>(); 
+
+            compra.idCompra = 0;
+            compra.FechaCompra = DateTime.Now;
+            compra.Total = Convert.ToDecimal(txtBTotalCompra.Text);
+            compra.idProveedor = proveedor.idProveedor;
+            compra.fechaRegistro = DateTime.Now;
+
+            // Se llena la lista de detalles.
+
+            foreach (ArticuloDTO articulo in ArticulosEncontrados)
+            {
+                ListaCompra.Add(new MComprasDetalleDTO
+                {
+                    idComprasDetalle = 0,
+                    idCompra = 0,
+                    idArticulo = articulo.idArticulo,
+                    Cantidad = articulo.Cantidad,
+                    PrecioUnitario = articulo.PrecioCompra
+                });
+            }
+
+            compra.Detalles = ListaCompra;
+
+            // Con la compra construida, se envia a la API
+
+            try {
+
+                var resultado = await api.PostAsync("api/CCompras/", compra);
+                MessageBox.Show("Compra cargada con exito!.", "Exito!", MessageBoxButton.OK, MessageBoxImage.Information);
+                ArticulosEncontrados.Clear();
+                txtBTotalCompra.Text = "0";
+            }
+            catch (Exception ex) { 
+            
+            MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void cbArticuloManual_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            txtPrecioManual.Text = (cbArticuloManual.SelectedItem as ArticuloDTO)?.PrecioCompra?.ToString("F2") ?? "0.00";
         }
     }
 
